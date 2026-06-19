@@ -407,7 +407,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .section { padding: clamp(64px, 10vh, 128px) 0; }
 .section--soft { background: var(--bg-soft); }
 
-.section__head { max-width: 720px; margin: 0 auto clamp(36px, 5vh, 64px); text-align: center; }
+.section__head { max-width: 720px; margin: 0 auto clamp(48px, 7vh, 88px); text-align: center; }
 .section__head--left { text-align: left; margin-inline: 0; }
 .kicker {
   font-family: var(--mono); font-size: .74rem; letter-spacing: .14em; text-transform: uppercase;
