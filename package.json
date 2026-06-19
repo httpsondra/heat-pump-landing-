@@ -1,0 +1,14 @@
+{
+  "name": "milan-dusek-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing page – Milan Dušek (tepelná čerpadla, klimatizace, servis)",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-assets.mjs",
+    "serve": "python3 -m http.server 4321"
+  },
+  "devDependencies": {
+    "ffmpeg-static": "^5.2.0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "count": 150,
+  "pattern": "heat-pump-{n}.jpg",
+  "pad": 4,
+  "width": 1280,
+  "height": 720,
+  "fps": 15
+}

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Milan Dušek — tepelná čerpadla, klimatizace a servis topení | Praha a okolí</title>
+  <meta name="description" content="Milan Dušek — návrh, montáž a servis tepelných čerpadel, klimatizací a plynových kotlů v Praze a okolí. Osobní přístup, rychlá domluva, servis po montáži." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Milan Dušek — tepelná čerpadla, klimatizace a servis" />
+  <meta property="og:description" content="Kompletní návrh, montáž a servis technologií pro vytápění a chlazení v Praze a okolí." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/images/heat-pump-fallback.jpg" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+  <!-- ================= STICKY TOP BAR ================= -->
+  <header class="topbar" id="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="#top" aria-label="Milan Dušek — domů">
+        <span class="brand__mark" aria-hidden="true">MD</span>
+        <span class="brand__name">Milan&nbsp;Dušek</span>
+        <span class="brand__role">topení&nbsp;·&nbsp;chlazení</span>
+      </a>
+
+      <nav class="topnav" aria-label="Hlavní">
+        <a href="#sluzby">Služby</a>
+        <a href="#postup">Jak to probíhá</a>
+        <a href="#proc">Proč já</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+
+      <div class="topbar__cta">
+        <a class="btn btn--phone" href="tel:+420603479240">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.3 15.3 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.37 2.3.57 3.5.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.57 3.5a1 1 0 0 1-.25 1z"/></svg>
+          <span>+420 603 479 240</span>
+        </a>
+        <a class="btn btn--ghost btn--email" href="mailto:dusekmilan@volny.cz">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.4 2L12 12l7.6-5z"/></svg>
+          <span>E-mail</span>
+        </a>
+        <button class="btn btn--menu" id="menuToggle" aria-label="Menu" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ================= HERO + SCROLL-SCRUB ================= -->
+    <section class="hero" id="hero" aria-label="Tepelné čerpadlo — rozložený pohled">
+      <div class="hero__stage" id="heroStage">
+
+        <!-- Levý sloupec: nadpis + lede + CTA -->
+        <div class="hero__copy" id="heroCopy">
+          <h1 class="hero__title">Tepelná čerpadla,<br>klimatizace<br>a&nbsp;servis</h1>
+          <p class="hero__lede">Montáž a servis v Praze a okolí.</p>
+          <div class="cta-row">
+            <a class="btn btn--primary btn--lg" href="tel:+420603479240">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.3 15.3 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.37 2.3.57 3.5.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.57 3.5a1 1 0 0 1-.25 1z"/></svg>
+              Zavolat
+            </a>
+            <a class="btn btn--ghost btn--lg" href="mailto:dusekmilan@volny.cz">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.4 2L12 12l7.6-5z"/></svg>
+              Napsat e-mail
+            </a>
+          </div>
+        </div>
+
+        <!-- Pravý sloupec: animace čerpadla -->
+        <div class="hero__viz" id="heroViz">
+          <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+
+          <video class="hero__fallback" id="heroFallback" playsinline muted loop preload="none"
+                 poster="/images/heat-pump-fallback.jpg" aria-hidden="true">
+            <source src="/videos/heat-pump-exploded.mp4" type="video/mp4" />
+          </video>
+
+          <div class="annotations" id="annotations" aria-hidden="true">
+            <span class="anno anno--1" data-at="0.30"><i></i>Ventilátor</span>
+            <span class="anno anno--2" data-at="0.48"><i></i>Výměník</span>
+            <span class="anno anno--3" data-at="0.66"><i></i>Kompresor</span>
+            <span class="anno anno--4" data-at="0.84"><i></i>Hydraulický modul</span>
+          </div>
+
+          <div class="hero__loader" id="heroLoader"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VÝROBCI (marquee banner) ================= -->
+    <section class="brands" aria-label="Výrobci, se kterými spolupracuji">
+      <p class="brands__label">Spolupráce s ověřenými výrobci</p>
+      <div class="marquee">
+        <div class="marquee__track">
+          <!-- skupina A -->
+          <span class="marquee__item"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="Protherm" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="Vaillant" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" aria-hidden="true" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" aria-hidden="true" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" aria-hidden="true" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" aria-hidden="true" loading="lazy" decoding="async" /></span>
+          <!-- skupina B (identická kopie pro plynulou smyčku) -->
+          <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" loading="lazy" decoding="async" /></span>
+          <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" loading="lazy" decoding="async" /></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLUŽBY ================= -->
+    <section class="section" id="sluzby">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker">01 — Služby</p>
+          <h2>Co pro vás zajistím</h2>
+          <p class="section__sub">Od prvního návrhu po servis. Osobně, bez prostředníků.</p>
+        </header>
+
+        <div class="grid grid--services">
+          <article class="card reveal">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32"><rect x="5" y="7" width="22" height="18" rx="3"/><circle cx="13" cy="16" r="5"/><path d="M20 12h3M20 16h3M20 20h3"/></svg>
+            </span>
+            <p class="card__tag">Vzduch–voda</p>
+            <h3>Tepelná čerpadla</h3>
+            <p>Návrh a montáž na míru — výkon podle domu, napojení na stávající soustavu.</p>
+          </article>
+
+          <article class="card reveal">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32"><path d="M16 4v24M16 4l-4 4M16 4l4 4M16 28l-4-4M16 28l4-4"/><path d="M5.6 10 26.4 22M5.6 10l5.5.4M5.6 10 6 4.5M26.4 22l-5.5-.4M26.4 22 26 27.5"/><path d="M26.4 10 5.6 22M26.4 10l-5.5.4M26.4 10 26 4.5M5.6 22l5.5-.4M5.6 22 6 27.5"/></svg>
+            </span>
+            <p class="card__tag">Chlazení i přitápění</p>
+            <h3>Klimatizace</h3>
+            <p>Instalace pro byty i domy. Chlazení v létě, přitápění v přechodném období.</p>
+          </article>
+
+          <article class="card reveal">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32"><path d="M16 4c4 4 5 7 3 10-1.5 2.2-1 4 .5 5.5C21 22 22 20 22 17c3 3 4 6 2.5 9.2C23 29 19.8 30 16 30s-7-1-8.5-3.8C6 23 7 20 10 17c0 2 .4 3.4 1.5 4.5C13 20 13.5 18 12 16c-2-3-1-7 4-12z"/></svg>
+            </span>
+            <p class="card__tag">Kondenzační kotle</p>
+            <h3>Plynové kotle</h3>
+            <p>Výměna a montáž kondenzačních kotlů včetně uvedení do provozu.</p>
+          </article>
+
+          <article class="card reveal">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32"><path d="M21.5 6.5a5 5 0 0 0-6.4 6.4L6 22l4 4 9.1-9.1a5 5 0 0 0 6.4-6.4l-3 3-3-3z"/></svg>
+            </span>
+            <p class="card__tag">Pravidelná péče</p>
+            <h3>Servis a revize</h3>
+            <p>Čištění, revize a řešení poruch — i přípravu na topnou sezónu.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= JAK TO PROBÍHÁ ================= -->
+    <section class="section section--soft" id="postup">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker">02 — Postup</p>
+          <h2>Jak to probíhá</h2>
+          <p class="section__sub">Od první domluvy po dlouhodobý servis ve čtyřech krocích.</p>
+        </header>
+
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="step__num">01</span>
+            <h3>Konzultace</h3>
+            <p>Projdeme dům a potřeby. Nezávazně.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num">02</span>
+            <h3>Návrh řešení</h3>
+            <p>Technologie a výkon na míru, orientační cena.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num">03</span>
+            <h3>Montáž</h3>
+            <p>Odborná montáž a zprovoznění.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__num">04</span>
+            <h3>Servis</h3>
+            <p>Pravidelný servis a revize i po montáži.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= PROČ LOKÁLNÍ TECHNIK ================= -->
+    <section class="section" id="proc">
+      <div class="container">
+        <div class="why">
+          <header class="section__head section__head--left reveal">
+            <p class="kicker">03 — Proč já</p>
+            <h2>Jeden člověk, který za svou prací stojí</h2>
+            <p class="section__sub">Žádné call centrum, žádný řetězec.</p>
+            <a class="btn btn--primary btn--lg why__cta" href="tel:+420603479240">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.3 15.3 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.37 2.3.57 3.5.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.57 3.5a1 1 0 0 1-.25 1z"/></svg>
+              Zavolat
+            </a>
+          </header>
+
+          <ul class="reasons">
+            <li class="reason reveal">
+              <span class="reason__mark" aria-hidden="true">›</span>
+              <h3>Osobní přístup</h3>
+              <p>Jednáte přímo se mnou, ne s operátorem.</p>
+            </li>
+            <li class="reason reveal">
+              <span class="reason__mark" aria-hidden="true">›</span>
+              <h3>Rychlá domluva</h3>
+              <p>Termín i poruchu vyřešíme bez zbytečné byrokracie.</p>
+            </li>
+            <li class="reason reveal">
+              <span class="reason__mark" aria-hidden="true">›</span>
+              <h3>Praha a okolí</h3>
+              <p>Jsem blízko — i když je potřeba přijet rychle.</p>
+            </li>
+            <li class="reason reveal">
+              <span class="reason__mark" aria-hidden="true">›</span>
+              <h3>Servis po montáži</h3>
+              <p>Po montáži nezmizím — zařízení dál servisuji.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= KONTAKT ================= -->
+    <section class="section" id="kontakt">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker">04 — Kontakt</p>
+          <h2>Kde mě najdete</h2>
+          <p class="section__sub">Nejrychleji telefonicky.</p>
+        </header>
+
+        <div class="contact">
+          <div class="contact__card reveal">
+            <p class="contact__name">Milan Dušek</p>
+
+            <a class="contact__row contact__row--primary" href="tel:+420603479240">
+              <span class="contact__label">Telefon</span>
+              <span class="contact__value">+420 603 479 240</span>
+            </a>
+            <a class="contact__row" href="mailto:dusekmilan@volny.cz">
+              <span class="contact__label">E-mail</span>
+              <span class="contact__value">dusekmilan@volny.cz</span>
+            </a>
+            <div class="contact__row">
+              <span class="contact__label">Sídlo</span>
+              <span class="contact__value">Severovýchodní VI. 1525/29<br />141 00 Praha 4</span>
+            </div>
+            <div class="contact__row">
+              <span class="contact__label">IČO</span>
+              <span class="contact__value mono">67267092</span>
+            </div>
+
+            <div class="cta-row contact__cta">
+              <a class="btn btn--primary" href="tel:+420603479240">Zavolat</a>
+              <a class="btn btn--ghost" href="mailto:dusekmilan@volny.cz">Napsat e-mail</a>
+            </div>
+          </div>
+
+          <div class="contact__map reveal">
+            <iframe
+              title="Mapa — Severovýchodní VI. 1525/29, 141 00 Praha 4"
+              src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2200!2d14.4800329!3d50.0459988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1scs!2scz!4v1700000000000!5m2!1scs!2scz"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+              loading="lazy"></iframe>
+            <span class="contact__pin" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#fff"/></svg>
+            </span>
+            <a class="contact__map-link" target="_blank" rel="noopener"
+               href="https://www.google.com/maps/search/?api=1&query=Severov%C3%BDchodn%C3%AD%20VI.%201525%2F29%2C%20141%2000%20Praha%204">
+              Otevřít v Google&nbsp;Mapách ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="brand__mark" aria-hidden="true">MD</span>
+        <div>
+          <p class="footer__name">Milan Dušek</p>
+          <p class="footer__role">Tepelná čerpadla · klimatizace · servis topení — Praha a okolí</p>
+        </div>
+      </div>
+      <div class="footer__contact">
+        <a href="tel:+420603479240">+420 603 479 240</a>
+        <a href="mailto:dusekmilan@volny.cz">dusekmilan@volny.cz</a>
+        <span class="mono">IČO 67267092</span>
+      </div>
+    </div>
+    <div class="container footer__legal">
+      <span>© <span id="year">2026</span> Milan Dušek</span>
+      <span>Severovýchodní VI. 1525/29, 141 00 Praha 4</span>
+    </div>
+  </footer>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+/* =========================================================================
+   Milan Dušek — landing page
+   - sticky bar stav
+   - reveal animace (IntersectionObserver)
+   - scroll-scrub tepelného čerpadla (obrázková sekvence na canvasu + GSAP)
+   - fallback pro mobil / reduced-motion (autoplay loop video)
+   ========================================================================= */
+(function () {
+  'use strict';
+
+  var doc = document;
+  var html = doc.documentElement;
+
+  /* ---- rok v patičce ---- */
+  var yearEl = doc.getElementById('year');
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  /* ---- sticky topbar stav ---- */
+  var topbar = doc.getElementById('topbar');
+  function onScrollTop() {
+    if (!topbar) return;
+    topbar.classList.toggle('is-stuck', window.scrollY > 8);
+  }
+  onScrollTop();
+  window.addEventListener('scroll', onScrollTop, { passive: true });
+
+  /* ---- mobile menu toggle ---- */
+  var menuToggle = doc.getElementById('menuToggle');
+  var topnav = doc.querySelector('.topnav');
+  if (menuToggle && topnav) {
+    menuToggle.addEventListener('click', function () {
+      var isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', !isOpen);
+      topnav.classList.toggle('is-open', !isOpen);
+    });
+    // Close menu on nav link click
+    var navLinks = topnav.querySelectorAll('a');
+    navLinks.forEach(function (link) {
+      link.addEventListener('click', function () {
+        menuToggle.setAttribute('aria-expanded', 'false');
+        topnav.classList.remove('is-open');
+      });
+    });
+  }
+
+  /* ---- reveal animace ---- */
+  var revealEls = Array.prototype.slice.call(doc.querySelectorAll('.reveal'));
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (revealEls.length) {
+    if (prefersReduced || !('IntersectionObserver' in window)) {
+      revealEls.forEach(function (el) { el.classList.add('is-in'); });
+    } else {
+      // Mobile-friendly: reduce aggressive bottom margin on small viewports
+      var isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+      var rootMargin = isSmallScreen ? '0px 0px -5% 0px' : '0px 0px -10% 0px';
+      var threshold = isSmallScreen ? 0.08 : 0.12;
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        });
+      }, { rootMargin: rootMargin, threshold: threshold });
+      revealEls.forEach(function (el) { io.observe(el); });
+    }
+  }
+
+  /* =======================================================================
+     HERO – scroll-scrub vs fallback
+     ======================================================================= */
+  var canvas = doc.getElementById('heroCanvas');
+  var loader = doc.getElementById('heroLoader');
+  var fallback = doc.getElementById('heroFallback');
+  var heroCopy = doc.getElementById('heroCopy');
+  var heroHint = doc.getElementById('heroHint');
+  var annoBox = doc.getElementById('annotations');
+  var annoEls = Array.prototype.slice.call(doc.querySelectorAll('.anno'));
+
+  var smallScreen = window.matchMedia('(max-width: 860px)').matches;
+  var gsapReady = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+
+  // Fallback režim: bez canvas scrubu, místo toho autoplay/loop video
+  function enterFallbackMode() {
+    html.classList.add('no-scrub');
+    if (fallback) {
+      fallback.setAttribute('preload', 'auto');
+      // autoplay až po interakci/načtení; muted+playsinline je v markupu
+      var tryPlay = function () {
+        var p = fallback.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {/* uživatel spustí sám */});
+      };
+      if (fallback.readyState >= 2) tryPlay();
+      else fallback.addEventListener('loadeddata', tryPlay, { once: true });
+      fallback.load();
+    }
+  }
+
+  if (!canvas || prefersReduced || smallScreen || !gsapReady) {
+    enterFallbackMode();
+    return;
+  }
+
+  /* ---------- Image sequence scrub (desktop) ---------- */
+  var ctx = canvas.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var frames = [];
+  var total = 0;
+  var current = 0;
+  var ready = false;
+
+  function pad(n, len) {
+    var s = String(n);
+    while (s.length < len) s = '0' + s;
+    return s;
+  }
+
+  function nearestLoaded(i) {
+    var img = frames[i];
+    if (img && img.complete && img.naturalWidth > 0) return img;
+    for (var d = 1; d < total; d++) {
+      var a = frames[i - d], b = frames[i + d];
+      if (a && a.complete && a.naturalWidth > 0) return a;
+      if (b && b.complete && b.naturalWidth > 0) return b;
+    }
+    return null;
+  }
+
+  var RATIO = 16 / 9;        // poměr snímků (1280×720)
+
+  function resizeCanvas() {
+    var box = canvas.parentElement.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    // Width-constrained to the right column — natural 16:9, product with breathing room.
+    var w = Math.min(box.width, window.innerWidth * 0.95, 1680);
+    var h = w / RATIO;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.style.width = Math.round(w) + 'px';
+    canvas.style.height = Math.round(h) + 'px';
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    if (annoBox) { annoBox.style.width = Math.round(w) + 'px'; annoBox.style.height = Math.round(h) + 'px'; }
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    drawFrame(current);
+  }
+
+  function drawFrame(i) {
+    var img = nearestLoaded(i);
+    if (!img) return;
+    current = i;
+    var cw = canvas.width, ch = canvas.height;
+    ctx.clearRect(0, 0, cw, ch);
+    // cover – canvas má stejný poměr jako snímek, takže vyplní beze zbytku
+    var ir = img.naturalWidth / img.naturalHeight;
+    var cr = cw / ch;
+    var dw, dh;
+    if (cr > ir) { dw = cw; dh = cw / ir; } else { dh = ch; dw = ch * ir; }
+    ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+  }
+
+  function setupScrollTrigger() {
+    if (ready) return;
+    ready = true;
+    window.gsap.registerPlugin(window.ScrollTrigger);
+
+    window.ScrollTrigger.create({
+      trigger: '.hero',
+      start: 'top top',
+      end: function () { return '+=' + Math.round(window.innerHeight * 2.2); },
+      pin: '.hero__stage',
+      pinSpacing: true,
+      scrub: 0.5,
+      invalidateOnRefresh: true,
+      onUpdate: function (self) {
+        var p = self.progress;
+        var idx = Math.min(total - 1, Math.max(0, Math.round(p * (total - 1))));
+        if (idx !== current) drawFrame(idx);
+
+        // text fades out and slides left as scroll begins
+        if (heroCopy) {
+          var fade = Math.max(0, 1 - p / 0.35);
+          heroCopy.style.opacity = fade.toFixed(3);
+          heroCopy.style.transform = 'translateX(' + (-60 * (1 - fade)).toFixed(1) + 'px)';
+        }
+        if (heroHint) heroHint.style.opacity = p > 0.04 ? '0' : '1';
+
+        // canvas + annotations drift left together as product expands into focus.
+        // Drift scales with viewport width (capped) so it never leaves the frame on narrow views.
+        if (canvas) {
+          var maxShift = Math.min(window.innerWidth * 0.18, 300);
+          var shift = -maxShift * Math.min(p / 0.6, 1);
+          var t = 'translate(calc(-50% + ' + shift.toFixed(1) + 'px), -50%)';
+          canvas.style.transform = t;
+          if (annoBox) annoBox.style.transform = t;
+        }
+
+        // anotace součástek
+        for (var k = 0; k < annoEls.length; k++) {
+          var at = parseFloat(annoEls[k].getAttribute('data-at')) || 1;
+          annoEls[k].classList.toggle('is-on', p >= at && p < 0.99);
+        }
+      }
+    });
+
+    window.ScrollTrigger.refresh();
+  }
+
+  // Načtení manifestu a přednačtení snímků
+  fetch('/images/sequence/manifest.json', { cache: 'force-cache' })
+    .then(function (r) {
+      if (!r.ok) throw new Error('manifest ' + r.status);
+      return r.json();
+    })
+    .then(function (m) {
+      total = m.count;
+      var padLen = m.pad || 4;
+      var loadedCount = 0;
+      var firstDrawn = false;
+
+      for (var i = 0; i < total; i++) {
+        (function (i) {
+          var img = new Image();
+          img.decoding = 'async';
+          img.onload = function () {
+            loadedCount++;
+            if (!firstDrawn && i === 0) {
+              firstDrawn = true;
+              if (loader) loader.classList.add('is-hidden');
+              resizeCanvas();
+              setupScrollTrigger();
+            }
+            // jakmile je hotová většina, pro jistotu refresh měření
+            if (loadedCount === total && window.ScrollTrigger) window.ScrollTrigger.refresh();
+          };
+          img.onerror = function () { loadedCount++; };
+          img.src = '/images/sequence/heat-pump-' + pad(i + 1, padLen) + '.jpg';
+          frames[i] = img;
+        })(i);
+      }
+
+      // pojistka: kdyby se první snímek z cache načetl okamžitě
+      window.setTimeout(function () {
+        if (!firstDrawn && nearestLoaded(0)) {
+          firstDrawn = true;
+          if (loader) loader.classList.add('is-hidden');
+          resizeCanvas();
+          setupScrollTrigger();
+        }
+      }, 400);
+    })
+    .catch(function () {
+      // Když cokoli selže, spadni elegantně do fallbacku
+      enterFallbackMode();
+    });
+
+  /* ---- resize ---- */
+  var rt;
+  window.addEventListener('resize', function () {
+    window.clearTimeout(rt);
+    rt = window.setTimeout(function () {
+      resizeCanvas();
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    }, 160);
+  });
+})();
