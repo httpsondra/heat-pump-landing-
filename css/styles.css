@@ -536,41 +536,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .cta-band .btn--primary { background: #fff; color: var(--ink); }
 
 /* =========================================================================
-   Závěrečné CTA (closer) – velký wordmark nad patičkou
-   ========================================================================= */
-.closer { padding: clamp(40px, 7vh, 88px) 0; }
-.closer__card {
-  position: relative; overflow: hidden;
-  margin-inline: var(--pad);
-  border-radius: var(--r-lg);
-  text-align: center;
-  background:
-    linear-gradient(180deg, #eaf3f6 0%, rgba(234,243,246,.55) 38%, rgba(234,243,246,0) 62%),
-    url(/images/heat-pump-fallback.jpg) center 64% / cover no-repeat;
-}
-.closer__inner {
-  position: relative; z-index: 2;
-  padding: clamp(56px, 10vh, 120px) var(--pad) clamp(180px, 26vh, 300px);
-}
-.closer .kicker { color: var(--accent-dark); }
-.closer__title { font-size: clamp(2rem, 4.6vw, 3.4rem); letter-spacing: -.04em; }
-.closer__title .muted { color: var(--ink-soft); }
-.closer__lede {
-  margin: 1rem auto 0; max-width: 46ch;
-  color: var(--ink-2); font-size: clamp(1rem, 1.2vw, 1.12rem);
-}
-.closer .btn { margin-top: 1.8rem; }
-.closer__wordmark {
-  position: absolute; left: 50%; bottom: clamp(-1.4rem, -1vw, -.6rem);
-  transform: translateX(-50%);
-  z-index: 1; pointer-events: none; user-select: none;
-  font-weight: 700; letter-spacing: -.04em; line-height: .8;
-  font-size: clamp(4rem, 20vw, 16rem);
-  color: rgba(255,255,255,.22);
-  white-space: nowrap;
-}
-
-/* =========================================================================
    Kontakt
    ========================================================================= */
 .contact { display: grid; grid-template-columns: 1fr .9fr; gap: clamp(20px, 3vw, 40px); align-items: stretch; }
