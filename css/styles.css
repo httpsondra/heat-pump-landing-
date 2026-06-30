@@ -31,13 +31,14 @@
   --maxw: 1180px;
   --pad: clamp(20px, 5vw, 48px);
 
-  /* Stíny */
-  --shadow-sm: 0 1px 3px rgba(16, 22, 26, .06), 0 4px 16px rgba(16, 22, 26, .07);
-  --shadow-md: 0 2px 8px rgba(16, 22, 26, .06), 0 20px 48px rgba(16, 22, 26, .11);
-  --shadow-lg: 0 4px 16px rgba(16, 22, 26, .07), 0 32px 72px rgba(16, 22, 26, .14);
+  /* Stíny — měkké, vrstvené, nízká sytost (prémiový, difúzní dojem) */
+  --shadow-sm: 0 1px 2px rgba(16, 22, 26, .04), 0 3px 10px rgba(16, 22, 26, .045);
+  --shadow-md: 0 2px 6px rgba(16, 22, 26, .04), 0 14px 34px rgba(16, 22, 26, .07);
+  --shadow-lg: 0 4px 14px rgba(16, 22, 26, .05), 0 28px 60px rgba(16, 22, 26, .10);
 
-  /* Easing — silný ease-out pro vstupy a interakce */
+  /* Easing — rafinované křivky pro klidný, záměrný pohyb */
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);     /* silný, ale měkký dojezd */
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
@@ -73,8 +74,8 @@ body {
 
 img, svg, canvas, video, iframe { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
-h1, h2, h3 { margin: 0; line-height: 1.06; letter-spacing: -.03em; font-weight: 700; text-wrap: balance; }
-p { margin: 0; }
+h1, h2, h3 { margin: 0; line-height: 1.08; letter-spacing: -.03em; font-weight: 700; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
 ul, ol { margin: 0; padding: 0; list-style: none; }
 
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
@@ -91,9 +92,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   font: inherit; font-weight: 600; font-size: .95rem; letter-spacing: -.015em;
   cursor: pointer; white-space: nowrap;
   touch-action: manipulation; -webkit-tap-highlight-color: transparent;
-  transition: background 160ms var(--ease), border-color 160ms var(--ease),
-              box-shadow 160ms var(--ease), color 160ms var(--ease),
-              transform 160ms var(--ease);
+  transition: background 220ms var(--ease-out), border-color 220ms var(--ease-out),
+              box-shadow 280ms var(--ease-out), color 220ms var(--ease-out),
+              transform 240ms var(--ease-out);
 }
 .btn .icon { width: 1.1em; height: 1.1em; flex-shrink: 0; }
 /* active press — tactile scale feedback */
@@ -117,8 +118,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* Hover gated — never fires on touch devices */
 @media (hover: hover) and (pointer: fine) {
-  .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-  .btn:active { transform: scale(0.97); box-shadow: none; }
+  .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .btn:active { transform: scale(0.97); box-shadow: none; transition-duration: 80ms; }
   .btn--primary:hover { background: #1a1f24; }
   .btn--phone:hover { border-color: var(--ink-2); }
   .btn--ghost:hover { border-color: var(--ink-2); }
@@ -137,18 +138,19 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   backdrop-filter: saturate(1.4) blur(12px);
   -webkit-backdrop-filter: saturate(1.4) blur(12px);
   border-bottom: 1px solid transparent;
-  transition: border-color .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+  transition: border-color .4s var(--ease-out), box-shadow .4s var(--ease-out), background .4s var(--ease-out);
 }
 .topbar.is-stuck {
+  background: rgba(255, 255, 255, .9);
   border-bottom-color: var(--line);
-  box-shadow: 0 1px 0 rgba(16,22,26,.02), 0 8px 24px rgba(16,22,26,.05);
+  box-shadow: 0 1px 0 rgba(16,22,26,.02), 0 10px 30px rgba(16,22,26,.045);
 }
 .topbar__inner {
   display: flex; align-items: center; gap: 1.5rem;
-  min-height: 68px;
+  min-height: 72px;
 }
-.topbar.is-stuck .topbar__inner { min-height: 60px; }
-.topbar__inner { transition: min-height .25s var(--ease); }
+.topbar.is-stuck .topbar__inner { min-height: 62px; }
+.topbar__inner { transition: min-height .4s var(--ease-out); }
 
 .brand { display: flex; align-items: baseline; gap: .55rem; margin-right: auto; }
 .brand__mark {
@@ -305,30 +307,30 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   min-height: 100svh; height: 100svh;
   overflow: hidden;
   display: grid;
-  grid-template-columns: 38fr 62fr;
+  grid-template-columns: 35fr 65fr;
   grid-template-rows: 1fr;
   padding: 0;
-  background: radial-gradient(110% 90% at 70% 52%, #ffffff 0%, rgba(255,255,255,0) 58%);
+  background: radial-gradient(120% 100% at 72% 50%, #ffffff 0%, rgba(255,255,255,0) 60%);
 }
 
-/* Levý sloupec: text posunutý mírně dolů od středu */
+/* Levý sloupec: text v dolním optickém středu (záměrně mimo geometrický střed) */
 .hero__copy {
   display: flex; flex-direction: column; justify-content: center;
-  padding: clamp(24px, 3vh, 40px) clamp(16px, 2vw, 32px) clamp(56px, 9vh, 100px) var(--pad);
+  padding: clamp(24px, 8vh, 96px) clamp(20px, 2.4vw, 40px) clamp(64px, 12vh, 124px) var(--pad);
   position: relative; z-index: 2;
   will-change: opacity, transform;
 }
 .hero__title {
-  font-size: clamp(2.3rem, 4.4vw, 4.2rem);
+  font-size: clamp(2.3rem, 4.3vw, 4rem);
   font-weight: 700;
-  letter-spacing: -.048em; line-height: 0.95;
+  letter-spacing: -.045em; line-height: 1.0;
   text-align: left;
 }
 .hero__lede {
-  font-size: clamp(1rem, 1.2vw, 1.12rem); color: var(--ink-2);
-  margin: 1.1rem 0 0; text-align: left; line-height: 1.5;
+  font-size: clamp(1.02rem, 1.2vw, 1.14rem); color: var(--ink-2);
+  margin: 1.35rem 0 0; text-align: left; line-height: 1.55; max-width: 32ch;
 }
-.hero__copy .cta-row { justify-content: flex-start; margin-top: 1.6rem; }
+.hero__copy .cta-row { justify-content: flex-start; margin-top: 2rem; }
 
 /* Pravý sloupec: animace dominuje, přetéká přes okraj */
 .hero__viz {
@@ -396,11 +398,12 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
    Výrobci – minimalistický nekonečný marquee banner
    (Milan Dušek zůstává hlavní značkou; loga monochromní a tlumená)
    ========================================================================= */
-.brands { padding: clamp(40px, 7vh, 88px) 0; background: var(--bg); }
+/* Pozadí navazuje na spodní tón hero gradientu a rozpustí se do bílé — plynulý přechod z animace */
+.brands { padding: clamp(48px, 8vh, 104px) 0 clamp(40px, 7vh, 88px); background: linear-gradient(180deg, #edeff1 0%, #ffffff 42%); }
 .brands__label {
   text-align: center;
   font-family: var(--mono);
-  font-size: .8rem; letter-spacing: .14em; text-transform: uppercase;
+  font-size: .78rem; letter-spacing: .16em; text-transform: uppercase;
   color: var(--ink-soft);
   margin-bottom: clamp(40px, 6vh, 72px);
 }
@@ -445,16 +448,22 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .section { padding: clamp(64px, 10vh, 128px) 0; }
 .section--soft { background: var(--bg-soft); }
 
+/* Záměrně nepravidelný vertikální rytmus — některé sekce dýchají víc, jiné jsou sevřenější */
+#sluzby  { padding-block: clamp(64px, 10vh, 132px) clamp(60px, 9vh, 116px); }
+#postup  { padding-block: clamp(56px, 8vh, 104px); }
+#proc    { padding-block: clamp(80px, 13vh, 168px); }
+#kontakt { padding-block: clamp(56px, 8vh, 104px) clamp(48px, 7vh, 92px); }
+
 .section__head { max-width: 720px; margin: 0 auto clamp(48px, 7vh, 88px); text-align: center; }
 .section__head--left { text-align: left; margin-inline: 0; }
 .kicker {
-  font-family: var(--mono); font-size: .74rem; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--accent-deep); margin-bottom: .9rem;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--accent-deep); margin-bottom: 1.05rem;
 }
-.kicker::before { content: "\25C9"; margin-right: .5em; }
+.kicker::before { content: "\25C9"; margin-right: .55em; opacity: .85; }
 .section__head h2 { font-size: clamp(1.8rem, 3.6vw, 2.8rem); letter-spacing: -.035em; }
 .section__head h2 .muted { color: var(--ink-soft); }
-.section__sub { margin-top: .85rem; color: var(--ink-2); font-size: clamp(.98rem, 1.2vw, 1.08rem); }
+.section__sub { margin-top: .9rem; color: var(--ink-2); font-size: clamp(.98rem, 1.2vw, 1.08rem); line-height: 1.6; max-width: 46ch; }
 
 /* Asymmetrický editorial header: nadpis vlevo, doprovodný text vpravo dole */
 .section__head--split {
@@ -472,34 +481,34 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .card {
   position: relative;
   background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
-  padding: clamp(16px, 1.6vw, 22px);
-  display: flex; flex-direction: column; gap: .35rem;
-  transition: transform 200ms var(--ease), box-shadow 200ms var(--ease), border-color 200ms var(--ease);
+  padding: clamp(22px, 2vw, 30px) clamp(20px, 1.8vw, 26px) clamp(24px, 2.2vw, 30px);
+  display: flex; flex-direction: column; gap: .4rem;
+  transition: transform 320ms var(--ease-out), box-shadow 320ms var(--ease-out), border-color 320ms var(--ease-out);
 }
 .card__num {
-  position: absolute; top: clamp(12px, 1.4vw, 18px); right: clamp(14px, 1.6vw, 20px);
-  font-family: var(--mono); font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 500;
-  color: var(--line-strong); letter-spacing: -.02em; line-height: 1;
-  transition: color 200ms var(--ease);
+  position: absolute; top: clamp(16px, 1.8vw, 22px); right: clamp(18px, 1.8vw, 24px);
+  font-family: var(--mono); font-size: clamp(1.5rem, 2.8vw, 2.2rem); font-weight: 500;
+  color: var(--line); letter-spacing: -.02em; line-height: 1;
+  transition: color 320ms var(--ease-out);
 }
 .card__icon {
-  width: 40px; height: 40px; border-radius: 10px; margin-bottom: .4rem;
+  width: 42px; height: 42px; border-radius: 11px; margin-bottom: .7rem;
   display: grid; place-items: center;
   background: var(--accent-soft); color: var(--accent-dark);
-  transition: background 200ms var(--ease);
+  transition: background 320ms var(--ease-out), transform 320ms var(--ease-out);
 }
 .card__icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.card__tag { font-family: var(--mono); font-size: .67rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: .05rem; }
-.card h3 { font-size: 1.12rem; letter-spacing: -.025em; font-weight: 700; }
-.card p { color: var(--ink-soft); font-size: .93rem; line-height: 1.55; }
+.card__tag { font-family: var(--mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: .1rem; }
+.card h3 { font-size: 1.14rem; letter-spacing: -.02em; font-weight: 700; }
+.card p { color: var(--ink-soft); font-size: .93rem; line-height: 1.6; margin-top: .15rem; }
 
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-md);
     border-color: var(--line-strong);
   }
-  .card:hover .card__icon { background: #d1eeeb; }
+  .card:hover .card__icon { background: #d1eeeb; transform: scale(1.06); }
   .card:hover .card__num { color: var(--accent); }
 }
 
@@ -543,17 +552,17 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .why__cta { margin-top: 1.6rem; }
 .reasons { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(18px, 2.2vw, 32px); }
 .reason {
-  padding: 1.4rem 1.6rem;
+  padding: 1.5rem 1.7rem;
   background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
-  box-shadow: 0 1px 4px rgba(16,22,26,.04);
-  transition: border-color 180ms var(--ease), box-shadow 180ms var(--ease);
+  box-shadow: 0 1px 4px rgba(16,22,26,.035);
+  transition: border-color 320ms var(--ease-out), box-shadow 320ms var(--ease-out), transform 320ms var(--ease-out);
 }
 .reason__mark { display: none; }
-.reason h3 { font-size: 1.1rem; letter-spacing: -.025em; font-weight: 700; }
-.reason p { color: var(--ink-soft); font-size: .94rem; line-height: 1.54; margin-top: .4rem; }
+.reason h3 { font-size: 1.1rem; letter-spacing: -.02em; font-weight: 700; }
+.reason p { color: var(--ink-soft); font-size: .94rem; line-height: 1.58; margin-top: .45rem; }
 
 @media (hover: hover) and (pointer: fine) {
-  .reason:hover { border-color: var(--line-strong); box-shadow: var(--shadow-sm); }
+  .reason:hover { transform: translateY(-3px); border-color: var(--line-strong); box-shadow: var(--shadow-sm); }
 }
 
 /* =========================================================================
@@ -646,21 +655,28 @@ a.contact__row { transition: color 150ms var(--ease); }
 /* =========================================================================
    Reveal animace
    ========================================================================= */
+/* Základní reveal — klidné nadnesení textu/bloků */
 .reveal {
-  opacity: 0; transform: translateY(10px);
-  transition: opacity .5s var(--ease), transform .5s var(--ease);
+  opacity: 0; transform: translateY(18px);
+  transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
 }
 .reveal.is-in { opacity: 1; transform: none; }
 
+/* Karty — jemné nadnesení + nepatrné zvětšení (jiný charakter než text) */
+.card.reveal:not(.is-in) { transform: translateY(14px) scale(.985); }
+/* Mapa — pouze prolnutí s nepatrným měřítkem, žádný posun */
+.contact__map.reveal { transition-duration: 1s; }
+.contact__map.reveal:not(.is-in) { transform: scale(.99); }
+
 /* stagger for grid/step children — delay applied when element becomes visible */
 .grid--services .card:nth-child(1).is-in { transition-delay: 0ms; }
-.grid--services .card:nth-child(2).is-in { transition-delay: 65ms; }
-.grid--services .card:nth-child(3).is-in { transition-delay: 130ms; }
-.grid--services .card:nth-child(4).is-in { transition-delay: 195ms; }
+.grid--services .card:nth-child(2).is-in { transition-delay: 80ms; }
+.grid--services .card:nth-child(3).is-in { transition-delay: 160ms; }
+.grid--services .card:nth-child(4).is-in { transition-delay: 240ms; }
 .steps .step:nth-child(1).is-in { transition-delay: 0ms; }
-.steps .step:nth-child(2).is-in { transition-delay: 70ms; }
-.steps .step:nth-child(3).is-in { transition-delay: 140ms; }
-.steps .step:nth-child(4).is-in { transition-delay: 210ms; }
+.steps .step:nth-child(2).is-in { transition-delay: 90ms; }
+.steps .step:nth-child(3).is-in { transition-delay: 180ms; }
+.steps .step:nth-child(4).is-in { transition-delay: 270ms; }
 
 /* =========================================================================
    Responsivita
