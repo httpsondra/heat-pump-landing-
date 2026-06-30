@@ -64,6 +64,36 @@
     }
   }
 
+  /* ---- scrollspy: aktivní záložka podle pozice scrollu ---- */
+  var spyLinks = Array.prototype.slice.call(doc.querySelectorAll('.topnav a[href^="#"]'));
+  var spyMap = {};
+  var spySections = [];
+  spyLinks.forEach(function (link) {
+    var id = link.getAttribute('href').slice(1);
+    var sec = doc.getElementById(id);
+    if (sec) { spyMap[id] = link; spySections.push(sec); }
+  });
+  if (spySections.length) {
+    var spyOffset = 140;          // referenční linka pod sticky lištou
+    var activeSpyId = null;
+    var setActive = function (id) {
+      if (id === activeSpyId) return;
+      activeSpyId = id;
+      spyLinks.forEach(function (l) { l.classList.remove('is-active'); l.removeAttribute('aria-current'); });
+      var link = id && spyMap[id];
+      if (link) { link.classList.add('is-active'); link.setAttribute('aria-current', 'true'); }
+    };
+    var updateSpy = function () {
+      var currentId = null;
+      for (var i = 0; i < spySections.length; i++) {
+        if (spySections[i].getBoundingClientRect().top <= spyOffset) currentId = spySections[i].id;
+      }
+      setActive(currentId);
+    };
+    window.addEventListener('scroll', updateSpy, { passive: true });
+    updateSpy();
+  }
+
   /* =======================================================================
      HERO – scroll-scrub vs fallback
      ======================================================================= */
