@@ -165,29 +165,37 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* Segmentovaná „pill" navigace – ohraničená, zaoblená, aktivní záložka světle šedá */
 .topnav {
+  position: relative;
   display: flex; gap: .25rem;
   padding: .28rem;
   background: rgba(255,255,255,.6);
   border: 1px solid var(--line);
   border-radius: 999px;
 }
+/* Klouzavý indikátor – plynule se přesouvá pod aktivní záložku */
+.topnav__indicator {
+  position: absolute; top: .28rem; bottom: .28rem; left: 0; width: 0;
+  border-radius: 999px;
+  background: #eceef1;
+  box-shadow: inset 0 0 0 1px rgba(16,22,26,.04);
+  opacity: 0;
+  transform: translateX(0);
+  transition: transform .5s var(--ease), width .5s var(--ease), opacity .3s var(--ease);
+  pointer-events: none;
+  z-index: 0;
+}
 .topnav a {
+  position: relative; z-index: 1;
   font-size: .88rem; font-weight: 500; color: var(--ink-2);
   letter-spacing: -.01em;
   padding: .5rem .95rem;
   border-radius: 999px;
   white-space: nowrap;
-  transition: background 220ms var(--ease), color 220ms var(--ease), box-shadow 220ms var(--ease);
+  transition: color 300ms var(--ease);
 }
-/* Aktivní záložka (klik i scrollspy) */
-.topnav a.is-active {
-  background: #eceef1;
-  color: var(--ink);
-  box-shadow: inset 0 0 0 1px rgba(16,22,26,.04);
-}
+.topnav a.is-active { color: var(--ink); }
 @media (hover: hover) and (pointer: fine) {
-  .topnav a:hover { color: var(--ink); background: rgba(16,22,26,.05); }
-  .topnav a.is-active:hover { background: #e5e8ec; }
+  .topnav a:hover { color: var(--ink); }
 }
 
 /* Mobile menu dropdown */
@@ -210,6 +218,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   }
   .topnav.is-open { display: flex; animation: slideDown 200ms var(--ease); }
   .topnav a { padding: .8rem .6rem; border-bottom: 1px solid var(--line); border-radius: var(--r-sm); font-size: .95rem; }
+  .topnav__indicator { display: none; }
+  .topnav a.is-active { background: #eceef1; }
 }
 
 /* Desktop menu toggle */
@@ -231,6 +241,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     animation: slideDown 200ms var(--ease);
   }
   .topnav.is-open a { padding: .8rem .6rem; border-bottom: 1px solid var(--line); border-radius: var(--r-sm); }
+  .topnav.is-open .topnav__indicator { display: none; }
+  .topnav.is-open a.is-active { background: #eceef1; }
 }
 
 @keyframes slideDown {

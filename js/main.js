@@ -76,12 +76,24 @@
   if (spySections.length) {
     var spyOffset = 140;          // referenční linka pod sticky lištou
     var activeSpyId = null;
+    var indicator = doc.querySelector('.topnav__indicator');
+    var moveIndicator = function (link) {
+      if (!indicator) return;
+      if (link && link.offsetWidth) {
+        indicator.style.width = link.offsetWidth + 'px';
+        indicator.style.transform = 'translateX(' + link.offsetLeft + 'px)';
+        indicator.style.opacity = '1';
+      } else {
+        indicator.style.opacity = '0';
+      }
+    };
     var setActive = function (id) {
       if (id === activeSpyId) return;
       activeSpyId = id;
       spyLinks.forEach(function (l) { l.classList.remove('is-active'); l.removeAttribute('aria-current'); });
       var link = id && spyMap[id];
       if (link) { link.classList.add('is-active'); link.setAttribute('aria-current', 'true'); }
+      moveIndicator(link);
     };
     var updateSpy = function () {
       var currentId = null;
@@ -91,6 +103,16 @@
       setActive(currentId);
     };
     window.addEventListener('scroll', updateSpy, { passive: true });
+    // Po změně šířky okna přesuň indikátor pod aktivní záložku bez animace
+    window.addEventListener('resize', function () {
+      var link = activeSpyId && spyMap[activeSpyId];
+      if (!indicator || !link) return;
+      var prev = indicator.style.transition;
+      indicator.style.transition = 'none';
+      moveIndicator(link);
+      void indicator.offsetWidth;          // vynucený reflow
+      indicator.style.transition = prev;
+    }, { passive: true });
     updateSpy();
   }
 
