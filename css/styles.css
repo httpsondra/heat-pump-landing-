@@ -591,7 +591,7 @@ a.contact__row { transition: color 150ms var(--ease); }
 @media (hover: hover) and (pointer: fine) {
   .contact__map-link:hover { color: var(--accent-deep); border-color: var(--accent); transform: translateY(-1px); }
 }
-/* Vlastní špendlík uprostřed mapy (pb embed nemá vestavěný marker) */
+/* Špendlík přesně ve středu mapy (pb embed je vycentrovaný na adresu) */
 .contact__pin {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -100%);
   z-index: 2; pointer-events: none; filter: drop-shadow(0 4px 6px rgba(16,22,26,.28));
