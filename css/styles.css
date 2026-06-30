@@ -413,18 +413,36 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   font-family: var(--mono); font-size: .74rem; letter-spacing: .14em; text-transform: uppercase;
   color: var(--accent-deep); margin-bottom: .9rem;
 }
+.kicker::before { content: "\25C9"; margin-right: .5em; }
 .section__head h2 { font-size: clamp(1.8rem, 3.6vw, 2.8rem); letter-spacing: -.035em; }
+.section__head h2 .muted { color: var(--ink-soft); }
 .section__sub { margin-top: .85rem; color: var(--ink-2); font-size: clamp(.98rem, 1.2vw, 1.08rem); }
+
+/* Asymmetrický editorial header: nadpis vlevo, doprovodný text vpravo dole */
+.section__head--split {
+  max-width: none; text-align: left;
+  display: grid; grid-template-columns: 1.3fr .9fr;
+  gap: clamp(24px, 4vw, 72px); align-items: end;
+}
+.section__head--split h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); }
+.section__head--split .section__sub { margin-top: 0; padding-bottom: .4rem; }
 
 /* ---------- Služby ---------- */
 .grid { display: grid; gap: clamp(12px, 1.4vw, 18px); }
 .grid--services { grid-template-columns: repeat(4, 1fr); }
 
 .card {
+  position: relative;
   background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
   padding: clamp(16px, 1.6vw, 22px);
   display: flex; flex-direction: column; gap: .35rem;
   transition: transform 200ms var(--ease), box-shadow 200ms var(--ease), border-color 200ms var(--ease);
+}
+.card__num {
+  position: absolute; top: clamp(12px, 1.4vw, 18px); right: clamp(14px, 1.6vw, 20px);
+  font-family: var(--mono); font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 500;
+  color: var(--line-strong); letter-spacing: -.02em; line-height: 1;
+  transition: color 200ms var(--ease);
 }
 .card__icon {
   width: 40px; height: 40px; border-radius: 10px; margin-bottom: .4rem;
@@ -444,6 +462,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     border-color: var(--line-strong);
   }
   .card:hover .card__icon { background: #d1eeeb; }
+  .card:hover .card__num { color: var(--accent); }
 }
 
 /* ---------- Postup ---------- */
@@ -515,6 +534,41 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .cta-band h2 { font-size: clamp(1.5rem, 2.8vw, 2.1rem); max-width: 18ch; }
 .cta-band p { margin-top: .6rem; color: rgba(255,255,255,.82); max-width: 40ch; }
 .cta-band .btn--primary { background: #fff; color: var(--ink); }
+
+/* =========================================================================
+   Závěrečné CTA (closer) – velký wordmark nad patičkou
+   ========================================================================= */
+.closer { padding: clamp(40px, 7vh, 88px) 0; }
+.closer__card {
+  position: relative; overflow: hidden;
+  margin-inline: var(--pad);
+  border-radius: var(--r-lg);
+  text-align: center;
+  background:
+    linear-gradient(180deg, #eaf3f6 0%, rgba(234,243,246,.55) 38%, rgba(234,243,246,0) 62%),
+    url(/images/heat-pump-fallback.jpg) center 64% / cover no-repeat;
+}
+.closer__inner {
+  position: relative; z-index: 2;
+  padding: clamp(56px, 10vh, 120px) var(--pad) clamp(180px, 26vh, 300px);
+}
+.closer .kicker { color: var(--accent-dark); }
+.closer__title { font-size: clamp(2rem, 4.6vw, 3.4rem); letter-spacing: -.04em; }
+.closer__title .muted { color: var(--ink-soft); }
+.closer__lede {
+  margin: 1rem auto 0; max-width: 46ch;
+  color: var(--ink-2); font-size: clamp(1rem, 1.2vw, 1.12rem);
+}
+.closer .btn { margin-top: 1.8rem; }
+.closer__wordmark {
+  position: absolute; left: 50%; bottom: clamp(-1.4rem, -1vw, -.6rem);
+  transform: translateX(-50%);
+  z-index: 1; pointer-events: none; user-select: none;
+  font-weight: 700; letter-spacing: -.04em; line-height: .8;
+  font-size: clamp(4rem, 20vw, 16rem);
+  color: rgba(255,255,255,.22);
+  white-space: nowrap;
+}
 
 /* =========================================================================
    Kontakt
@@ -615,6 +669,8 @@ a.contact__row { transition: color 150ms var(--ease); }
   .why { grid-template-columns: 1fr; gap: 2.2rem; }
   .contact { grid-template-columns: 1fr; }
   .footer__contact { text-align: left; }
+  .section__head--split { grid-template-columns: 1fr; gap: 1rem; align-items: start; }
+  .section__head--split .section__sub { padding-bottom: 0; }
 }
 
 /* Hero: přechod na jednosloupcový layout na tabletu a mobilu */
