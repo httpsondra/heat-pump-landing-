@@ -345,9 +345,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   letter-spacing: -.045em; line-height: 1.02;
   text-align: center; text-wrap: balance;
 }
-/* Řádky nadpisu se při scrollu postupně „rozsvěcují" z tlumené do plné černi */
-.hero__line { display: block; color: rgba(14,17,19,.38); transition: color .6s var(--ease-out); }
-.hero__line.is-hl { color: var(--ink); }
+/* Nadpis je po načtení plně černý; při scrollu zbledne a pak se řádky postupně rozsvěcují */
+.hero__line { display: block; color: var(--ink); transition: color .6s var(--ease-out); }
+.hero__line.is-pale { color: rgba(14,17,19,.38); }
 .hero__lede {
   font-size: clamp(1.02rem, 1.2vw, 1.14rem); color: var(--ink-2);
   margin: 1.3rem auto 0; text-align: center; line-height: 1.55; max-width: 40ch;
