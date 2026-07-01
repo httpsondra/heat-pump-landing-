@@ -227,20 +227,18 @@
         var idx = Math.min(total - 1, Math.max(0, Math.round(p * (total - 1))));
         if (idx !== current) drawFrame(idx);
 
-        // text fades out and slides left as scroll begins
+        // centrovaný layout: text jemně vyplyne nahoru a zmizí, produkt zůstává uprostřed
         if (heroCopy) {
           var fade = Math.max(0, 1 - p / 0.35);
           heroCopy.style.opacity = fade.toFixed(3);
-          heroCopy.style.transform = 'translateX(' + (-60 * (1 - fade)).toFixed(1) + 'px)';
+          heroCopy.style.transform = 'translate(-50%, calc(-50% - ' + (28 * (1 - fade)).toFixed(1) + 'px))';
         }
         if (heroHint) heroHint.style.opacity = p > 0.04 ? '0' : '1';
 
-        // canvas + annotations drift left together as product expands into focus.
-        // Drift scales with viewport width (capped) so it never leaves the frame on narrow views.
+        // canvas + anotace zůstávají vycentrované, produkt se jemně přiblíží (bez posunu do strany)
         if (canvas) {
-          var maxShift = Math.min(window.innerWidth * 0.18, 300);
-          var shift = -maxShift * Math.min(p / 0.6, 1);
-          var t = 'translate(calc(-50% + ' + shift.toFixed(1) + 'px), -50%)';
+          var sc = 1 + 0.06 * Math.min(p / 0.6, 1);
+          var t = 'translate(-50%, -50%) scale(' + sc.toFixed(4) + ')';
           canvas.style.transform = t;
           if (annoBox) annoBox.style.transform = t;
         }

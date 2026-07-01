@@ -302,47 +302,54 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .hero { position: relative; background: linear-gradient(180deg, #ffffff 0%, #f5f6f8 58%, #edeff1 100%); }
 
 /* Hero: dvousloupcový layout — text vlevo, animace vpravo */
+/* Centrovaná vrstvená kompozice: produkt uprostřed, text v překryvu dolního středu */
 .hero__stage {
   position: relative;
   min-height: 100svh; height: 100svh;
   overflow: hidden;
-  display: grid;
-  grid-template-columns: 35fr 65fr;
-  grid-template-rows: 1fr;
+  display: block;
   padding: 0;
-  background: radial-gradient(120% 100% at 72% 50%, #ffffff 0%, rgba(255,255,255,0) 60%);
+  background: radial-gradient(58% 46% at 50% 60%, #ffffff 0%, rgba(255,255,255,0) 72%);
 }
 
-/* Levý sloupec: text v dolním optickém středu (záměrně mimo geometrický střed) */
+/* Produkt vyplňuje celé pódium a je vycentrovaný */
+.hero__viz {
+  position: absolute; inset: 0;
+  overflow: hidden;
+}
+/* Canvas má přesný poměr 16:9 (rozměr nastavuje JS); maska feathruje skutečné
+   hrany snímku – studiové pozadí se rozpustí do stránky, žádný rám. */
+.hero__canvas {
+  position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+}
+
+/* Text: vycentrovaný překryv v dolní části produktu (vrstvení / hloubka) */
 .hero__copy {
-  display: flex; flex-direction: column; justify-content: center;
-  padding: clamp(24px, 8vh, 96px) clamp(20px, 2.4vw, 40px) clamp(64px, 12vh, 124px) var(--pad);
-  position: relative; z-index: 2;
+  position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%);
+  z-index: 3;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  width: min(92%, 800px);
+  padding: 0 var(--pad);
   will-change: opacity, transform;
 }
+/* Měkká světelná svatozář za textem — čitelnost přes produkt, žádný tvrdý rám */
+.hero__copy::before {
+  content: ''; position: absolute; z-index: -1; inset: -14% -10%;
+  background: radial-gradient(58% 62% at 50% 50%, rgba(255,255,255,.92) 0%, rgba(255,255,255,.62) 44%, rgba(255,255,255,0) 74%);
+  pointer-events: none;
+}
 .hero__title {
-  font-size: clamp(2.3rem, 4.3vw, 4rem);
+  font-size: clamp(2.3rem, 4.8vw, 4.2rem);
   font-weight: 700;
   letter-spacing: -.045em; line-height: 1.0;
-  text-align: left;
+  text-align: center; text-wrap: balance;
 }
 .hero__lede {
   font-size: clamp(1.02rem, 1.2vw, 1.14rem); color: var(--ink-2);
-  margin: 1.35rem 0 0; text-align: left; line-height: 1.55; max-width: 32ch;
+  margin: 1.3rem auto 0; text-align: center; line-height: 1.55; max-width: 40ch;
 }
-.hero__copy .cta-row { justify-content: flex-start; margin-top: 2rem; }
-
-/* Pravý sloupec: animace dominuje, přetéká přes okraj */
-.hero__viz {
-  position: relative;
-  overflow: visible; /* canvas přetéká mírně doleva i doprava */
-  min-height: 0;
-}
-/* Canvas má přesný poměr 16:9 (rozměr nastavuje JS), takže maska feathruje
-   skutečné hrany snímku – studiové pozadí se rozpustí do stránky, žádný rám. */
-.hero__canvas {
-  position: absolute; top: 52%; left: calc(50% + 4%); transform: translate(-50%, -50%);
-}
+.hero__copy .cta-row { justify-content: center; margin-top: 1.9rem; }
 .hero__canvas, .hero__fallback {
   /* Silná asymetrická maska: levá strana se výrazně rozpouští (canvas přetéká do textu),
      pravá a spodní strana se jemně vytrácejí — produkt přirozeně vyrůstá ze stránky */
@@ -692,22 +699,23 @@ a.contact__row { transition: color 150ms var(--ease); }
   .section__head--split .section__sub { padding-bottom: 0; }
 }
 
-/* Hero: přechod na jednosloupcový layout na tabletu a mobilu */
+/* Hero: přechod na jednosloupcový layout na tabletu a mobilu (text nad produktem) */
 @media (max-width: 860px) {
   .hero__stage {
     display: flex; flex-direction: column; justify-content: flex-start;
   }
   .hero__copy {
-    flex-shrink: 0;
+    position: static; transform: none; width: auto; z-index: 2;
+    flex-shrink: 0; align-items: center; text-align: center;
     padding: clamp(20px, 3vh, 40px) var(--pad) clamp(8px, 1.5vh, 16px);
-    justify-content: flex-start;
   }
+  .hero__copy::before { display: none; }
   .hero__title { font-size: clamp(1.9rem, 6vw, 3rem); }
   .hero__lede { margin-top: 1rem; line-height: 1.65; }
   .hero__copy .cta-row { margin-top: 1.5rem; }
-  .hero__viz { flex: 1 1 0; min-height: 0; overflow: hidden; }
+  .hero__viz { position: relative; inset: auto; flex: 1 1 0; min-height: 0; overflow: hidden; }
   .hero__canvas {
-    left: 50%; /* reset posunu */
+    top: 50%; left: 50%; /* reset posunu */
   }
   .hero__canvas, .hero__fallback {
     -webkit-mask-image:
@@ -767,7 +775,9 @@ a.contact__row { transition: color 150ms var(--ease); }
    Fallback režim (mobil / reduced-motion) – řízeno přes <html class="no-scrub">
    ========================================================================= */
 .no-scrub .hero__stage { display: flex; flex-direction: column; justify-content: flex-start; min-height: auto; height: auto; }
-.no-scrub .hero__viz { min-height: 58vw; max-height: 64vh; }
+.no-scrub .hero__copy { position: static; transform: none; width: auto; align-items: center; text-align: center; }
+.no-scrub .hero__copy::before { display: none; }
+.no-scrub .hero__viz { position: relative; inset: auto; min-height: 58vw; max-height: 64vh; }
 .no-scrub .hero__canvas { display: none; }
 .no-scrub .hero__fallback { display: block; }
 .no-scrub .hero__hint, .no-scrub .hero__loader, .no-scrub .annotations { display: none; }
