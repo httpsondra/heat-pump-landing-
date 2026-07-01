@@ -6,19 +6,19 @@
 :root {
   /* Barvy */
   --bg: #ffffff;
-  --bg-soft: #f5f6f7;
-  --bg-studio: #f7f8f9;          /* hero – ladí se studiovým pozadím videa */
-  --ink: #0e1113;
-  --ink-2: #3c4248;
-  --ink-soft: #697077;
-  --line: #e7e9ec;
-  --line-strong: #d7dade;
+  --bg-soft: #f7f7f7;
+  --bg-studio: #fafafa;          /* hero – ladí se studiovým pozadím videa */
+  --ink: #111111;
+  --ink-2: #444444;              /* sekundární text */
+  --ink-soft: #666666;           /* tlumený text – kontrast ≥4.5:1 na bílé */
+  --line: #e5e5e5;
+  --line-strong: #d5d5d5;
 
-  /* Akcent – zeleno-modrá (sampled ze studiové fotky), používat střídmě */
-  --accent: #11b3a4;
-  --accent-deep: #0a8d80;        /* čitelný na bílé (text/odkazy) */
-  --accent-dark: #0c6f66;
-  --accent-soft: #e6f6f4;
+  /* Akcent – červená inspirovaná Prothermem, používat střídmě (CTA, odkazy, ikony) */
+  --accent: #d71920;
+  --accent-deep: #b51218;        /* tmavší červená – hover, čitelná na bílé (text/odkazy) */
+  --accent-dark: #8f1116;        /* nejtmavší – ikony na světlém podkladu, kontrast */
+  --accent-soft: #fdecec;        /* velmi jemný červený nádech (pozadí ikon) */
 
   /* Typografie */
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -74,6 +74,10 @@ body {
 
 img, svg, canvas, video, iframe { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+/* Viditelné focus stavy pro klávesnici (přístupnost) */
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent-deep); outline-offset: 3px; border-radius: 6px;
+}
 h1, h2, h3 { margin: 0; line-height: 1.08; letter-spacing: -.03em; font-weight: 700; text-wrap: balance; }
 p { margin: 0; text-wrap: pretty; }
 ul, ol { margin: 0; padding: 0; list-style: none; }
@@ -103,8 +107,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .btn:active { transform: scale(0.97); transition-duration: 80ms; }
 .btn:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 3px; }
 
-.btn--primary { background: var(--ink); color: #fff; }
-.btn--primary:active { background: #1a1f24; }
+.btn--primary { background: var(--accent); color: #fff; }
+.btn--primary:active { background: var(--accent-deep); }
 
 .btn--phone { background: #fff; color: var(--ink); border-color: var(--line-strong); }
 .btn--phone .icon { fill: currentColor; }
@@ -122,7 +126,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @media (hover: hover) and (pointer: fine) {
   .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
   .btn:active { transform: scale(0.97); box-shadow: none; transition-duration: 80ms; }
-  .btn--primary:hover { background: #1a1f24; }
+  .btn--primary:hover { background: var(--accent-deep); }
   .btn--phone:hover { border-color: var(--ink-2); }
   .btn--ghost:hover { border-color: var(--ink-2); }
   .btn--ghost-inv:hover { border-color: rgba(255,255,255,.7); background: rgba(255,255,255,.08); }
@@ -487,6 +491,24 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 
 /* =========================================================================
+   3 benefity pod hero — kompaktní, čistý pás, ikony v akcentu (žádné karty)
+   ========================================================================= */
+.benefits { padding: clamp(40px, 6vh, 72px) 0 clamp(8px, 2vh, 20px); }
+.benefits__row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 3vw, 48px);
+}
+.benefit { display: flex; gap: 1rem; align-items: flex-start; }
+.benefit__icon {
+  flex: none; width: 46px; height: 46px; border-radius: 12px;
+  display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent);
+}
+.benefit__icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.benefit__title { font-size: 1.06rem; font-weight: 700; letter-spacing: -.02em; }
+.benefit__text { color: var(--ink-soft); font-size: .93rem; line-height: 1.5; margin-top: .28rem; }
+
+/* =========================================================================
    Obecné sekce
    ========================================================================= */
 .section { padding: clamp(64px, 10vh, 128px) 0; }
@@ -533,7 +555,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .card::before {
   content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
   border-radius: inherit;
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(17,179,164,.12), transparent 66%);
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(215,25,32,.10), transparent 66%);
   opacity: 0; transition: opacity .35s var(--ease-out);
 }
 /* Tenká akcentní linka, která se při najetí rozvine odshora */
@@ -564,12 +586,12 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 6px 20px rgba(16,22,26,.06), 0 22px 48px rgba(12,111,102,.10);
-    border-color: rgba(17,179,164,.35);
+    box-shadow: 0 6px 20px rgba(16,22,26,.06), 0 22px 48px rgba(16,22,26,.10);
+    border-color: rgba(215,25,32,.30);
   }
   .card:hover::before { opacity: 1; }
   .card:hover::after { transform: scaleX(1); }
-  .card:hover .card__icon { background: #cfeeea; transform: translateY(-1px) scale(1.08); }
+  .card:hover .card__icon { background: #fbdedf; transform: translateY(-1px) scale(1.08); }
   .card:hover .card__num { color: var(--accent); transform: translateY(-2px); }
 }
 
@@ -810,6 +832,7 @@ html:not(.js) .section__head h2 .muted { opacity: 1 !important; transform: none 
   .grid--services { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; gap: 1.4rem; }
   .reasons { grid-template-columns: 1fr; }
+  .benefits__row { grid-template-columns: 1fr; gap: 1.1rem; }
   .hero__title { font-size: clamp(2.2rem, 8.5vw, 2.8rem); }
 
   /* CTA na celou šířku → pohodlné cílení palcem */
