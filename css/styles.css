@@ -495,17 +495,32 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .grid--services { grid-template-columns: repeat(4, 1fr); }
 
 .card {
-  position: relative;
+  position: relative; overflow: hidden;
   background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
   padding: clamp(22px, 2vw, 30px) clamp(20px, 1.8vw, 26px) clamp(24px, 2.2vw, 30px);
   display: flex; flex-direction: column; gap: .4rem;
-  transition: transform 320ms var(--ease-out), box-shadow 320ms var(--ease-out), border-color 320ms var(--ease-out);
+  transition: transform 380ms var(--ease-out), box-shadow 380ms var(--ease-out), border-color 380ms var(--ease-out);
 }
+/* Reflektor sledující kurzor — jemná tyrkysová záře, která kartu oživí */
+.card::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(17,179,164,.12), transparent 66%);
+  opacity: 0; transition: opacity .35s var(--ease-out);
+}
+/* Tenká akcentní linka, která se při najetí rozvine odshora */
+.card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 2;
+  background: linear-gradient(90deg, var(--accent), var(--accent-deep));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .5s var(--ease-out);
+}
+.card > * { position: relative; z-index: 1; }
 .card__num {
   position: absolute; top: clamp(16px, 1.8vw, 22px); right: clamp(18px, 1.8vw, 24px);
   font-family: var(--mono); font-size: clamp(1.5rem, 2.8vw, 2.2rem); font-weight: 500;
   color: var(--line); letter-spacing: -.02em; line-height: 1;
-  transition: color 320ms var(--ease-out);
+  transition: color 380ms var(--ease-out), transform 380ms var(--ease-out);
 }
 .card__icon {
   width: 42px; height: 42px; border-radius: 11px; margin-bottom: .7rem;
@@ -520,12 +535,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--line-strong);
+    transform: translateY(-6px);
+    box-shadow: 0 6px 20px rgba(16,22,26,.06), 0 22px 48px rgba(12,111,102,.10);
+    border-color: rgba(17,179,164,.35);
   }
-  .card:hover .card__icon { background: #d1eeeb; transform: scale(1.06); }
-  .card:hover .card__num { color: var(--accent); }
+  .card:hover::before { opacity: 1; }
+  .card:hover::after { transform: scaleX(1); }
+  .card:hover .card__icon { background: #cfeeea; transform: translateY(-1px) scale(1.08); }
+  .card:hover .card__num { color: var(--accent); transform: translateY(-2px); }
 }
 
 /* ---------- Postup ---------- */

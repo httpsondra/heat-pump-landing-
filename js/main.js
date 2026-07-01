@@ -64,6 +64,18 @@
     }
   }
 
+  /* ---- karty služeb: reflektor sledující kurzor ---- */
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var cards = Array.prototype.slice.call(doc.querySelectorAll('.card'));
+    cards.forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+  }
+
   /* ---- scrollspy: aktivní záložka podle pozice scrollu ---- */
   var spyLinks = Array.prototype.slice.call(doc.querySelectorAll('.topnav a[href^="#"]'));
   var spyMap = {};
