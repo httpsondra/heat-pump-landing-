@@ -491,24 +491,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 
 /* =========================================================================
-   3 benefity pod hero — kompaktní, čistý pás, ikony v akcentu (žádné karty)
-   ========================================================================= */
-.benefits { padding: clamp(40px, 6vh, 72px) 0 clamp(8px, 2vh, 20px); }
-.benefits__row {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: clamp(20px, 3vw, 48px);
-}
-.benefit { display: flex; gap: 1rem; align-items: flex-start; }
-.benefit__icon {
-  flex: none; width: 46px; height: 46px; border-radius: 12px;
-  display: grid; place-items: center;
-  background: var(--accent-soft); color: var(--accent);
-}
-.benefit__icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.benefit__title { font-size: 1.06rem; font-weight: 700; letter-spacing: -.02em; }
-.benefit__text { color: var(--ink-soft); font-size: .93rem; line-height: 1.5; margin-top: .28rem; }
-
-/* =========================================================================
    Obecné sekce
    ========================================================================= */
 .section { padding: clamp(64px, 10vh, 128px) 0; }
@@ -832,7 +814,6 @@ html:not(.js) .section__head h2 .muted { opacity: 1 !important; transform: none 
   .grid--services { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; gap: 1.4rem; }
   .reasons { grid-template-columns: 1fr; }
-  .benefits__row { grid-template-columns: 1fr; gap: 1.1rem; }
   .hero__title { font-size: clamp(2.2rem, 8.5vw, 2.8rem); }
 
   /* CTA na celou šířku → pohodlné cílení palcem */
