@@ -231,10 +231,11 @@
     window.ScrollTrigger.create({
       trigger: '.hero',
       start: 'top top',
-      end: function () { return '+=' + Math.round(window.innerHeight * 2.8); },
+      end: function () { return '+=' + Math.round(window.innerHeight * 3.2); },
       pin: '.hero__stage',
       pinSpacing: true,
-      scrub: 0.5,
+      scrub: 1,                 /* delší doběh = plynulejší glide, míň „skákání" snímků */
+      anticipatePin: 1,         /* hladší zapnutí/uvolnění pinu (konec animace) */
       invalidateOnRefresh: true,
       onUpdate: function (self) {
         var p = self.progress;

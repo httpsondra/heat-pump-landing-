@@ -336,12 +336,15 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .hero__atmos, .hero__vignette {
   position: absolute; inset: 0; pointer-events: none; will-change: opacity, transform;
 }
-/* Měkký teplý „nádech" — jako by produkt začal vyzařovat teplo. Screen blend jen přisvětlí. */
+/* Měkký teplý „nádech" — jako by produkt začal vyzařovat teplo. Screen blend jen přisvětlí.
+   Vrstva je ohraničená na střed (kolem produktu) a izolovaná (contain), aby screen-blend
+   nekompozitoval přes celý viewport — to dřív u konce scrollu způsobovalo záseky. */
 .hero__atmos {
-  z-index: 1; mix-blend-mode: screen;
-  background: radial-gradient(42% 42% at 50% 44%, rgba(255,236,208,.55) 0%, rgba(255,236,208,0) 70%);
+  inset: 6% 18%;
+  z-index: 1; mix-blend-mode: screen; contain: paint;
+  background: radial-gradient(58% 58% at 50% 45%, rgba(255,236,208,.55) 0%, rgba(255,236,208,0) 72%);
   opacity: calc(var(--hero-p) * 0.9);
-  transform: scale(calc(1 + var(--hero-p) * 0.14));
+  transform: scale(calc(1 + var(--hero-p) * 0.1));
 }
 /* Jemná vinětace — okraje ztmavnou, pozornost se soustředí na produkt. */
 .hero__vignette {
