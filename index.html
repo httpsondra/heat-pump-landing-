@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=16" />
+  <link rel="stylesheet" href="/css/styles.css?v=17" />
 </head>
 <body>
 
@@ -87,6 +87,10 @@
         <!-- Pravý sloupec: animace čerpadla -->
         <div class="hero__viz" id="heroViz">
           <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+
+          <!-- Kinematické vrstvy řízené scrollem (--hero-p): měkký „tepelný" nádech + vinětace -->
+          <div class="hero__atmos" aria-hidden="true"></div>
+          <div class="hero__vignette" aria-hidden="true"></div>
 
           <video class="hero__fallback" id="heroFallback" playsinline muted loop preload="none"
                  poster="/images/heat-pump-fallback.jpg" aria-hidden="true">
@@ -342,6 +346,6 @@
   <!-- GSAP + ScrollTrigger -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="/js/main.js?v=16" defer></script>
+  <script src="/js/main.js?v=17" defer></script>
 </body>
 </html>

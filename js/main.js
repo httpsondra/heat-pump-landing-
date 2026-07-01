@@ -134,6 +134,7 @@
   var canvas = doc.getElementById('heroCanvas');
   var loader = doc.getElementById('heroLoader');
   var fallback = doc.getElementById('heroFallback');
+  var heroStage = doc.getElementById('heroStage');
   var heroCopy = doc.getElementById('heroCopy');
   var heroHint = doc.getElementById('heroHint');
   var heroLines = Array.prototype.slice.call(doc.querySelectorAll('.hero__title .hero__line'));
@@ -239,6 +240,9 @@
         var p = self.progress;
         var idx = Math.min(total - 1, Math.max(0, Math.round(p * (total - 1))));
         if (idx !== current) drawFrame(idx);
+
+        // kinematické vrstvy (tepelný nádech + vinětace) reagují na postup scrollu
+        if (heroStage) heroStage.style.setProperty('--hero-p', p.toFixed(4));
 
         // po načtení (p<initHold) je nadpis plně černý; pak zbledne a „reflektor" se posouvá po řádcích
         if (heroLines.length) {

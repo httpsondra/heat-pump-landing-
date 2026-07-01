@@ -326,6 +326,30 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
 }
 
+/* ---- Kinematické vrstvy hero: řízené scrollem přes --hero-p (0→1) ----
+   V klidu (p=0) i ve fallbacku jsou neviditelné; sílí, jak se produkt rozkládá. */
+.hero__stage { --hero-p: 0; }
+.hero__atmos, .hero__vignette {
+  position: absolute; inset: 0; pointer-events: none; will-change: opacity, transform;
+}
+/* Měkký teplý „nádech" — jako by produkt začal vyzařovat teplo. Screen blend jen přisvětlí. */
+.hero__atmos {
+  z-index: 1; mix-blend-mode: screen;
+  background: radial-gradient(42% 42% at 50% 44%, rgba(255,236,208,.55) 0%, rgba(255,236,208,0) 70%);
+  opacity: calc(var(--hero-p) * 0.9);
+  transform: scale(calc(1 + var(--hero-p) * 0.14));
+}
+/* Jemná vinětace — okraje ztmavnou, pozornost se soustředí na produkt. */
+.hero__vignette {
+  z-index: 2;
+  background: radial-gradient(78% 72% at 50% 46%, rgba(16,22,26,0) 52%, rgba(16,22,26,.16) 100%);
+  opacity: calc(var(--hero-p) * 1);
+}
+.no-scrub .hero__atmos, .no-scrub .hero__vignette { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hero__atmos, .hero__vignette { display: none; }
+}
+
 /* Text: vycentrovaný překryv v dolní části produktu (vrstvení / hloubka) */
 .hero__copy {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
@@ -386,10 +410,11 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   background: rgba(255,255,255,.78); backdrop-filter: blur(4px);
   border: 1px solid var(--line); border-radius: 999px;
   padding: .32rem .7rem;
-  opacity: 0; transform: translateY(6px); transition: opacity .35s var(--ease), transform .35s var(--ease);
+  opacity: 0; transform: translateY(10px); filter: blur(5px);
+  transition: opacity .5s var(--ease-out), transform .5s var(--ease-out), filter .5s var(--ease-out);
 }
 .anno i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
-.anno.is-on { opacity: 1; transform: translateY(0); }
+.anno.is-on { opacity: 1; transform: translateY(0); filter: blur(0); }
 .anno--1 { top: 24%; left: 12%; }
 .anno--2 { top: 18%; right: 16%; }
 .anno--3 { bottom: 26%; left: 18%; }
