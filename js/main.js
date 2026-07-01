@@ -296,25 +296,54 @@
       var loadedCount = 0;
       var firstDrawn = false;
 
-      for (var i = 0; i < total; i++) {
-        (function (i) {
-          var img = new Image();
-          img.decoding = 'async';
-          img.onload = function () {
-            loadedCount++;
-            if (!firstDrawn && i === 0) {
-              firstDrawn = true;
-              if (loader) loader.classList.add('is-hidden');
-              resizeCanvas();
-              setupScrollTrigger();
-            }
-            // jakmile je hotová většina, pro jistotu refresh měření
-            if (loadedCount === total && window.ScrollTrigger) window.ScrollTrigger.refresh();
-          };
-          img.onerror = function () { loadedCount++; };
-          img.src = '/images/sequence/heat-pump-' + pad(i + 1, padLen) + '.jpg';
-          frames[i] = img;
-        })(i);
+      function frameSrc(i) { return '/images/sequence/heat-pump-' + pad(i + 1, padLen) + '.jpg'; }
+      function onSettled() {
+        loadedCount++;
+        if (loadedCount >= total && window.ScrollTrigger) window.ScrollTrigger.refresh();
+      }
+
+      // 1) První snímek přednostně — odemkne hero a nastavení ScrollTriggeru co nejdřív.
+      (function () {
+        var img = new Image();
+        img.decoding = 'async';
+        if ('fetchPriority' in img) img.fetchPriority = 'high';
+        img.onload = function () {
+          onSettled();
+          if (!firstDrawn) {
+            firstDrawn = true;
+            if (loader) loader.classList.add('is-hidden');
+            resizeCanvas();
+            setupScrollTrigger();
+          }
+        };
+        img.onerror = onSettled;
+        frames[0] = img;
+        img.src = frameSrc(0);
+      })();
+
+      // 2) Zbytek snímků na pozadí — sekvenčně, s omezenou soubežností, spuštěno až
+      //    když je stránka klidná. 150 snímků (~5,7 MB) jinak zahltí síť a brzdí
+      //    první vykreslení; nearestLoaded() zvládne chybějící snímky během scrollu.
+      var next = 1, inFlight = 0, MAX_PARALLEL = 6;
+      function pump() {
+        while (inFlight < MAX_PARALLEL && next < total) {
+          var i = next++;
+          inFlight++;
+          (function (i) {
+            var img = new Image();
+            img.decoding = 'async';
+            if ('fetchPriority' in img) img.fetchPriority = 'low';
+            img.onload = function () { inFlight--; onSettled(); pump(); };
+            img.onerror = function () { inFlight--; onSettled(); pump(); };
+            frames[i] = img;
+            img.src = frameSrc(i);
+          })(i);
+        }
+      }
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(pump, { timeout: 2000 });
+      } else {
+        window.addEventListener('load', function () { window.setTimeout(pump, 150); }, { once: true });
       }
 
       // pojistka: kdyby se první snímek z cache načetl okamžitě
