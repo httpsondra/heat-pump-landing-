@@ -340,11 +340,11 @@
           })(i);
         }
       }
-      if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(pump, { timeout: 2000 });
-      } else {
-        window.addEventListener('load', function () { window.setTimeout(pump, 150); }, { once: true });
-      }
+      // Spustit načítání hned. Snímky mají fetchPriority:'low', takže je prohlížeč
+      // sám zařadí až za kritické zdroje (fonty, CSS, první snímek) — první
+      // vykreslení tím netrpí. Dřívější odklad na requestIdleCallback způsobil, že
+      // scrub „nescrolloval": snímky nebyly načtené, když uživatel hned zascrolloval.
+      pump();
 
       // pojistka: kdyby se první snímek z cache načetl okamžitě
       window.setTimeout(function () {
