@@ -228,13 +228,20 @@
         var idx = Math.min(total - 1, Math.max(0, Math.round(p * (total - 1))));
         if (idx !== current) drawFrame(idx);
 
-        // po načtení (p<initHold) je nadpis plně černý; pak zbledne a řádky se postupně rozsvěcují
+        // po načtení (p<initHold) je nadpis plně černý; pak zbledne a „reflektor" se posouvá po řádcích
         if (heroLines.length) {
-          var initHold = 0.05, hlStart = 0.12, hlSpan = 0.52;
-          for (var hl = 0; hl < heroLines.length; hl++) {
-            var thr = hlStart + (hlSpan / heroLines.length) * hl;
-            var inked = (p < initHold) || (p >= thr);
-            heroLines[hl].classList.toggle('is-pale', !inked);
+          var nLines = heroLines.length;
+          var initHold = 0.05, hlStart = 0.12, hlEnd = 0.66;
+          var allInk = p < initHold;
+          var active = -1;
+          if (!allInk && p >= hlStart) {
+            var seg = (hlEnd - hlStart) / nLines;
+            active = Math.min(nLines - 1, Math.floor((p - hlStart) / seg));
+          }
+          for (var hl = 0; hl < nLines; hl++) {
+            var focus = (active === hl);
+            heroLines[hl].classList.toggle('is-focus', focus);
+            heroLines[hl].classList.toggle('is-pale', !focus && !allInk);
           }
         }
 
