@@ -124,6 +124,7 @@
   var fallback = doc.getElementById('heroFallback');
   var heroCopy = doc.getElementById('heroCopy');
   var heroHint = doc.getElementById('heroHint');
+  var heroLines = Array.prototype.slice.call(doc.querySelectorAll('.hero__title .hero__line'));
   var annoBox = doc.getElementById('annotations');
   var annoEls = Array.prototype.slice.call(doc.querySelectorAll('.anno'));
 
@@ -217,7 +218,7 @@
     window.ScrollTrigger.create({
       trigger: '.hero',
       start: 'top top',
-      end: function () { return '+=' + Math.round(window.innerHeight * 2.2); },
+      end: function () { return '+=' + Math.round(window.innerHeight * 2.8); },
       pin: '.hero__stage',
       pinSpacing: true,
       scrub: 0.5,
@@ -227,11 +228,20 @@
         var idx = Math.min(total - 1, Math.max(0, Math.round(p * (total - 1))));
         if (idx !== current) drawFrame(idx);
 
-        // centrovaný layout: text jemně vyplyne nahoru a zmizí, produkt zůstává uprostřed
+        // řádky nadpisu se postupně rozsvěcují (tlumené → plná čerň) během scrollu
+        if (heroLines.length) {
+          var hlStart = 0.05, hlSpan = 0.55;   // dokončí rozsvěcení kolem p ≈ 0.6
+          for (var hl = 0; hl < heroLines.length; hl++) {
+            var thr = hlStart + (hlSpan / heroLines.length) * hl;
+            heroLines[hl].classList.toggle('is-hl', p >= thr);
+          }
+        }
+
+        // text zůstává čitelný, dokud se řádky rozsvěcují; teprve na konci pinu se jemně vytratí
         if (heroCopy) {
-          var fade = Math.max(0, 1 - p / 0.35);
-          heroCopy.style.opacity = fade.toFixed(3);
-          heroCopy.style.transform = 'translate(-50%, calc(-50% - ' + (28 * (1 - fade)).toFixed(1) + 'px))';
+          var exit = Math.max(0, Math.min(1, (p - 0.78) / 0.22));
+          heroCopy.style.opacity = (1 - exit).toFixed(3);
+          heroCopy.style.transform = 'translate(-50%, calc(-50% - ' + (34 * exit).toFixed(1) + 'px))';
         }
         if (heroHint) heroHint.style.opacity = p > 0.04 ? '0' : '1';
 

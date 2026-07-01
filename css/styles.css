@@ -325,26 +325,29 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* Text: vycentrovaný překryv v dolní části produktu (vrstvení / hloubka) */
 .hero__copy {
-  position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%);
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   z-index: 3;
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
-  width: min(92%, 800px);
+  width: min(94%, 900px);
   padding: 0 var(--pad);
   will-change: opacity, transform;
 }
 /* Měkká světelná svatozář za textem — čitelnost přes produkt, žádný tvrdý rám */
 .hero__copy::before {
-  content: ''; position: absolute; z-index: -1; inset: -14% -10%;
-  background: radial-gradient(58% 62% at 50% 50%, rgba(255,255,255,.92) 0%, rgba(255,255,255,.62) 44%, rgba(255,255,255,0) 74%);
+  content: ''; position: absolute; z-index: -1; inset: -18% -12%;
+  background: radial-gradient(60% 66% at 50% 50%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.72) 46%, rgba(255,255,255,0) 76%);
   pointer-events: none;
 }
 .hero__title {
-  font-size: clamp(2.3rem, 4.8vw, 4.2rem);
+  font-size: clamp(2.7rem, 5.8vw, 5rem);
   font-weight: 700;
-  letter-spacing: -.045em; line-height: 1.0;
+  letter-spacing: -.045em; line-height: 1.02;
   text-align: center; text-wrap: balance;
 }
+/* Řádky nadpisu se při scrollu postupně „rozsvěcují" z tlumené do plné černi */
+.hero__line { display: block; color: rgba(14,17,19,.38); transition: color .6s var(--ease-out); }
+.hero__line.is-hl { color: var(--ink); }
 .hero__lede {
   font-size: clamp(1.02rem, 1.2vw, 1.14rem); color: var(--ink-2);
   margin: 1.3rem auto 0; text-align: center; line-height: 1.55; max-width: 40ch;
@@ -777,6 +780,7 @@ a.contact__row { transition: color 150ms var(--ease); }
 .no-scrub .hero__stage { display: flex; flex-direction: column; justify-content: flex-start; min-height: auto; height: auto; }
 .no-scrub .hero__copy { position: static; transform: none; width: auto; align-items: center; text-align: center; }
 .no-scrub .hero__copy::before { display: none; }
+.no-scrub .hero__line { color: var(--ink); }
 .no-scrub .hero__viz { position: relative; inset: auto; min-height: 58vw; max-height: 64vh; }
 .no-scrub .hero__canvas { display: none; }
 .no-scrub .hero__fallback { display: block; }
@@ -790,4 +794,5 @@ a.contact__row { transition: color 150ms var(--ease); }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   .hero__hint svg { animation: none; }
+  .hero__line { color: var(--ink); transition: none; }
 }
