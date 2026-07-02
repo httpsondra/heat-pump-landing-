@@ -11,6 +11,9 @@
   var doc = document;
   var html = doc.documentElement;
 
+  /* Signál pro pojistku v <head>: JS běží, takže reveal-fallback se nespustí. */
+  html.classList.add('js-ready');
+
   /* ---- rok v patičce ---- */
   var yearEl = doc.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
@@ -28,18 +31,28 @@
   var menuToggle = doc.getElementById('menuToggle');
   var topnav = doc.querySelector('.topnav');
   if (menuToggle && topnav) {
+    var setMenu = function (open) {
+      menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      topnav.classList.toggle('is-open', open);
+    };
     menuToggle.addEventListener('click', function () {
-      var isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
-      menuToggle.setAttribute('aria-expanded', !isOpen);
-      topnav.classList.toggle('is-open', !isOpen);
+      setMenu(menuToggle.getAttribute('aria-expanded') !== 'true');
     });
-    // Close menu on nav link click
-    var navLinks = topnav.querySelectorAll('a');
-    navLinks.forEach(function (link) {
-      link.addEventListener('click', function () {
-        menuToggle.setAttribute('aria-expanded', 'false');
-        topnav.classList.remove('is-open');
-      });
+    // Zavřít po kliknutí na položku
+    topnav.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () { setMenu(false); });
+    });
+    // Zavřít klávesou Escape a vrátit fokus na tlačítko (klávesnicová dostupnost)
+    doc.addEventListener('keydown', function (e) {
+      if ((e.key === 'Escape' || e.key === 'Esc') && menuToggle.getAttribute('aria-expanded') === 'true') {
+        setMenu(false);
+        menuToggle.focus();
+      }
+    });
+    // Zavřít kliknutím mimo otevřené menu
+    doc.addEventListener('click', function (e) {
+      if (menuToggle.getAttribute('aria-expanded') !== 'true') return;
+      if (!topnav.contains(e.target) && !menuToggle.contains(e.target)) setMenu(false);
     });
   }
 
@@ -115,15 +128,15 @@
       setActive(currentId);
     };
     window.addEventListener('scroll', updateSpy, { passive: true });
-    // Po změně šířky okna přesuň indikátor pod aktivní záložku bez animace
+    // Po změně šířky/výšky okna: přepočítat aktivní sekci (reflow může posunout jinou
+    // sekci přes referenční linku bez scroll eventu) a přesunout indikátor bez animace.
     window.addEventListener('resize', function () {
+      var prev = indicator && indicator.style.transition;
+      if (indicator) indicator.style.transition = 'none';
+      updateSpy();
       var link = activeSpyId && spyMap[activeSpyId];
-      if (!indicator || !link) return;
-      var prev = indicator.style.transition;
-      indicator.style.transition = 'none';
-      moveIndicator(link);
-      void indicator.offsetWidth;          // vynucený reflow
-      indicator.style.transition = prev;
+      if (indicator && link) { moveIndicator(link); void indicator.offsetWidth; }
+      if (indicator) indicator.style.transition = prev;
     }, { passive: true });
     updateSpy();
   }
@@ -136,13 +149,26 @@
   var fallback = doc.getElementById('heroFallback');
   var heroStage = doc.getElementById('heroStage');
   var heroCopy = doc.getElementById('heroCopy');
-  var heroHint = doc.getElementById('heroHint');
   var heroLines = Array.prototype.slice.call(doc.querySelectorAll('.hero__title .hero__line'));
   var annoBox = doc.getElementById('annotations');
   var annoEls = Array.prototype.slice.call(doc.querySelectorAll('.anno'));
 
   var smallScreen = window.matchMedia('(max-width: 860px)').matches;
   var gsapReady = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+
+  /* Režim hero (scrub vs. video fallback) se volí jednou podle 860px. Pokud uživatel
+     tuto hranici překročí (změna velikosti okna, otočení tabletu), přebuduj stránku
+     čistým reloadem — jinak by pinovaný scrub a mobilní stacked layout kolidovaly.
+     Reaguje jen tam, kde na hranici skutečně závisí (ne u reduced-motion / bez GSAPu). */
+  if (canvas && !prefersReduced && gsapReady) {
+    var modeAtLoad = smallScreen, modeRt;
+    window.addEventListener('resize', function () {
+      window.clearTimeout(modeRt);
+      modeRt = window.setTimeout(function () {
+        if (window.matchMedia('(max-width: 860px)').matches !== modeAtLoad) window.location.reload();
+      }, 250);
+    });
+  }
 
   // Fallback režim: bez canvas scrubu, místo toho autoplay/loop video
   function enterFallbackMode() {
@@ -209,10 +235,14 @@
     drawFrame(current);
   }
 
+  var drawnExact = false;   // nakreslil se přesně požadovaný snímek, nebo jen náhradník?
   function drawFrame(i) {
-    var img = nearestLoaded(i);
+    var exactImg = frames[i];
+    var exact = !!(exactImg && exactImg.complete && exactImg.naturalWidth > 0);
+    var img = exact ? exactImg : nearestLoaded(i);
     if (!img) return;
     current = i;
+    drawnExact = exact;
     var cw = canvas.width, ch = canvas.height;
     ctx.clearRect(0, 0, cw, ch);
     // cover – canvas má stejný poměr jako snímek, takže vyplní beze zbytku
@@ -268,7 +298,6 @@
           heroCopy.style.opacity = (1 - exit).toFixed(3);
           heroCopy.style.transform = 'translate(-50%, calc(-50% - ' + (34 * exit).toFixed(1) + 'px))';
         }
-        if (heroHint) heroHint.style.opacity = p > 0.04 ? '0' : '1';
 
         // canvas + anotace zůstávají vycentrované, produkt se jemně přiblíží (bez posunu do strany)
         if (canvas) {
@@ -321,7 +350,8 @@
             setupScrollTrigger();
           }
         };
-        img.onerror = onSettled;
+        // první snímek selhal (404 / síť) → nezůstat na věčně blikajícím loaderu, přejít na video
+        img.onerror = function () { onSettled(); if (!firstDrawn) enterFallbackMode(); };
         frames[0] = img;
         img.src = frameSrc(0);
       })();
@@ -338,7 +368,12 @@
             var img = new Image();
             img.decoding = 'async';
             if ('fetchPriority' in img) img.fetchPriority = 'low';
-            img.onload = function () { inFlight--; onSettled(); pump(); };
+            img.onload = function () {
+              inFlight--; onSettled();
+              // dřív se na této pozici kreslil náhradník → teď překresli přesným snímkem
+              if (i === current && !drawnExact) drawFrame(current);
+              pump();
+            };
             img.onerror = function () { inFlight--; onSettled(); pump(); };
             frames[i] = img;
             img.src = frameSrc(i);
@@ -360,6 +395,10 @@
           setupScrollTrigger();
         }
       }, 400);
+
+      // tvrdá pojistka: když se do 4 s nevykreslí žádný snímek (síť / stará cache
+      // manifestu ukazuje na přejmenované soubory), přejít na video místo blikajícího loaderu
+      window.setTimeout(function () { if (!firstDrawn) enterFallbackMode(); }, 4000);
     })
     .catch(function () {
       // Když cokoli selže, spadni elegantně do fallbacku

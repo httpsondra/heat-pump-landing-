@@ -115,8 +115,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .btn--phone:active { background: #f5f5f5; }
 
 .btn--ghost { background: #fff; color: var(--ink); border-color: var(--line-strong); }
-.btn--ghost-inv { background: transparent; color: #fff; border-color: rgba(255,255,255,.4); }
-.btn--ghost-inv:active { background: rgba(255,255,255,.1); }
 
 .btn--lg { --bh: 54px; padding: 0 1.8rem; font-size: 1.02rem; }
 .btn .icon path { stroke: none; }
@@ -129,8 +127,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .btn--primary:hover { background: var(--accent-deep); }
   .btn--phone:hover { border-color: var(--ink-2); }
   .btn--ghost:hover { border-color: var(--ink-2); }
-  .btn--ghost-inv:hover { border-color: rgba(255,255,255,.7); background: rgba(255,255,255,.08); }
-  .cta-band .btn--primary:hover { background: #f0f0f0; box-shadow: none; }
 }
 
 .cta-row { display: flex; flex-wrap: wrap; gap: .75rem; }
@@ -386,7 +382,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   transform-origin: center; will-change: transform;
   transition: color .6s var(--ease-out), transform .6s var(--ease-out);
 }
-.hero__line.is-pale { color: rgba(14,17,19,.38); }
+.hero__line.is-pale { color: rgba(14,17,19,.46); }
 .hero__line.is-focus { color: var(--ink); transform: scale(1.07); }
 .hero__lede {
   font-size: clamp(1.02rem, 1.2vw, 1.14rem); color: var(--ink-2);
@@ -426,14 +422,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .anno--2 { top: 18%; right: 16%; }
 .anno--3 { bottom: 26%; left: 18%; }
 .anno--4 { bottom: 22%; right: 12%; }
-
-.hero__hint {
-  position: absolute; left: 0; right: 0; bottom: clamp(8px, 1.6vh, 18px);
-  display: flex; align-items: center; justify-content: center;
-  transition: opacity .3s var(--ease); pointer-events: none;
-}
-.hero__hint svg { width: 22px; height: 22px; fill: none; stroke: var(--accent-deep); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; animation: nudge 1.8s var(--ease) infinite; opacity: .7; }
-@keyframes nudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
 
 .hero__loader {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
@@ -634,23 +622,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 
 /* =========================================================================
-   CTA band
-   ========================================================================= */
-.cta-band {
-  background:
-    radial-gradient(120% 160% at 12% 0%, #14241f 0%, rgba(20,36,31,0) 55%),
-    linear-gradient(120deg, #0c6f66 0%, #0a8d80 48%, #11b3a4 100%);
-  color: #fff;
-}
-.cta-band__inner {
-  display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
-  padding-block: clamp(40px, 7vh, 72px);
-}
-.cta-band h2 { font-size: clamp(1.5rem, 2.8vw, 2.1rem); max-width: 18ch; }
-.cta-band p { margin-top: .6rem; color: rgba(255,255,255,.82); max-width: 40ch; }
-.cta-band .btn--primary { background: #fff; color: var(--ink); }
-
-/* =========================================================================
    Kontakt
    ========================================================================= */
 .contact { display: grid; grid-template-columns: 1fr .9fr; gap: clamp(20px, 3vw, 40px); align-items: stretch; }
@@ -711,7 +682,8 @@ a.contact__row { transition: color 150ms var(--ease); }
 .footer__contact { display: flex; flex-direction: column; gap: .35rem; text-align: right; }
 .footer__contact a { color: #fff; font-weight: 600; transition: color 150ms var(--ease); }
 @media (hover: hover) and (pointer: fine) {
-  .footer__contact a:hover { color: var(--accent); }
+  /* světlejší červená pro tmavou patičku (kontrast ≥4.5:1 na #111) */
+  .footer__contact a:hover { color: #ff6b64; }
 }
 .footer__contact .mono { color: #9aa0a6; font-size: .85rem; }
 .footer__legal {
@@ -729,9 +701,12 @@ a.contact__row { transition: color 150ms var(--ease); }
   transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
 }
 .reveal.is-in { opacity: 1; transform: none; }
-/* Bez JS (nenaběhne třída .js) zůstává obsah plně viditelný — nikdy prázdná sekce */
+/* Bez JS (nenaběhne třída .js) zůstává obsah plně viditelný — nikdy prázdná sekce.
+   .reveal-fallback nasadí hlavička po 4 s, pokud JS z jakéhokoli důvodu neběžel. */
 html:not(.js) .reveal,
-html:not(.js) .section__head h2 .muted { opacity: 1 !important; transform: none !important; }
+html:not(.js) .section__head h2 .muted,
+html.reveal-fallback .reveal,
+html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform: none !important; }
 
 /* Dvoudobý reveal dvoubarevného nadpisu: tlumená druhá řádka naskočí o beat později —
    pohyb, který sedí přesně k tomuto prvku (ne uniformní fade-up na všem). */
@@ -819,16 +794,11 @@ html:not(.js) .section__head h2 .muted { opacity: 1 !important; transform: none 
   .reasons { grid-template-columns: 1fr; }
   .hero__title { font-size: clamp(2.2rem, 8.5vw, 2.8rem); }
 
-  /* CTA na celou šířku → pohodlné cílení palcem */
-  .cta-band__inner { flex-direction: column; align-items: stretch; gap: 1.4rem; }
-  .cta-band .cta-row { width: 100%; }
   /* Hero CTA: side-by-side buttons on mobile */
   .hero__copy .cta-row { flex-direction: row !important; flex-wrap: nowrap; align-items: stretch; gap: 0.75rem; }
   .hero__copy .cta-row .btn { flex: 1; min-height: 44px; min-width: 0; }
-  /* Other CTA rows stay stacked */
-  .cta-band .cta-row,
+  /* Kontaktní CTA na celou šířku → pohodlné cílení palcem */
   .contact__cta { flex-direction: column; align-items: stretch; }
-  .cta-band .cta-row .btn,
   .contact__cta .btn { width: 100%; }
 
   /* Mapa nepřebíjí kontaktní kartu */
@@ -837,7 +807,6 @@ html:not(.js) .section__head h2 .muted { opacity: 1 !important; transform: none 
 
 @media (max-width: 480px) {
   .brand__name { display: none; }                 /* na úzkém mobilu stačí logo MD */
-  .btn--phone span { font-size: .82rem; }
   .footer__contact { text-align: left; }
   .footer__inner { gap: 1.2rem; }
   .contact__row--primary .contact__value { font-size: 1.3rem; }
@@ -860,7 +829,7 @@ html:not(.js) .section__head h2 .muted { opacity: 1 !important; transform: none 
 .no-scrub .hero__viz { position: relative; inset: auto; min-height: 58vw; max-height: 64vh; }
 .no-scrub .hero__canvas { display: none; }
 .no-scrub .hero__fallback { display: block; }
-.no-scrub .hero__hint, .no-scrub .hero__loader, .no-scrub .annotations { display: none; }
+.no-scrub .hero__loader, .no-scrub .annotations { display: none; }
 
 /* Increase video size on mobile with side-by-side buttons */
 @media (max-width: 620px) {
@@ -870,6 +839,11 @@ html:not(.js) .section__head h2 .muted { opacity: 1 !important; transform: none 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   .section__head h2 .muted { opacity: 1; transform: none; transition: none; }
-  .hero__hint svg { animation: none; }
   .hero__line { color: var(--ink); transition: none; }
+  /* Ostatní pohyb také ztlumit: menu, klouzavý indikátor, záře karet, ikony */
+  .topnav.is-open a { animation: none; }
+  .topnav__indicator { transition: opacity .1s linear; }
+  .card, .card::before, .card::after, .card__icon, .card__num { transition: none; }
+  .btn { transition: background 120ms linear, border-color 120ms linear, color 120ms linear; }
+  .btn:hover, .card:hover { transform: none; }
 }

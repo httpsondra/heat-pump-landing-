@@ -1,0 +1,9 @@
+# Nenasazovat vývojové a interní soubory na veřejný web
+README.md
+.gitignore
+.DS_Store
+**/.DS_Store
+scripts/
+node_modules/
+package.json
+package-lock.json

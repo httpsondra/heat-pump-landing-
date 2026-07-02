@@ -3,17 +3,34 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <!-- Reveal animace vylepšují už viditelný obsah: bez JS se nic neskryje -->
-  <script>document.documentElement.classList.add('js');</script>
+  <!-- Reveal animace vylepšují už viditelný obsah. Bez JS se nic neskryje (html:not(.js));
+       a pokud by JS z jakéhokoli důvodu neběžel (výpadek CDN / chyba), pojistka po 4 s
+       obsah přesto zobrazí, aby sekce pod hero nikdy nezůstaly prázdné. -->
+  <script>
+    document.documentElement.classList.add('js');
+    setTimeout(function () {
+      if (!document.documentElement.classList.contains('js-ready')) {
+        document.documentElement.classList.add('reveal-fallback');
+      }
+    }, 4000);
+  </script>
   <title>Milan Dušek — tepelná čerpadla, klimatizace a servis topení | Praha a okolí</title>
   <meta name="description" content="Milan Dušek — návrh, montáž a servis tepelných čerpadel, klimatizací a plynových kotlů v Praze a okolí. Osobní přístup, rychlá domluva, servis po montáži." />
   <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <link rel="canonical" href="https://heat-pump-landing.vercel.app/" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Milan Dušek — tepelná čerpadla, klimatizace a servis" />
   <meta property="og:description" content="Kompletní návrh, montáž a servis technologií pro vytápění a chlazení v Praze a okolí." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="/images/heat-pump-fallback.jpg" />
+  <meta property="og:url" content="https://heat-pump-landing.vercel.app/" />
+  <meta property="og:image" content="https://heat-pump-landing.vercel.app/images/heat-pump-fallback.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Milan Dušek — tepelná čerpadla, klimatizace a servis" />
+  <meta name="twitter:description" content="Kompletní návrh, montáž a servis technologií pro vytápění a chlazení v Praze a okolí." />
+  <meta name="twitter:image" content="https://heat-pump-landing.vercel.app/images/heat-pump-fallback.jpg" />
 
   <!-- Fonts + skript CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,7 +38,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=22" />
+  <link rel="stylesheet" href="/css/styles.css?v=23" />
 </head>
 <body>
 
@@ -36,7 +53,7 @@
         <span class="brand__role">topení&nbsp;·&nbsp;chlazení</span>
       </a>
 
-      <nav class="topnav" aria-label="Hlavní">
+      <nav class="topnav" id="topnav" aria-label="Hlavní">
         <span class="topnav__indicator" aria-hidden="true"></span>
         <a href="#sluzby">Služby</a>
         <a href="#postup">Jak to probíhá</a>
@@ -45,15 +62,15 @@
       </nav>
 
       <div class="topbar__cta">
-        <a class="btn btn--phone" href="tel:+420603479240">
+        <a class="btn btn--phone" href="tel:+420603479240" aria-label="Zavolat: +420 603 479 240">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.3 15.3 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.37 2.3.57 3.5.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.57 3.5a1 1 0 0 1-.25 1z"/></svg>
           <span>+420 603 479 240</span>
         </a>
-        <a class="btn btn--ghost btn--email" href="mailto:dusekmilan@volny.cz">
+        <a class="btn btn--ghost btn--email" href="mailto:dusekmilan@volny.cz" aria-label="Napsat e-mail: dusekmilan@volny.cz">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.4 2L12 12l7.6-5z"/></svg>
           <span>E-mail</span>
         </a>
-        <button class="btn btn--menu" id="menuToggle" aria-label="Menu" aria-expanded="false">
+        <button class="btn btn--menu" id="menuToggle" aria-label="Menu" aria-controls="topnav" aria-expanded="false">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
       </div>
@@ -345,9 +362,14 @@
     </div>
   </footer>
 
-  <!-- GSAP + ScrollTrigger -->
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script src="/js/main.js?v=22" defer></script>
+  <!-- GSAP + ScrollTrigger — se Subresource Integrity: prohlížeč spustí soubor jen když
+       jeho hash sedí, takže případně podvržený skript z CDN se neprovede. -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"
+          integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"
+          integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d"
+          crossorigin="anonymous"></script>
+  <script src="/js/main.js?v=23" defer></script>
 </body>
 </html>
