@@ -43,11 +43,15 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=23" />
+  <link rel="stylesheet" href="/css/styles.css?v=24" />
 </head>
 <body>
 
   <a class="skip-link" href="#top">Přeskočit na obsah</a>
+
+  <!-- Atmosférické pozadí — silně rozmazaný, odbarvený barevný proud hluboko za obsahem.
+       Bez src: připojí ho až JS, jen na desktopu bez reduced-motion/saveData. -->
+  <video class="page-atmos" id="pageAtmos" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
 
   <!-- ================= STICKY TOP BAR ================= -->
   <header class="topbar" id="topbar">
@@ -375,6 +379,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"
           integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d"
           crossorigin="anonymous"></script>
-  <script src="/js/main.js?v=23" defer></script>
+  <script src="/js/main.js?v=24" defer></script>
 </body>
 </html>

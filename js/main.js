@@ -14,6 +14,32 @@
   /* Signál pro pojistku v <head>: JS běží, takže reveal-fallback se nespustí. */
   html.classList.add('js-ready');
 
+  /* ---- atmosférické video pozadí (jen desktop; šetrné k datům a baterii) ---- */
+  var atmos = doc.getElementById('pageAtmos');
+  if (atmos) {
+    var connInfo = navigator.connection || {};
+    var wantAtmos = window.matchMedia('(min-width: 861px)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+      !connInfo.saveData;
+    if (wantAtmos) {
+      var atmosPlay = function () {
+        var p = atmos.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {/* autoplay blokován — vrstva prostě zůstane skrytá */});
+      };
+      atmos.addEventListener('canplay', function () {
+        atmosPlay();
+        atmos.classList.add('is-on');
+      }, { once: true });
+      atmos.src = '/videos/atmos-colorflow.mp4';
+      atmos.load();
+      // Neplýtvat dekódováním, když je karta na pozadí
+      doc.addEventListener('visibilitychange', function () {
+        if (doc.hidden) atmos.pause();
+        else if (atmos.src) atmosPlay();
+      });
+    }
+  }
+
   /* ---- rok v patičce ---- */
   var yearEl = doc.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
