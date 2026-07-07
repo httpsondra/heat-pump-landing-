@@ -44,7 +44,9 @@
 
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; color-scheme: light; }
+/* Základní bílé plátno je na <html> (za atmosférickou vrstvou), aby ji neprůhledné
+   pozadí <body> nezakrylo — atmos má z-index:-1 a je potomkem body. */
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; color-scheme: light; background: var(--bg); }
 
 /* Skip link – pro klávesnici, skrytý dokud není fokus */
 .skip-link {
@@ -75,7 +77,7 @@ html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; color-scheme: li
   -webkit-mask-image: radial-gradient(115% 85% at 50% 45%, #000 38%, transparent 90%);
           mask-image: radial-gradient(115% 85% at 50% 45%, #000 38%, transparent 90%);
 }
-.page-atmos.is-on { opacity: .08; }
+.page-atmos.is-on { opacity: .1; }
 @media (max-width: 860px) { .page-atmos { display: none; } }
 @media (prefers-reduced-motion: reduce) { .page-atmos { display: none; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
@@ -84,7 +86,7 @@ body {
   margin: 0;
   font-family: var(--sans);
   color: var(--ink);
-  background: var(--bg);
+  background: transparent;    /* plátno je na <html>; průhledné sekce prosvítají atmosféru */
   font-size: clamp(15px, 1.05vw, 17px);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
