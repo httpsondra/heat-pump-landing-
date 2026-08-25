@@ -21,30 +21,26 @@
   /* =======================================================================
      ODESLÁNÍ POPTÁVKY — konfigurace
      -----------------------------------------------------------------------
-     Web zatím nemá žádný backend ani e-mailovou službu.
+     Poptávka se odesílá na pozadí přes Web3Forms (žádný vlastní backend).
 
-     JAK TO FUNGUJE TEĎ (bez nastavení):
-       Formulář sesbírá odpovědi a otevře uživateli jeho e-mailového klienta
-       s předvyplněnou, čitelně naformátovanou poptávkou. Uživatel ji jen
-       odešle. Funguje to okamžitě a nic se neztrácí "do prázdna" — ale část
-       lidí ten poslední krok neudělá.
+     NASTAVENÍ (jednorázově, ~5 minut):
+       1) Na https://web3forms.com nechat vygenerovat access key na adresu
+          dusekmilan@volny.cz (klíč přijde e-mailem).
+       2) Vložit ho níže do WEB3FORMS_ACCESS_KEY.
+       3) Zvýšit ?v= u js/form.js v index.html, ať se nová verze nekešuje.
+       CSP už api.web3forms.com povoluje (connect-src ve vercel.json),
+       nic dalšího se měnit nemusí.
 
-     JAK TO ZAPNOUT NAPLNO (doporučeno, ~5 minut):
-       1) Založit zdarma účet na https://web3forms.com a nechat si poslat
-          access key na dusekmilan@volny.cz.
-       2) Vložit ten klíč níže do ACCESS_KEY.
-       3) Hotovo — poptávka pak chodí Milanovi rovnou na e-mail, uživatel
-          vidí potvrzení na stránce a nic nemusí odesílat ručně.
-       CSP už api.web3forms.com povoluje (viz connect-src ve vercel.json),
-       takže se nic dalšího měnit nemusí.
+     Access key je veřejný identifikátor formuláře, ne tajemství — může být
+     v klientském kódu. Proti robotům slouží honeypot pole `web` níže.
 
-     Dokud je ACCESS_KEY prázdný, na server se záměrně NEPOSÍLÁ nic —
-     žádný zbytečný požadavek, žádné falešné "odesláno".
+     Dokud je klíč prázdný, formulář se tváří jako nenakonfigurovaný:
+     NEODESLÁ nic, NEPŘEDSTÍRÁ úspěch a NEOTEVÍRÁ e-mailového klienta —
+     ukáže chybový stav, aby si toho někdo všiml dřív než zákazník.
      ======================================================================= */
-  var ENDPOINT   = 'https://api.web3forms.com/submit';
-  var ACCESS_KEY = '';                 // TODO (Milan): sem vložit klíč z web3forms.com
-  var MAIL_TO    = 'dusekmilan@volny.cz';
-  var PHONE      = '+420 603 479 240';
+  var WEB3FORMS_ACCESS_KEY = '';          // TODO (Milan): vložit klíč z web3forms.com
+  var WEB3FORMS_ENDPOINT   = 'https://api.web3forms.com/submit';
+  var SUBMIT_TIMEOUT_MS    = 15000;
 
   /* =======================================================================
      FAQ akordeon
@@ -137,10 +133,10 @@
   var backBtn  = doc.getElementById('inquiryBack');
   var nextBtn  = doc.getElementById('inquiryNext');
   var submitBtn= doc.getElementById('inquirySubmit');
-  var microEl  = doc.getElementById('inquiryMicro');
   var alertEl  = doc.getElementById('inquiryAlert');
   var doneEl   = doc.getElementById('inquiryDone');
-  var doneText = doc.getElementById('inquiryDoneText');
+  var errorEl  = doc.getElementById('inquiryError');
+  var retryBtn = doc.getElementById('inquiryRetry');
   var summaryEl= doc.getElementById('inquirySummary');
   var navEl    = doc.getElementById('inquiryNav');
   var railEl   = doc.getElementById('inquiryRail');
@@ -228,6 +224,87 @@
     else input.removeAttribute('aria-invalid');
   }
 
+  /* =======================================================================
+     Telefon — průběžné formátování na české 600 700 800
+     -----------------------------------------------------------------------
+     Zobrazená hodnota je vždy jen 9 číslic po trojicích. Předvolba se do pole
+     nepíše (ani jako placeholder), ale vloží-li ji uživatel přes schránku,
+     tiše se odřízne. Interně se drží normalizovaný tvar +420600700800.
+     ======================================================================= */
+  var telEl = doc.getElementById('f-telefon');
+
+  function telDigits(raw) {
+    var d = String(raw == null ? '' : raw).replace(/\D/g, '');
+    // +420 / 420 / 00420 na začátku = česká předvolba, ne první číslice čísla
+    if (d.indexOf('00420') === 0) d = d.slice(5);
+    else if (d.indexOf('420') === 0 && d.length > 9) d = d.slice(3);
+    return d.slice(0, 9);
+  }
+  function telGroup(digits) {
+    return digits.replace(/(\d{3})(?=\d)/g, '$1 ');
+  }
+  function telDisplay() { return telEl ? telEl.value.trim() : ''; }
+  function telE164() {
+    var d = telDigits(telEl ? telEl.value : '');
+    return d.length === 9 ? '+420' + d : '';
+  }
+
+  /* Přeformátuje pole a udrží kurzor u stejné číslice, u které stál.
+     Bez toho kurzor po každé mezeře odskakuje na konec. */
+  function telFormat(caretDigits) {
+    if (!telEl) return;
+    var digits = telDigits(telEl.value);
+    var out = telGroup(digits);
+    if (caretDigits == null) {
+      var before = telEl.value.slice(0, telEl.selectionStart == null ? telEl.value.length : telEl.selectionStart);
+      caretDigits = telDigits(before).length;
+      // Když se odřízla předvolba, posune se o ni i kurzor.
+      var rawBefore = before.replace(/\D/g, '');
+      var rawAll = telEl.value.replace(/\D/g, '');
+      if (rawAll.indexOf('420') === 0 && rawAll.length > 9 && rawBefore.indexOf('420') === 0) {
+        caretDigits = Math.max(0, rawBefore.length - 3);
+      }
+    }
+    caretDigits = Math.max(0, Math.min(caretDigits, digits.length));
+    telEl.value = out;
+    // Kurzor za N-tou číslici (mezery přeskočí).
+    var pos = 0, seen = 0;
+    while (pos < out.length && seen < caretDigits) {
+      if (/\d/.test(out.charAt(pos))) seen++;
+      pos++;
+    }
+    try { telEl.setSelectionRange(pos, pos); } catch (e) { /* pole není zaměřené */ }
+  }
+
+  if (telEl) {
+    telEl.addEventListener('input', function () { telFormat(); });
+
+    /* Backspace přes mezeru musí smazat číslici před ní, ne jen mezeru —
+       jinak se první stisk „nic nestane" a působí to rozbitě. */
+    telEl.addEventListener('keydown', function (e) {
+      if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+      if (telEl.selectionStart !== telEl.selectionEnd) return;   // výběr řeší prohlížeč
+      var pos = telEl.selectionStart;
+      if (e.key === 'Backspace' && pos > 0 && telEl.value.charAt(pos - 1) === ' ') {
+        e.preventDefault();
+        var d = telDigits(telEl.value);
+        var idx = telDigits(telEl.value.slice(0, pos)).length;     // číslic vlevo
+        telEl.value = telGroup(d.slice(0, idx - 1) + d.slice(idx));
+        telFormat(Math.max(0, idx - 1));
+      } else if (e.key === 'Delete' && telEl.value.charAt(pos) === ' ') {
+        e.preventDefault();
+        var d2 = telDigits(telEl.value);
+        var idx2 = telDigits(telEl.value.slice(0, pos)).length;    // číslic vlevo
+        telEl.value = telGroup(d2.slice(0, idx2) + d2.slice(idx2 + 1));
+        telFormat(idx2);
+      }
+    });
+
+    // Vložení ze schránky: nechat prohlížeč vložit, pak srovnat na konci tiku.
+    telEl.addEventListener('paste', function () { window.setTimeout(function () { telFormat(); }, 0); });
+    telEl.addEventListener('blur', function () { telFormat(telDigits(telEl.value).length); });
+  }
+
   /* ---- validace jednotlivých kroků ---- */
   function validate(n) {
     setAlert('');
@@ -257,8 +334,8 @@
       var em = doc.getElementById('f-email').value.trim();
       var ok2 = true;
       if (!jm) { fieldError('jmeno', 'Doplňte prosím jméno.'); ok2 = false; }
-      if (!tel) { fieldError('telefon', 'Doplňte prosím telefon, ať se vám mám kam ozvat.'); ok2 = false; }
-      else if (!/^\+?[\d\s()/-]{9,17}$/.test(tel)) { fieldError('telefon', 'Zkontrolujte prosím tvar telefonního čísla.'); ok2 = false; }
+      if (!tel) { fieldError('telefon', 'Doplňte prosím telefon, ať se vám máme kam ozvat.'); ok2 = false; }
+      else if (telDigits(tel).length !== 9) { fieldError('telefon', 'Zadejte prosím devítimístné číslo, například 600 700 800.'); ok2 = false; }
       if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) { fieldError('email', 'Zkontrolujte prosím tvar e-mailu.'); ok2 = false; }
       if (!ok2) {
         setAlert('Zkontrolujte prosím označená pole.');
@@ -304,7 +381,6 @@
     var last = step === TOTAL;
     nextBtn.hidden = last;
     submitBtn.hidden = !last;
-    microEl.hidden = !last;
     // Krok 5 je celý nepovinný — ať je vidět, že se dá přeskočit.
     nextBtn.textContent = step === 5 ? 'Přeskočit a pokračovat' : 'Pokračovat';
     if (last) renderSummary();
@@ -329,10 +405,12 @@
   }
 
   function go(n, focusIt) {
+    var from = step;
     step = Math.min(TOTAL, Math.max(1, n));
     setAlert('');
     render(focusIt !== false);
     track('inquiry_step', { step: step, label: LABELS[step - 1] });
+    if (step > from) track('inquiry_step_completed', { step: from, label: LABELS[from - 1] });
   }
 
   /* ---- ovládání ---- */
@@ -369,16 +447,21 @@
     if (step < TOTAL) { e.preventDefault(); if (validate(step)) go(step + 1); }
   });
 
-  /* ---- sestavení čitelné poptávky ---- */
+  /* ---- sestavení poptávky ---- */
   function collect() {
     function val(id) { var el = doc.getElementById('f-' + id); return el ? el.value.trim() : ''; }
     function radio(n) { var el = form.querySelector('input[name="' + n + '"]:checked'); return el ? el.value : ''; }
     return {
       sluzba: radio('sluzba'), objekt: radio('objekt'), situace: radio('situace'),
       mesto: val('mesto'), psc: val('psc'), popis: val('popis'), zarizeni: val('zarizeni'),
-      jmeno: val('jmeno'), telefon: val('telefon'), email: val('email')
+      jmeno: val('jmeno'),
+      telefon: telDisplay(),          // čitelně: 600 700 800
+      telefonE164: telE164(),         // strojově: +420600700800 (pro CRM)
+      email: val('email')
     };
   }
+
+  /* Čitelný přepis poptávky do těla e-mailu. */
   function asText(d) {
     return [
       'Nová poptávka z webu dusekweb.com', '',
@@ -390,23 +473,72 @@
       'Popis:', (d.popis || '—'), '',
       '— Kontakt —',
       'Jméno:     ' + d.jmeno,
-      'Telefon:   ' + d.telefon,
+      'Telefon:   ' + d.telefon + (d.telefonE164 ? '  (' + d.telefonE164 + ')' : ''),
       'E-mail:    ' + (d.email || '—')
     ].join('\n');
   }
 
-  function showDone(msg) {
+  /* Payload pro Web3Forms. Jednotlivá pole jsou i samostatně (ne jen v `message`),
+     aby se z nich dalo později bez přepisování napojit CRM nebo automatizace. */
+  function payload(d) {
+    return {
+      access_key: WEB3FORMS_ACCESS_KEY,
+      subject: 'Nová poptávka z webu — ' + (d.sluzba || 'neurčeno'),
+      from_name: 'Web Milan Dušek',
+      replyto: d.email || '',
+      // strukturovaná data
+      sluzba: d.sluzba, objekt: d.objekt, situace: d.situace,
+      mesto: d.mesto, psc: d.psc,
+      popis: d.popis, zarizeni: d.zarizeni,
+      jmeno: d.jmeno, telefon: d.telefon, telefon_e164: d.telefonE164, email: d.email,
+      // původ poptávky
+      zdroj: 'web', stranka: (location.origin + location.pathname),
+      // čitelná verze pro tělo e-mailu
+      message: asText(d)
+    };
+  }
+
+  /* ---- přepínání stavů karty ---- */
+  function hideFormChrome() {
     panels.forEach(function (p) { p.hidden = true; });
     if (railEl) railEl.hidden = true;
     if (metaEl) metaEl.hidden = true;
     navEl.hidden = true;
-    microEl.hidden = true;
     setAlert('');
-    if (msg) doneText.textContent = msg;
+  }
+  function showDone() {
+    hideFormChrome();
+    errorEl.hidden = true;
     doneEl.hidden = false;
     doneEl.focus({ preventScroll: true });
     keepInView();
-    clearSaved();
+    clearSaved();                      // odesláno → rozepsaná kopie už není potřeba
+    track('inquiry_success', {});
+  }
+  function showError(reason) {
+    hideFormChrome();
+    doneEl.hidden = true;
+    errorEl.hidden = false;
+    errorEl.focus({ preventScroll: true });
+    keepInView();
+    // Data zůstávají ve formuláři i v sessionStorage — „Zkusit znovu" je vrátí.
+    track('inquiry_error', { reason: reason || 'unknown' });
+  }
+  function resetSubmitBtn() {
+    form.removeAttribute('aria-busy');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Odeslat nezávaznou poptávku';
+  }
+
+  if (retryBtn) {
+    retryBtn.addEventListener('click', function () {
+      errorEl.hidden = true;
+      if (railEl) railEl.hidden = false;
+      if (metaEl) metaEl.hidden = false;
+      navEl.hidden = false;
+      resetSubmitBtn();
+      go(TOTAL);                       // zpět na kontaktní krok, odpovědi zůstaly
+    });
   }
 
   /* ---- odeslání ---- */
@@ -418,56 +550,42 @@
     var data = collect();
     track('inquiry_submit', { sluzba: data.sluzba, objekt: data.objekt, mesto: data.mesto });
 
-    // Bez nastaveného klíče se na server nic neposílá — otevře se předvyplněný
-    // e-mail. Žádný zbytečný požadavek a hlavně žádné falešné „odesláno".
-    if (!ACCESS_KEY) { handoffToMail(data); return; }
+    /* Chybějící klíč = špatná konfigurace, ne chyba uživatele. Nic se neodesílá
+       a hlavně se nepředstírá úspěch — jinak by se poptávky tiše ztrácely. */
+    if (!WEB3FORMS_ACCESS_KEY) {
+      if (window.console && console.warn) {
+        console.warn('[poptávka] Chybí WEB3FORMS_ACCESS_KEY v js/form.js — formulář nic neodeslal.');
+      }
+      showError('missing_access_key');
+      return;
+    }
 
     form.setAttribute('aria-busy', 'true');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Odesílám…';
+    submitBtn.textContent = 'Odesíláme…';
 
     var ac = new AbortController();
-    var timer = window.setTimeout(function () { ac.abort(); }, 12000);
+    var timedOut = false;
+    var timer = window.setTimeout(function () { timedOut = true; ac.abort(); }, SUBMIT_TIMEOUT_MS);
 
-    fetch(ENDPOINT, {
+    fetch(WEB3FORMS_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       signal: ac.signal,
-      body: JSON.stringify({
-        access_key: ACCESS_KEY,
-        subject: 'Nová poptávka z webu — ' + (data.sluzba || 'neurčeno'),
-        from_name: 'Web Milan Dušek',
-        replyto: data.email || undefined,
-        message: asText(data)
-      })
+      body: JSON.stringify(payload(data))
     })
-      .then(function (r) { return r.json(); })
+      .then(function (r) { return r.json().catch(function () { return null; }); })
       .then(function (j) {
-        if (!j || !j.success) throw new Error(j && j.message || 'odeslání selhalo');
         window.clearTimeout(timer);
-        showDone('Díky, mám ji. Ozvu se vám na uvedený kontakt a probereme detaily.');
+        if (!j || !j.success) throw new Error((j && j.message) || 'odeslání selhalo');
+        showDone();
       })
-      .catch(function () {
+      .catch(function (err) {
         window.clearTimeout(timer);
-        form.removeAttribute('aria-busy');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Odeslat nezávaznou poptávku';
-        // Lead se nesmí ztratit — nabídneme e-mail i telefon.
-        setAlert('Poptávku se nepodařilo odeslat. Zkuste to prosím znovu, nebo zavolejte na +420 603 479 240.');
-        handoffToMail(data, true);
+        resetSubmitBtn();
+        showError(timedOut ? 'timeout' : (err && err.message) || 'network');
       });
   });
-
-  /* Předvyplněný e-mail — funguje bez jakéhokoli backendu. */
-  function handoffToMail(data, afterError) {
-    var href = 'mailto:' + MAIL_TO +
-      '?subject=' + encodeURIComponent('Poptávka z webu — ' + (data.sluzba || 'neurčeno')) +
-      '&body=' + encodeURIComponent(asText(data));
-    try { window.location.href = href; } catch (e) {}
-    if (afterError) return;
-    showDone('Otevřel jsem vám e-mail s vyplněnou poptávkou — stačí ji odeslat. ' +
-             'Pokud se e-mail neotevřel, zavolejte prosím na ' + PHONE + '.');
-  }
 
   /* ---- start ----
      Pořadí je důležité: nejdřív obnovit uložené odpovědi (včetně `branch`),
@@ -475,6 +593,7 @@
      ze servisní větve zahodila, protože ta větev byla ještě disabled. */
   restore();
   syncBranch();
+  if (telEl && telEl.value) telFormat(telDigits(telEl.value).length);
   render(false);
 
   /* Kliknutí na CTA v kartě služby předvybere odpovídající službu. */

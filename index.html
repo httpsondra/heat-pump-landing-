@@ -51,7 +51,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=26" />
+  <link rel="stylesheet" href="/css/styles.css?v=27" />
 </head>
 <body>
 
@@ -74,7 +74,7 @@
         <span class="topnav__indicator" aria-hidden="true"></span>
         <a href="#sluzby">Služby</a>
         <a href="#postup">Jak to probíhá</a>
-        <a href="#proc">Proč já</a>
+        <a href="#proc">Proč my</a>
         <a href="#faq">Časté dotazy</a>
         <a href="#kontakt">Kontakt</a>
       </nav>
@@ -139,36 +139,12 @@
       </div>
     </section>
 
-    <!-- ================= TRUST STRIP ================= -->
-    <section class="trust" id="duvera" aria-labelledby="duvera-nadpis">
-      <h2 id="duvera-nadpis" class="sr-only">Proč lidé volají mně</h2>
-      <div class="container">
-        <div class="trust__grid">
-          <div class="trust__item">
-            <p class="trust__label">Kdo přijede</p>
-            <p class="trust__value">Přímo technik</p>
-          </div>
-          <div class="trust__item">
-            <p class="trust__label">Kde pracuji</p>
-            <p class="trust__value">Praha a okolí</p>
-          </div>
-          <div class="trust__item">
-            <p class="trust__label">Rozsah</p>
-            <p class="trust__value">Montáž i servis</p>
-          </div>
-          <div class="trust__item">
-            <p class="trust__label">První krok</p>
-            <p class="trust__value">Nezávazná poptávka</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ================= VÝROBCI (marquee banner) ================= -->
-    <!-- Formulace je záměrně opatrná: „pracuji se zařízeními" netvrdí oficiální
-         partnerství ani autorizaci, což zatím není ověřeno. -->
-    <section class="brands" aria-label="Značky, se kterými pracuji">
-      <p class="brands__label">Pracuji se zařízeními ověřených výrobců</p>
+    <!-- Formulace je záměrně opatrná: „pracujeme se zařízeními" netvrdí oficiální
+         partnerství ani autorizaci, což zatím není ověřeno. Nedoplňovat tvrzení
+         typu „oficiální/certifikovaný partner" bez písemného potvrzení. -->
+    <section class="brands" aria-label="Značky, se kterými pracujeme">
+      <p class="brands__label">Pracujeme se zařízeními ověřených výrobců</p>
       <div class="marquee">
         <div class="marquee__track">
           <span class="marquee__item"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="Protherm" width="1440" height="810" loading="lazy" decoding="async" /></span>
@@ -186,7 +162,6 @@
           <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
         </div>
       </div>
-      <p class="brands__note">Loga jsou majetkem příslušných výrobců. Nejde o oficiální partnerství.</p>
     </section>
 
     <!-- ================= SLUŽBY ================= -->
@@ -195,7 +170,7 @@
         <header class="section__head section__head--split reveal">
           <div>
             <p class="kicker">01 — Služby</p>
-            <h2>Tepelná čerpadla, klimatizace a kotle<br><span class="muted">co pro vás zajistím</span></h2>
+            <h2>Tepelná čerpadla, klimatizace a kotle<br><span class="muted">co pro vás zajistíme</span></h2>
           </div>
           <p class="section__sub">Od prvního návrhu po servis. Osobně, bez prostředníků.</p>
         </header>
@@ -208,7 +183,7 @@
             </span>
             <p class="card__tag">Vzduch–voda</p>
             <h3>Tepelná čerpadla</h3>
-            <p>Navrhnu výkon podle vašeho domu a napojím čerpadlo na stávající otopnou soustavu.</p>
+            <p>Navrhneme výkon podle vašeho domu a napojíme čerpadlo na stávající otopnou soustavu.</p>
             <a class="card__cta card__link" href="#poptavka" data-sluzba="tepelne-cerpadlo">Poptat tepelné čerpadlo <i aria-hidden="true">→</i></a>
           </article>
 
@@ -230,7 +205,7 @@
             </span>
             <p class="card__tag">Kondenzační kotle</p>
             <h3>Plynové kotle</h3>
-            <p>Výměna i nová montáž včetně uvedení do provozu — starý kotel odpojím, nový nechám běžet.</p>
+            <p>Výměna i nová montáž včetně uvedení do provozu — starý kotel odpojíme, nový necháme běžet.</p>
             <a class="card__cta card__link" href="#poptavka" data-sluzba="plynovy-kotel">Poptat výměnu kotle <i aria-hidden="true">→</i></a>
           </article>
 
@@ -241,7 +216,7 @@
             </span>
             <p class="card__tag">Pravidelná péče</p>
             <h3>Servis a revize</h3>
-            <p>Čištění, kontroly a řešení poruch — u zařízení, která jsem montoval, i u cizích.</p>
+            <p>Čištění, kontroly a řešení poruch — u zařízení, která jsme montovali, i u cizích.</p>
             <a class="card__cta card__link" href="#poptavka" data-sluzba="servis">Objednat servis <i aria-hidden="true">→</i></a>
           </article>
         </div>
@@ -268,17 +243,17 @@
           <li class="step reveal">
             <span class="step__num">02</span>
             <h3>Návrh řešení</h3>
-            <p>Doporučím konkrétní zařízení a výkon a řeknu orientační cenu. Rozmyslet si to můžete v klidu.</p>
+            <p>Doporučíme konkrétní zařízení a výkon a řekneme orientační cenu. Rozmyslet si to můžete v klidu.</p>
           </li>
           <li class="step reveal">
             <span class="step__num">03</span>
             <h3>Montáž</h3>
-            <p>Domluvíme termín. Odvedu montáž, zprovozním zařízení a ukážu vám, jak ho ovládat.</p>
+            <p>Domluvíme termín. Odvedeme montáž, zprovozníme zařízení a ukážeme vám, jak ho ovládat.</p>
           </li>
           <li class="step reveal">
             <span class="step__num">04</span>
             <h3>Servis</h3>
-            <p>Po montáži nekončím. Zařízení dál servisuji a pomůžu i s poruchou.</p>
+            <p>Po montáži nekončíme. Zařízení dál servisujeme a pomůžeme i s poruchou.</p>
           </li>
         </ol>
       </div>
@@ -289,8 +264,8 @@
       <div class="container">
         <div class="why">
           <header class="section__head section__head--left reveal">
-            <p class="kicker">03 — Proč já</p>
-            <h2>Jeden člověk,<br><span class="muted">který za svou prací stojí</span></h2>
+            <p class="kicker">03 — Proč my</p>
+            <h2>Za svou prací<br><span class="muted">si stojíme</span></h2>
             <p class="section__sub">Nevoláte do call centra. Jednáte přímo s technikem, který řešení navrhne, namontuje a následně servisuje.</p>
             <a class="btn btn--primary btn--lg why__cta" href="#poptavka">Nezávazně poptat</a>
           </header>
@@ -298,7 +273,7 @@
           <ul class="reasons">
             <li class="reason reveal">
               <h3>Osobní přístup</h3>
-              <p>Jednáte přímo se mnou. Kdo přijede, ten to i namontuje.</p>
+              <p>Jednáte přímo s technikem. Kdo přijede, ten práci i odvede.</p>
             </li>
             <li class="reason reveal">
               <h3>Rychlá domluva</h3>
@@ -306,11 +281,11 @@
             </li>
             <li class="reason reveal">
               <h3>Praha a okolí</h3>
-              <p>Pracuji v Praze a okolí, takže to k vám nemám daleko.</p>
+              <p>Pracujeme v Praze a okolí, takže to k vám nemáme daleko.</p>
             </li>
             <li class="reason reveal">
               <h3>Servis po montáži</h3>
-              <p>Po montáži nezmizím. Zařízení dál servisuji.</p>
+              <p>Po montáži nezmizíme. Zařízení dál servisujeme.</p>
             </li>
           </ul>
         </div>
@@ -332,7 +307,7 @@
             <p class="kicker">04 — Realizace</p>
             <h2>Vybrané realizace<br><span class="muted">v Praze a okolí</span></h2>
           </div>
-          <p class="section__sub">Ukázky z toho, co mi prošlo rukama. Fotky z konkrétních montáží.</p>
+          <p class="section__sub">Ukázky z toho, co nám prošlo rukama. Fotky z konkrétních montáží.</p>
         </header>
 
         <div class="grid grid--work">
@@ -363,8 +338,8 @@
       <div class="container">
         <header class="section__head reveal">
           <p class="kicker">04 — Poptávka</p>
-          <h2>Řekněte mi, co potřebujete<br><span class="muted">ozvu se osobně</span></h2>
-          <p class="section__sub" style="margin-inline:auto">Pár otázek, ať vím, o co jde. Zabere přibližně 2 minuty, nezávazně a zdarma.</p>
+          <h2>Řekněte nám, co potřebujete<br><span class="muted">ozveme se vám</span></h2>
+          <p class="section__sub" style="margin-inline:auto">Pár otázek, ať víme, o co jde. Zabere přibližně 2 minuty, nezávazně a zdarma.</p>
         </header>
 
         <form class="inquiry" id="inquiryForm" novalidate>
@@ -391,7 +366,7 @@
                 <label class="opt"><input type="radio" name="sluzba" value="Klimatizace" data-next="instalace" /><span>Klimatizace<em>chlazení, případně přitápění</em></span></label>
                 <label class="opt"><input type="radio" name="sluzba" value="Servis nebo oprava" data-next="servis" /><span>Servis nebo oprava<em>revize, čištění, porucha</em></span></label>
                 <label class="opt"><input type="radio" name="sluzba" value="Plynový kotel" data-next="instalace" /><span>Plynový kotel<em>výměna nebo nová montáž</em></span></label>
-                <label class="opt"><input type="radio" name="sluzba" value="Nejsem si jistý" data-next="instalace" /><span>Nejsem si jistý<em>poradím vám, co dává smysl</em></span></label>
+                <label class="opt"><input type="radio" name="sluzba" value="Nejsem si jistý" data-next="instalace" /><span>Nejsem si jistý<em>poradíme vám, co dává smysl</em></span></label>
               </div>
             </fieldset>
 
@@ -400,10 +375,10 @@
               <legend class="inquiry__q" id="q2" tabindex="-1">O jaký objekt jde?</legend>
               <p class="inquiry__hint">Podle typu objektu se liší návrh i montáž.</p>
               <div class="opts">
-                <label class="opt"><input type="radio" name="objekt" value="Rodinný dům" /><span>Rodinný dům</span></label>
-                <label class="opt"><input type="radio" name="objekt" value="Byt" /><span>Byt</span></label>
-                <label class="opt"><input type="radio" name="objekt" value="Firemní objekt" /><span>Firemní objekt<em>kancelář, provozovna, dílna</em></span></label>
-                <label class="opt"><input type="radio" name="objekt" value="Jiný" /><span>Jiný<em>chata, novostavba, něco dalšího</em></span></label>
+                <label class="opt"><input type="radio" name="objekt" value="Rodinný dům" /><span>Rodinný dům<em>novostavba i stávající dům</em></span></label>
+                <label class="opt"><input type="radio" name="objekt" value="Byt" /><span>Byt<em>bytová jednotka nebo apartmán</em></span></label>
+                <label class="opt"><input type="radio" name="objekt" value="Firemní objekt" /><span>Firemní objekt<em>kancelář, provozovna nebo dílna</em></span></label>
+                <label class="opt"><input type="radio" name="objekt" value="Jiný objekt" /><span>Jiný objekt<em>chata, ateliér nebo jiný prostor</em></span></label>
               </div>
             </fieldset>
 
@@ -412,10 +387,10 @@
                  nezůstane v tab orderu ani se neodešle. -->
             <fieldset class="inquiry__panel" data-step="3" data-variant="instalace" hidden>
               <legend class="inquiry__q" id="q3a" tabindex="-1">Co právě řešíte?</legend>
-              <p class="inquiry__hint">Ať vím, v jaké fázi jste.</p>
+              <p class="inquiry__hint">Ať víme, v jaké fázi jste.</p>
               <div class="opts opts--wide">
                 <label class="opt"><input type="radio" name="situace" value="Zjišťuji možnosti" disabled /><span>Zjišťuji možnosti<em>zatím se rozhoduji</em></span></label>
-                <label class="opt"><input type="radio" name="situace" value="Chci nacenit konkrétní řešení" disabled /><span>Chci nacenit konkrétní řešení</span></label>
+                <label class="opt"><input type="radio" name="situace" value="Chci nacenit konkrétní řešení" disabled /><span>Chci nacenit konkrétní řešení<em>mám představu, chci znát cenu</em></span></label>
                 <label class="opt"><input type="radio" name="situace" value="Měním starý zdroj tepla" disabled /><span>Měním starý zdroj tepla<em>kotel, elektrokotel, přímotopy</em></span></label>
                 <label class="opt"><input type="radio" name="situace" value="Stavím nebo rekonstruuji" disabled /><span>Stavím nebo rekonstruuji<em>řeším to už v projektu</em></span></label>
               </div>
@@ -423,12 +398,12 @@
 
             <fieldset class="inquiry__panel" data-step="3" data-variant="servis" hidden>
               <legend class="inquiry__q" id="q3b" tabindex="-1">Co právě řešíte?</legend>
-              <p class="inquiry__hint">Ať vím, jestli to spěchá.</p>
+              <p class="inquiry__hint">Ať víme, jestli to spěchá.</p>
               <div class="opts opts--wide">
                 <label class="opt"><input type="radio" name="situace" value="Zařízení nefunguje" disabled /><span>Zařízení nefunguje<em>porucha, netopí, nechladí</em></span></label>
                 <label class="opt"><input type="radio" name="situace" value="Hlásí chybu" disabled /><span>Hlásí chybu<em>na displeji nebo v aplikaci</em></span></label>
-                <label class="opt"><input type="radio" name="situace" value="Divný zvuk nebo slabý výkon" disabled /><span>Divný zvuk nebo slabý výkon</span></label>
-                <label class="opt"><input type="radio" name="situace" value="Pravidelná prohlídka nebo revize" disabled /><span>Pravidelná prohlídka nebo revize</span></label>
+                <label class="opt"><input type="radio" name="situace" value="Divný zvuk nebo slabý výkon" disabled /><span>Divný zvuk nebo slabý výkon<em>topí hůř než dřív, nebo je hlučné</em></span></label>
+                <label class="opt"><input type="radio" name="situace" value="Pravidelná prohlídka nebo revize" disabled /><span>Pravidelná prohlídka nebo revize<em>kontrola před sezónou</em></span></label>
               </div>
               <p class="inquiry__micro">Pokud jde o poruchu a spěchá to, zavolejte rovnou na <a href="tel:+420603479240"><strong>603 479 240</strong></a> — bude to nejrychlejší.</p>
             </fieldset>
@@ -436,7 +411,7 @@
             <!-- KROK 4 -->
             <fieldset class="inquiry__panel" data-step="4" hidden>
               <legend class="inquiry__q" id="q4" tabindex="-1">Kde se objekt nachází?</legend>
-              <p class="inquiry__hint">Pracuji v Praze a okolí. Napište adresu i tak — když to nevyjde, řeknu vám to rovnou.</p>
+              <p class="inquiry__hint">Pracujeme v Praze a okolí. Napište adresu i tak — když to nevyjde, řekneme vám to rovnou.</p>
               <div class="fields fields--2">
                 <div class="field">
                   <label for="f-mesto">Město nebo obec</label>
@@ -454,7 +429,7 @@
             <!-- KROK 5 -->
             <fieldset class="inquiry__panel" data-step="5" hidden>
               <legend class="inquiry__q" id="q5" tabindex="-1">Chcete něco doplnit?</legend>
-              <p class="inquiry__hint">Nepovinné, ale pomůže mi to připravit se dopředu.</p>
+              <p class="inquiry__hint">Nepovinné, ale pomůže nám to připravit se dopředu.</p>
               <div class="fields">
                 <div class="field">
                   <label for="f-popis">Popis situace <span class="opt-tag">(nepovinné)</span></label>
@@ -463,15 +438,15 @@
                 <div class="field">
                   <label for="f-zarizeni">Značka a model zařízení <span class="opt-tag">(nepovinné)</span></label>
                   <input id="f-zarizeni" name="zarizeni" type="text" enterkeyhint="next" placeholder="např. Vaillant aroTHERM — štítek bývá na boku jednotky" />
-                  <p class="field__note">Fotky zařízení nebo místa můžete poslat později e-mailem nebo na WhatsApp — ušetří to jednu návštěvu.</p>
+                  <p class="field__note">Fotky zařízení nebo místa můžete poslat později e-mailem — ušetří to jednu návštěvu.</p>
                 </div>
               </div>
             </fieldset>
 
             <!-- KROK 6 -->
             <fieldset class="inquiry__panel" data-step="6" hidden>
-              <legend class="inquiry__q" id="q6" tabindex="-1">Kam se vám mám ozvat?</legend>
-              <p class="inquiry__hint">Ozvu se osobně. Žádný newsletter, žádné předávání dál.</p>
+              <legend class="inquiry__q" id="q6" tabindex="-1">Kam se vám máme ozvat?</legend>
+              <p class="inquiry__hint">Telefon je nejrychlejší cesta, jak se domluvit.</p>
               <div class="inquiry__summary" id="inquirySummary"></div>
               <div class="fields fields--2">
                 <div class="field">
@@ -481,7 +456,7 @@
                 </div>
                 <div class="field">
                   <label for="f-telefon">Telefon</label>
-                  <input id="f-telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="+420 000 000 000" aria-describedby="e-telefon" />
+                  <input id="f-telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="600 700 800" maxlength="11" aria-describedby="e-telefon" />
                   <p class="field__err" id="e-telefon"></p>
                 </div>
               </div>
@@ -494,16 +469,28 @@
               </div>
               <!-- Honeypot proti robotům — pro člověka neviditelné, nikdy nevyplněné. -->
               <div class="sr-only" aria-hidden="true"><label for="f-web">Nevyplňujte</label><input id="f-web" name="web" type="text" tabindex="-1" autocomplete="off" /></div>
-              <p class="inquiry__consent">Odesláním souhlasíte s tím, že vás na uvedený kontakt oslovím kvůli této poptávce. Údaje nikam dál nepředávám.</p>
+              <p class="inquiry__consent">Odesláním souhlasíte s tím, že vás na uvedený kontakt oslovíme kvůli této poptávce.</p>
             </fieldset>
 
             <!-- ÚSPĚCH -->
             <div class="inquiry__done" id="inquiryDone" role="status" tabindex="-1" hidden>
               <div class="tick" aria-hidden="true"></div>
-              <h3 id="inquiryDoneTitle">Poptávka odeslána</h3>
-              <p id="inquiryDoneText">Díky, mám ji. Ozvu se vám na uvedený kontakt a probereme detaily.</p>
+              <h3>Poptávka byla odeslána</h3>
+              <p>Děkujeme. Ozveme se vám co nejdříve a domluvíme další postup.</p>
               <div class="cta-row" style="justify-content:center;margin-top:1.6rem">
-                <a class="btn btn--ghost" href="tel:+420603479240">Zavolat: 603 479 240</a>
+                <a class="btn btn--ghost" href="tel:+420603479240">Zavolat</a>
+              </div>
+            </div>
+
+            <!-- CHYBA ODESLÁNÍ — vyplněné odpovědi zůstávají, „Zkusit znovu"
+                 vrátí uživatele na poslední krok s daty. -->
+            <div class="inquiry__done inquiry__fail" id="inquiryError" role="alert" tabindex="-1" hidden>
+              <div class="cross" aria-hidden="true"></div>
+              <h3>Poptávku se nepodařilo odeslat</h3>
+              <p>Zkuste to prosím znovu, nebo nám zavolejte — vyplněné odpovědi zůstaly zachované.</p>
+              <div class="cta-row" style="justify-content:center;margin-top:1.6rem">
+                <button type="button" class="btn btn--primary" id="inquiryRetry">Zkusit znovu</button>
+                <a class="btn btn--ghost" href="tel:+420603479240">Zavolat</a>
               </div>
             </div>
           </div>
@@ -515,7 +502,6 @@
             <button type="button" class="btn btn--ghost" id="inquiryNext">Pokračovat</button>
             <button type="submit" class="btn btn--primary btn--lg" id="inquirySubmit" hidden>Odeslat nezávaznou poptávku</button>
           </div>
-          <p class="inquiry__micro" id="inquiryMicro" hidden>Nezávazné a zdarma. Odpověď vám pošlu osobně.</p>
 
           <noscript>
             <p class="inquiry__micro">Formulář vyžaduje JavaScript. Zavolejte prosím na <a href="tel:+420603479240"><strong>+420 603 479 240</strong></a> nebo napište na <a href="mailto:dusekmilan@volny.cz">dusekmilan@volny.cz</a>.</p>
@@ -549,42 +535,42 @@
         <div class="faq" id="faqList">
           <div class="faq__item">
             <h3 class="faq__h"><button type="button" class="faq__q" id="faq1-b" aria-expanded="false" aria-controls="faq1-p">Kolik stojí tepelné čerpadlo?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
-            <div class="faq__a" id="faq1-p" role="region" aria-labelledby="faq1-b" hidden><div><p>Cena závisí na velikosti a stavu domu, potřebném výkonu, zvolené značce a na tom, jestli se čerpadlo napojuje na stávající soustavu, nebo se dělá nová. Proto neuvádím jedno číslo — bylo by nepřesné. Po prohlídce vám dám konkrétní nacenění na váš dům.</p></div></div>
+            <div class="faq__a" id="faq1-p" role="region" aria-labelledby="faq1-b" hidden><div><p>Cena závisí na velikosti a stavu domu, potřebném výkonu, zvolené značce a na tom, jestli se čerpadlo napojuje na stávající soustavu, nebo se dělá nová. Proto neuvádíme jedno číslo — bylo by nepřesné. Po prohlídce vám dáme konkrétní nacenění na váš dům.</p></div></div>
           </div>
 
           <div class="faq__item">
             <h3 class="faq__h"><button type="button" class="faq__q" id="faq2-b" aria-expanded="false" aria-controls="faq2-p">Jak dlouho montáž trvá?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
-            <div class="faq__a" id="faq2-p" role="region" aria-labelledby="faq2-b" hidden><div><p>Záleží na rozsahu. Jinak dlouho trvá výměna kotle za kotel a jinak instalace tepelného čerpadla s úpravou rozvodů. Konkrétní termín i délku vám řeknu při návrhu, ať víte dopředu, kolik dnů se u vás bude pracovat.</p></div></div>
+            <div class="faq__a" id="faq2-p" role="region" aria-labelledby="faq2-b" hidden><div><p>Záleží na rozsahu. Jinak dlouho trvá výměna kotle za kotel a jinak instalace tepelného čerpadla s úpravou rozvodů. Konkrétní termín i délku vám řekneme při návrhu, ať víte dopředu, kolik dnů se u vás bude pracovat.</p></div></div>
           </div>
 
           <div class="faq__item">
-            <h3 class="faq__h"><button type="button" class="faq__q" id="faq3-b" aria-expanded="false" aria-controls="faq3-p">Servisujete i zařízení, která jste nemontoval?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
-            <div class="faq__a" id="faq3-p" role="region" aria-labelledby="faq3-b" hidden><div><p>Ano. Napište mi značku a model — podle toho vám řeknu, jestli je servis proveditelný a co bude potřeba. U některých typů zařízení může být nutné objednat konkrétní díl, což termín ovlivní.</p></div></div>
+            <h3 class="faq__h"><button type="button" class="faq__q" id="faq3-b" aria-expanded="false" aria-controls="faq3-p">Servisujete i zařízení, která jste nemontovali?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
+            <div class="faq__a" id="faq3-p" role="region" aria-labelledby="faq3-b" hidden><div><p>Ano. Napište nám značku a model — podle toho vám řekneme, jestli je servis proveditelný a co bude potřeba. U některých typů zařízení může být nutné objednat konkrétní díl, což termín ovlivní.</p></div></div>
           </div>
 
           <div class="faq__item">
             <h3 class="faq__h"><button type="button" class="faq__q" id="faq4-b" aria-expanded="false" aria-controls="faq4-p">Jak rychle dokážete přijet k poruše?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
-            <div class="faq__a" id="faq4-p" role="region" aria-labelledby="faq4-b" hidden><div><p>Vždycky záleží na tom, kolik mám rozdělané práce a kde jste. Nejrychlejší cesta je zavolat na 603 479 240 — rovnou vám řeknu nejbližší reálný termín, ne obecný slib.</p></div></div>
+            <div class="faq__a" id="faq4-p" role="region" aria-labelledby="faq4-b" hidden><div><p>Vždycky záleží na tom, kolik máme rozdělané práce a kde jste. Nejrychlejší cesta je zavolat na 603 479 240 — rovnou vám řekneme nejbližší reálný termín, ne obecný slib.</p></div></div>
           </div>
 
           <div class="faq__item">
             <h3 class="faq__h"><button type="button" class="faq__q" id="faq5-b" aria-expanded="false" aria-controls="faq5-p">Kam dojíždíte?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
-            <div class="faq__a" id="faq5-p" role="region" aria-labelledby="faq5-b" hidden><div><p>Pracuji v Praze a v okolí. Když si nejste jistí, jestli k vám dojedu, napište obec nebo PSČ do poptávky — odpovím rovnou a bez okolků.</p></div></div>
+            <div class="faq__a" id="faq5-p" role="region" aria-labelledby="faq5-b" hidden><div><p>Pracujeme v Praze a v okolí. Když si nejste jistí, jestli k vám dojedeme, napište obec nebo PSČ do poptávky — odpovíme rovnou a bez okolků.</p></div></div>
           </div>
 
           <div class="faq__item">
             <h3 class="faq__h"><button type="button" class="faq__q" id="faq6-b" aria-expanded="false" aria-controls="faq6-p">Děláte i klimatizace?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
-            <div class="faq__a" id="faq6-p" role="region" aria-labelledby="faq6-b" hidden><div><p>Ano, instaluji klimatizace do bytů i domů. Většina dnešních jednotek umí i přitápět, takže se hodí i na jaře a na podzim. Klimatizace pak stejně jako ostatní zařízení dál servisuji.</p></div></div>
+            <div class="faq__a" id="faq6-p" role="region" aria-labelledby="faq6-b" hidden><div><p>Ano, instalujeme klimatizace do bytů i domů. Většina dnešních jednotek umí i přitápět, takže se hodí i na jaře a na podzim. Klimatizace pak stejně jako ostatní zařízení dál servisujeme.</p></div></div>
           </div>
 
           <div class="faq__item">
             <h3 class="faq__h"><button type="button" class="faq__q" id="faq7-b" aria-expanded="false" aria-controls="faq7-p">Pomůžete s výběrem vhodného výkonu?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
-            <div class="faq__a" id="faq7-p" role="region" aria-labelledby="faq7-b" hidden><div><p>To je právě podstata návrhu. Výkon určuji podle konkrétního domu — velikosti, zateplení a typu otopné soustavy. Předimenzované zařízení stojí víc a běží hůř, poddimenzované nestačí. Proto se nejdřív jedu podívat.</p></div></div>
+            <div class="faq__a" id="faq7-p" role="region" aria-labelledby="faq7-b" hidden><div><p>To je právě podstata návrhu. Výkon určujeme podle konkrétního domu — velikosti, zateplení a typu otopné soustavy. Předimenzované zařízení stojí víc a běží hůř, poddimenzované nestačí. Proto se k vám nejdřív jedeme podívat.</p></div></div>
           </div>
 
           <div class="faq__item">
             <h3 class="faq__h"><button type="button" class="faq__q" id="faq8-b" aria-expanded="false" aria-controls="faq8-p">Jak často je potřeba servis?<svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></h3>
-            <div class="faq__a" id="faq8-p" role="region" aria-labelledby="faq8-b" hidden><div><p>U většiny zařízení se doporučuje pravidelná roční kontrola. Přesný interval a rozsah předepisuje výrobce v návodu — u konkrétního zařízení vám řeknu, co je pro něj potřeba. Pravidelná kontrola je nejlevnější způsob, jak předejít poruše uprostřed zimy.</p></div></div>
+            <div class="faq__a" id="faq8-p" role="region" aria-labelledby="faq8-b" hidden><div><p>U většiny zařízení se doporučuje pravidelná roční kontrola. Přesný interval a rozsah předepisuje výrobce v návodu — u konkrétního zařízení vám řekneme, co je pro něj potřeba. Pravidelná kontrola je nejlevnější způsob, jak předejít poruše uprostřed zimy.</p></div></div>
           </div>
         </div>
       </div>
@@ -595,7 +581,7 @@
       <div class="container">
         <div class="cta-band__inner reveal">
           <h2>Řešíte nové vytápění<br>nebo potřebujete servis?</h2>
-          <p>Popište mi během pár kroků, co potřebujete. Ozvu se a domluvíme další postup.</p>
+          <p>Popište nám během pár kroků, co potřebujete. Ozveme se a domluvíme další postup.</p>
           <div class="cta-row">
             <a class="btn btn--primary btn--lg" href="#poptavka">Nezávazně poptat</a>
             <a class="btn btn--onDark btn--lg" href="tel:+420603479240">Zavolat: +420 603 479 240</a>
@@ -717,14 +703,14 @@
        Když se změní odpověď na stránce, změň ji i tady (jinak je to spam podle Googlu). -->
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","@id":"https://www.dusekweb.com/#faq","isPartOf":{"@id":"https://www.dusekweb.com/#webpage"},"mainEntity":[
-    {"@type":"Question","name":"Kolik stojí tepelné čerpadlo?","acceptedAnswer":{"@type":"Answer","text":"Cena závisí na velikosti a stavu domu, potřebném výkonu, zvolené značce a na tom, jestli se čerpadlo napojuje na stávající soustavu, nebo se dělá nová. Proto neuvádím jedno číslo — bylo by nepřesné. Po prohlídce vám dám konkrétní nacenění na váš dům."}},
-    {"@type":"Question","name":"Jak dlouho montáž trvá?","acceptedAnswer":{"@type":"Answer","text":"Záleží na rozsahu. Jinak dlouho trvá výměna kotle za kotel a jinak instalace tepelného čerpadla s úpravou rozvodů. Konkrétní termín i délku vám řeknu při návrhu, ať víte dopředu, kolik dnů se u vás bude pracovat."}},
-    {"@type":"Question","name":"Servisujete i zařízení, která jste nemontoval?","acceptedAnswer":{"@type":"Answer","text":"Ano. Napište mi značku a model — podle toho vám řeknu, jestli je servis proveditelný a co bude potřeba. U některých typů zařízení může být nutné objednat konkrétní díl, což termín ovlivní."}},
-    {"@type":"Question","name":"Jak rychle dokážete přijet k poruše?","acceptedAnswer":{"@type":"Answer","text":"Vždycky záleží na tom, kolik mám rozdělané práce a kde jste. Nejrychlejší cesta je zavolat na 603 479 240 — rovnou vám řeknu nejbližší reálný termín, ne obecný slib."}},
-    {"@type":"Question","name":"Kam dojíždíte?","acceptedAnswer":{"@type":"Answer","text":"Pracuji v Praze a v okolí. Když si nejste jistí, jestli k vám dojedu, napište obec nebo PSČ do poptávky — odpovím rovnou a bez okolků."}},
-    {"@type":"Question","name":"Děláte i klimatizace?","acceptedAnswer":{"@type":"Answer","text":"Ano, instaluji klimatizace do bytů i domů. Většina dnešních jednotek umí i přitápět, takže se hodí i na jaře a na podzim. Klimatizace pak stejně jako ostatní zařízení dál servisuji."}},
-    {"@type":"Question","name":"Pomůžete s výběrem vhodného výkonu?","acceptedAnswer":{"@type":"Answer","text":"To je právě podstata návrhu. Výkon určuji podle konkrétního domu — velikosti, zateplení a typu otopné soustavy. Předimenzované zařízení stojí víc a běží hůř, poddimenzované nestačí. Proto se nejdřív jedu podívat."}},
-    {"@type":"Question","name":"Jak často je potřeba servis?","acceptedAnswer":{"@type":"Answer","text":"U většiny zařízení se doporučuje pravidelná roční kontrola. Přesný interval a rozsah předepisuje výrobce v návodu — u konkrétního zařízení vám řeknu, co je pro něj potřeba. Pravidelná kontrola je nejlevnější způsob, jak předejít poruše uprostřed zimy."}}
+    {"@type":"Question","name":"Kolik stojí tepelné čerpadlo?","acceptedAnswer":{"@type":"Answer","text":"Cena závisí na velikosti a stavu domu, potřebném výkonu, zvolené značce a na tom, jestli se čerpadlo napojuje na stávající soustavu, nebo se dělá nová. Proto neuvádíme jedno číslo — bylo by nepřesné. Po prohlídce vám dáme konkrétní nacenění na váš dům."}},
+    {"@type":"Question","name":"Jak dlouho montáž trvá?","acceptedAnswer":{"@type":"Answer","text":"Záleží na rozsahu. Jinak dlouho trvá výměna kotle za kotel a jinak instalace tepelného čerpadla s úpravou rozvodů. Konkrétní termín i délku vám řekneme při návrhu, ať víte dopředu, kolik dnů se u vás bude pracovat."}},
+    {"@type":"Question","name":"Servisujete i zařízení, která jste nemontovali?","acceptedAnswer":{"@type":"Answer","text":"Ano. Napište nám značku a model — podle toho vám řekneme, jestli je servis proveditelný a co bude potřeba. U některých typů zařízení může být nutné objednat konkrétní díl, což termín ovlivní."}},
+    {"@type":"Question","name":"Jak rychle dokážete přijet k poruše?","acceptedAnswer":{"@type":"Answer","text":"Vždycky záleží na tom, kolik máme rozdělané práce a kde jste. Nejrychlejší cesta je zavolat na 603 479 240 — rovnou vám řekneme nejbližší reálný termín, ne obecný slib."}},
+    {"@type":"Question","name":"Kam dojíždíte?","acceptedAnswer":{"@type":"Answer","text":"Pracujeme v Praze a v okolí. Když si nejste jistí, jestli k vám dojedeme, napište obec nebo PSČ do poptávky — odpovíme rovnou a bez okolků."}},
+    {"@type":"Question","name":"Děláte i klimatizace?","acceptedAnswer":{"@type":"Answer","text":"Ano, instalujeme klimatizace do bytů i domů. Většina dnešních jednotek umí i přitápět, takže se hodí i na jaře a na podzim. Klimatizace pak stejně jako ostatní zařízení dál servisujeme."}},
+    {"@type":"Question","name":"Pomůžete s výběrem vhodného výkonu?","acceptedAnswer":{"@type":"Answer","text":"To je právě podstata návrhu. Výkon určujeme podle konkrétního domu — velikosti, zateplení a typu otopné soustavy. Předimenzované zařízení stojí víc a běží hůř, poddimenzované nestačí. Proto se k vám nejdřív jedeme podívat."}},
+    {"@type":"Question","name":"Jak často je potřeba servis?","acceptedAnswer":{"@type":"Answer","text":"U většiny zařízení se doporučuje pravidelná roční kontrola. Přesný interval a rozsah předepisuje výrobce v návodu — u konkrétního zařízení vám řekneme, co je pro něj potřeba. Pravidelná kontrola je nejlevnější způsob, jak předejít poruše uprostřed zimy."}}
   ]}
   </script>
 
@@ -759,11 +745,11 @@
     })();
   </script>
 
-  <script src="/js/main.js?v=26" defer></script>
+  <script src="/js/main.js?v=27" defer></script>
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=26" defer></script>
+  <script src="/js/form.js?v=27" defer></script>
 
   <!-- PostHog až po zbytku — analytika nepatří na kritickou cestu vykreslení. -->
   <script>
