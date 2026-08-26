@@ -308,6 +308,68 @@
     telEl.addEventListener('blur', function () { telFormat(telDigits(telEl.value).length); });
   }
 
+  /* =======================================================================
+     PSČ — průběžné formátování na 141 00
+     -----------------------------------------------------------------------
+     Stejné chování jako u telefonu výš, jen jiné seskupení (3 + 2) a bez
+     předvolby. Pole zůstává nepovinné; když se vyplní, musí mít pět číslic.
+     ======================================================================= */
+  var pscEl = doc.getElementById('f-psc');
+
+  function pscDigits(raw) {
+    return String(raw == null ? '' : raw).replace(/\D/g, '').slice(0, 5);
+  }
+  function pscGroup(digits) {
+    return digits.length > 3 ? digits.slice(0, 3) + ' ' + digits.slice(3) : digits;
+  }
+
+  /* Přeformátuje pole a nechá kurzor u stejné číslice, u které stál. */
+  function pscFormat(caretDigits) {
+    if (!pscEl) return;
+    var digits = pscDigits(pscEl.value);
+    var out = pscGroup(digits);
+    if (caretDigits == null) {
+      var before = pscEl.value.slice(0, pscEl.selectionStart == null ? pscEl.value.length : pscEl.selectionStart);
+      caretDigits = pscDigits(before).length;
+    }
+    caretDigits = Math.max(0, Math.min(caretDigits, digits.length));
+    pscEl.value = out;
+    var pos = 0, seen = 0;
+    while (pos < out.length && seen < caretDigits) {
+      if (/\d/.test(out.charAt(pos))) seen++;
+      pos++;
+    }
+    try { pscEl.setSelectionRange(pos, pos); } catch (e) { /* pole není zaměřené */ }
+  }
+
+  if (pscEl) {
+    pscEl.addEventListener('input', function () { pscFormat(); });
+
+    /* Backspace přes mezeru smaže číslici před ní, Delete číslici za ní —
+       jinak první stisk zdánlivě nic neudělá. */
+    pscEl.addEventListener('keydown', function (e) {
+      if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+      if (pscEl.selectionStart !== pscEl.selectionEnd) return;   // výběr řeší prohlížeč
+      var pos = pscEl.selectionStart;
+      if (e.key === 'Backspace' && pos > 0 && pscEl.value.charAt(pos - 1) === ' ') {
+        e.preventDefault();
+        var d = pscDigits(pscEl.value);
+        var idx = pscDigits(pscEl.value.slice(0, pos)).length;    // číslic vlevo
+        pscEl.value = pscGroup(d.slice(0, idx - 1) + d.slice(idx));
+        pscFormat(Math.max(0, idx - 1));
+      } else if (e.key === 'Delete' && pscEl.value.charAt(pos) === ' ') {
+        e.preventDefault();
+        var d2 = pscDigits(pscEl.value);
+        var idx2 = pscDigits(pscEl.value.slice(0, pos)).length;   // číslic vlevo
+        pscEl.value = pscGroup(d2.slice(0, idx2) + d2.slice(idx2 + 1));
+        pscFormat(idx2);
+      }
+    });
+
+    pscEl.addEventListener('paste', function () { window.setTimeout(function () { pscFormat(); }, 0); });
+    pscEl.addEventListener('blur', function () { pscFormat(pscDigits(pscEl.value).length); });
+  }
+
   /* ---- validace jednotlivých kroků ---- */
   function validate(n) {
     setAlert('');
@@ -326,7 +388,7 @@
       var psc = doc.getElementById('f-psc').value.trim();
       var ok = true;
       if (!mesto) { fieldError('mesto', 'Doplňte prosím město nebo obec.'); ok = false; }
-      if (psc && !/^\d{3}\s?\d{2}$/.test(psc)) { fieldError('psc', 'PSČ zadejte prosím jako pět číslic, např. 141 00.'); ok = false; }
+      if (psc && pscDigits(psc).length !== 5) { fieldError('psc', 'PSČ zadejte prosím jako pět číslic, např. 141 00.'); ok = false; }
       if (!ok) setAlert('Zkontrolujte prosím označená pole.');
       return ok;
     }
@@ -609,6 +671,7 @@
   restore();
   syncBranch();
   if (telEl && telEl.value) telFormat(telDigits(telEl.value).length);
+  if (pscEl && pscEl.value) pscFormat(pscDigits(pscEl.value).length);
   render(false);
 
   /* Kliknutí na CTA v kartě služby předvybere odpovídající službu. */
