@@ -34,11 +34,14 @@
      Access key je veřejný identifikátor formuláře, ne tajemství — může být
      v klientském kódu. Proti robotům slouží honeypot pole `web` níže.
 
-     Dokud je klíč prázdný, formulář se tváří jako nenakonfigurovaný:
-     NEODESLÁ nic, NEPŘEDSTÍRÁ úspěch a NEOTEVÍRÁ e-mailového klienta —
+     Kdyby byl klíč někdy prázdný, formulář se tváří jako nenakonfigurovaný:
+     NEODESLÁ nic, NEPŘEDSTÍRÁ úspěch a neotevírá e-mailového klienta —
      ukáže chybový stav, aby si toho někdo všiml dřív než zákazník.
+
+     Access key je veřejný identifikátor formuláře (chodí v těle požadavku
+     z prohlížeče), ne tajemství. Změnit se dá v účtu na web3forms.com.
      ======================================================================= */
-  var WEB3FORMS_ACCESS_KEY = '';          // TODO (Milan): vložit klíč z web3forms.com
+  var WEB3FORMS_ACCESS_KEY = '8f1198f1-ae3c-41a8-8ef9-ffc1b1c46d75';
   var WEB3FORMS_ENDPOINT   = 'https://api.web3forms.com/submit';
   var SUBMIT_TIMEOUT_MS    = 15000;
 
@@ -336,7 +339,9 @@
       if (!jm) { fieldError('jmeno', 'Doplňte prosím jméno.'); ok2 = false; }
       if (!tel) { fieldError('telefon', 'Doplňte prosím telefon, ať se vám máme kam ozvat.'); ok2 = false; }
       else if (telDigits(tel).length !== 9) { fieldError('telefon', 'Zadejte prosím devítimístné číslo, například 600 700 800.'); ok2 = false; }
-      if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) { fieldError('email', 'Zkontrolujte prosím tvar e-mailu.'); ok2 = false; }
+      /* E-mail je nově povinný — chodí na něj potvrzení poptávky. */
+      if (!em) { fieldError('email', 'Doplňte prosím e-mail, pošleme na něj potvrzení.'); ok2 = false; }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) { fieldError('email', 'Zkontrolujte prosím tvar e-mailu.'); ok2 = false; }
       if (!ok2) {
         setAlert('Zkontrolujte prosím označená pole.');
         var first = form.querySelector('[aria-invalid="true"]');
@@ -461,41 +466,51 @@
     };
   }
 
-  /* Čitelný přepis poptávky do těla e-mailu. */
-  function asText(d) {
-    return [
-      'Nová poptávka z webu dusekweb.com', '',
-      'Služba:    ' + (d.sluzba || '—'),
-      'Objekt:    ' + (d.objekt || '—'),
-      'Situace:   ' + (d.situace || '—'),
-      'Místo:     ' + (d.mesto || '—') + (d.psc ? ', ' + d.psc : ''),
-      'Zařízení:  ' + (d.zarizeni || '—'), '',
-      'Popis:', (d.popis || '—'), '',
-      '— Kontakt —',
-      'Jméno:     ' + d.jmeno,
-      'Telefon:   ' + d.telefon + (d.telefonE164 ? '  (' + d.telefonE164 + ')' : ''),
-      'E-mail:    ' + (d.email || '—')
-    ].join('\n');
-  }
+  /* Payload pro Web3Forms.
+     -----------------------------------------------------------------------
+     Web3Forms vypíše do notifikačního e-mailu KAŽDÉ pole, které není jeho
+     vlastní řídicí (access_key, subject, from_name, email, replyto, redirect,
+     botcheck, attachment, webhook). Neexistuje způsob, jak pole odeslat
+     a zároveň ho z e-mailu vynechat, a vlastní šablona e-mailu je placená
+     funkce nastavovaná v účtu Web3Forms, ne přes API.
 
-  /* Payload pro Web3Forms. Jednotlivá pole jsou i samostatně (ne jen v `message`),
-     aby se z nich dalo později bez přepisování napojit CRM nebo automatizace. */
+     Proto je struktura payloadu zároveň strukturou e-mailu:
+       · názvy klíčů jsou rovnou české popisky, které se v e-mailu zobrazí,
+       · pořadí klíčů = pořadí řádků v e-mailu,
+       · nepovinná prázdná pole se neposílají, ať nevznikají prázdné řádky,
+       · technické údaje jsou úplně dole,
+       · souhrnné pole `message` je pryč — dublovalo úplně všechno ostatní.
+
+     `email` musí zůstat přesně pod tímhle názvem: Web3Forms podle něj
+     nastavuje Reply-To a posílá autoresponder (potvrzení zákazníkovi). */
   function payload(d) {
-    return {
+    var p = {
+      /* Řídicí pole Web3Forms — do těla e-mailu se nevypisují. */
       access_key: WEB3FORMS_ACCESS_KEY,
-      subject: 'Nová poptávka z webu — ' + (d.sluzba || 'neurčeno'),
-      from_name: 'Web Milan Dušek',
-      replyto: d.email || '',
-      // strukturovaná data
-      sluzba: d.sluzba, objekt: d.objekt, situace: d.situace,
-      mesto: d.mesto, psc: d.psc,
-      popis: d.popis, zarizeni: d.zarizeni,
-      jmeno: d.jmeno, telefon: d.telefon, telefon_e164: d.telefonE164, email: d.email,
-      // původ poptávky
-      zdroj: 'web', stranka: (location.origin + location.pathname),
-      // čitelná verze pro tělo e-mailu
-      message: asText(d)
+      subject: 'Nová poptávka — ' + (d.sluzba || 'neurčeno') + (d.mesto ? ' — ' + d.mesto : ''),
+      from_name: 'Web Milan Dušek'
     };
+
+    /* Obsah poptávky v pořadí, v jakém se má číst. */
+    p['Služba']  = d.sluzba  || '—';
+    p['Objekt']  = d.objekt  || '—';
+    p['Situace'] = d.situace || '—';
+    /* PSČ se píše po trojici a dvojici (141 00) bez ohledu na to,
+       jak ho člověk zadal. */
+    var psc = String(d.psc || '').replace(/\D/g, '');
+    if (psc.length === 5) psc = psc.slice(0, 3) + ' ' + psc.slice(3);
+    p['Lokalita'] = d.mesto + (psc ? ', ' + psc : '');
+    if (d.zarizeni) p['Zařízení'] = d.zarizeni;
+    if (d.popis)    p['Popis']    = d.popis;
+    p['Jméno']   = d.jmeno;
+    p['Telefon'] = d.telefon;
+    p.email      = d.email;          /* reply-to + autoresponder — název neměnit */
+
+    /* Technické údaje naspodu — pro CRM a ladění, ne pro čtení. */
+    p['Telefon (mezinárodně)'] = d.telefonE164;
+    p['Zdroj']   = 'web';
+    p['Stránka'] = location.origin + location.pathname;
+    return p;
   }
 
   /* ---- přepínání stavů karty ---- */

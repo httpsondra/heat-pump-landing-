@@ -51,7 +51,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=27" />
+  <link rel="stylesheet" href="/css/styles.css?v=29" />
 </head>
 <body>
 
@@ -451,19 +451,19 @@
               <div class="fields fields--2">
                 <div class="field">
                   <label for="f-jmeno">Jméno</label>
-                  <input id="f-jmeno" name="jmeno" type="text" autocomplete="name" autocapitalize="words" enterkeyhint="next" placeholder="Jan Novák" aria-describedby="e-jmeno" />
+                  <input id="f-jmeno" name="jmeno" type="text" autocomplete="name" autocapitalize="words" enterkeyhint="next" required placeholder="Jan Novák" aria-describedby="e-jmeno" />
                   <p class="field__err" id="e-jmeno"></p>
                 </div>
                 <div class="field">
                   <label for="f-telefon">Telefon</label>
-                  <input id="f-telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="600 700 800" maxlength="11" aria-describedby="e-telefon" />
+                  <input id="f-telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" required placeholder="600 700 800" maxlength="11" aria-describedby="e-telefon" />
                   <p class="field__err" id="e-telefon"></p>
                 </div>
               </div>
               <div class="fields">
                 <div class="field">
-                  <label for="f-email">E-mail <span class="opt-tag">(nepovinné)</span></label>
-                  <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="jan.novak@email.cz" aria-describedby="e-email" />
+                  <label for="f-email">E-mail</label>
+                  <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" required placeholder="jan.novak@email.cz" aria-describedby="e-email" />
                   <p class="field__err" id="e-email"></p>
                 </div>
               </div>
@@ -476,7 +476,7 @@
             <div class="inquiry__done" id="inquiryDone" role="status" tabindex="-1" hidden>
               <div class="tick" aria-hidden="true"></div>
               <h3>Poptávka byla odeslána</h3>
-              <p>Děkujeme. Ozveme se vám co nejdříve a domluvíme další postup.</p>
+              <p>Děkujeme. Vaši poptávku jsme přijali a ozveme se vám co nejdříve.</p>
               <div class="cta-row" style="justify-content:center;margin-top:1.6rem">
                 <a class="btn btn--ghost" href="tel:+420603479240">Zavolat</a>
               </div>
@@ -745,11 +745,11 @@
     })();
   </script>
 
-  <script src="/js/main.js?v=27" defer></script>
+  <script src="/js/main.js?v=29" defer></script>
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=27" defer></script>
+  <script src="/js/form.js?v=29" defer></script>
 
   <!-- PostHog až po zbytku — analytika nepatří na kritickou cestu vykreslení. -->
   <script>

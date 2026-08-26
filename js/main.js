@@ -383,7 +383,7 @@
     }
 
     // Načtení manifestu a přednačtení snímků
-    fetch('/images/sequence/manifest.json?v=27', { cache: 'force-cache' })
+    fetch('/images/sequence/manifest.json?v=29', { cache: 'force-cache' })
       .then(function (r) {
         if (!r.ok) throw new Error('manifest ' + r.status);
         return r.json();
