@@ -448,8 +448,9 @@
     var last = step === TOTAL;
     nextBtn.hidden = last;
     submitBtn.hidden = !last;
-    // Krok 5 je celý nepovinný — ať je vidět, že se dá přeskočit.
-    nextBtn.textContent = step === 5 ? 'Přeskočit a pokračovat' : 'Pokračovat';
+    // Nepovinnost 5. kroku nesou popisky polí „(nepovinné)", tlačítko ji
+    // nemusí opakovat.
+    nextBtn.textContent = 'Pokračovat';
     if (last) renderSummary();
 
     if (focusIt && active) {
