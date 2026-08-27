@@ -67,5 +67,12 @@
     "api/*.mjs": {
       "maxDuration": 10
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/api/(.*)\\.mjs",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
 }
