@@ -593,7 +593,8 @@
         keepalive: true,          /* přežije i odklik ze stránky */
         body: JSON.stringify({
           jmeno: d.jmeno, email: d.email, sluzba: d.sluzba, objekt: d.objekt,
-          situace: d.situace, mesto: d.mesto, psc: d.psc
+          situace: d.situace, mesto: d.mesto, psc: d.psc,
+          popis: d.popis          /* nepovinný „Popis situace" z 5. kroku */
         })
       }).then(function (r) {
         track(r.ok ? 'confirmation_sent' : 'confirmation_error', { status: r.status });

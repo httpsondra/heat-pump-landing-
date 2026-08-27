@@ -33,6 +33,10 @@ const FIELDS = {
   psc: 10
 };
 
+/* Volný text od zákazníka. Řeší se zvlášť, protože jako jediný smí
+   obsahovat konce řádků — clean() je jinde záměrně slučuje do mezery. */
+const POPIS_MAX = 2000;
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const CTRL_RE = /[\u0000-\u001f\u007f]/g;
 
@@ -64,6 +68,21 @@ function clean(value, max) {
     .slice(0, max);
 }
 
+/* Jako clean(), ale zachová odřádkování — text zákazníka má zůstat tak,
+   jak ho napsal. Slučují se jen vodorovné mezery a víc než jeden prázdný
+   řádek; obsah samotný se nijak nepřepisuje. */
+function cleanMultiline(value, max) {
+  if (typeof value !== 'string') return '';
+  return value
+    .replace(/\r\n?/g, '\n')                  // sjednotit konce řádků
+    .replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ')  // vsechny ridici znaky krome odradkovani
+    .replace(/[ \t]+/g, ' ')
+    .split('\n').map(function (l) { return l.trim(); }).join('\n')
+    .replace(/\n{3,}/g, '\n\n')               // nejvýš jeden prázdný řádek
+    .trim()
+    .slice(0, max);
+}
+
 function esc(s) {
   return String(s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -76,14 +95,22 @@ function formatPsc(raw) {
   return d.length === 5 ? d.slice(0, 3) + ' ' + d.slice(3) : d;
 }
 
-function summaryRow(label, value, first) {
+function summaryRow(label, value, first, multiline) {
   const divider = first ? '' : `
                     <tr><td style="border-top:1px solid #eceef1; font-size:0; line-height:0;">&nbsp;</td></tr>`;
+  /* Volný text zákazníka sází normální vahou a s odřádkováním — tučný
+     16px jako u krátkých hodnot by u odstavce působil těžkopádně. */
+  const valueStyle = multiline
+    ? 'display:block; margin-top:5px; font-size:15px; line-height:23px; font-weight:400; color:#3b4149;'
+    : 'display:block; margin-top:3px; font-size:16px; font-weight:600; color:#111111;';
+  const rendered = multiline
+    ? esc(value).replace(/\n/g, '<br>')
+    : esc(value);
   return `${divider}
                     <tr>
                       <td style="padding:${first ? '0 0 14px 0' : '14px 0 0 0'}; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
                         <span style="display:block; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#6b7280;">${esc(label)}</span>
-                        <span style="display:block; margin-top:3px; font-size:16px; font-weight:600; color:#111111;">${esc(value)}</span>
+                        <span style="${valueStyle}">${rendered}</span>
                       </td>
                     </tr>`;
 }
@@ -93,16 +120,19 @@ function buildEmail(d) {
   const psc = formatPsc(d.psc);
   const lokalita = [d.mesto, psc].filter(Boolean).join(', ');
 
-  /* Nepovinné údaje se do shrnutí dostanou jen když opravdu existují. */
+  /* Nepovinné údaje se do shrnutí dostanou jen když opravdu existují.
+     Prázdný „Popis situace" se tedy neprojeví vůbec — žádný nadpis
+     ani prázdné místo. Text se přebírá doslova, jen escapovaný. */
   const summary = [
-    ['Služba', d.sluzba],
-    ['Objekt', d.objekt],
-    ['Situace', d.situace],
-    ['Lokalita', lokalita]
+    ['Služba', d.sluzba, false],
+    ['Objekt', d.objekt, false],
+    ['Situace', d.situace, false],
+    ['Lokalita', lokalita, false],
+    ['Doplňující informace', d.popis, true]
   ].filter(function (pair) { return pair[1]; });
 
   const rowsHtml = summary.map(function (pair, i) {
-    return summaryRow(pair[0], pair[1], i === 0);
+    return summaryRow(pair[0], pair[1], i === 0, pair[2]);
   }).join('');
 
   const summaryBlock = summary.length ? `
@@ -246,6 +276,7 @@ export default async function handler(req, res) {
   // Whitelist — cokoli navíc se zahodí.
   const d = {};
   Object.keys(FIELDS).forEach(function (key) { d[key] = clean(body[key], FIELDS[key]); });
+  d.popis = cleanMultiline(body.popis, POPIS_MAX);   // jediné pole s odřádkováním
 
   if (!EMAIL_RE.test(d.email)) return res.status(400).json({ ok: false });
 
