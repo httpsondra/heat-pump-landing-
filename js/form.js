@@ -1,5 +1,5 @@
 /* =========================================================================
-   Milan Dušek — poptávkový formulář, FAQ a mobilní lišta
+   MD-Therm — poptávkový formulář, FAQ a mobilní lišta
    ---------------------------------------------------------------------
    Vlastní soubor schválně: main.js se v mobilním / reduced-motion režimu
    ukončuje brzkým `return` (scrub hero se tam nespouští). Kdyby tahle
@@ -551,7 +551,7 @@
       /* Řídicí pole Web3Forms — do těla e-mailu se nevypisují. */
       access_key: WEB3FORMS_ACCESS_KEY,
       subject: 'Nová poptávka — ' + (d.sluzba || 'neurčeno') + (d.mesto ? ' — ' + d.mesto : ''),
-      from_name: 'Web Milan Dušek'
+      from_name: 'Web MD-Therm'
     };
 
     /* Obsah poptávky v pořadí, v jakém se má číst. */

@@ -1,5 +1,5 @@
 /* =========================================================================
-   POST /api/potvrzeni — potvrzovací e-mail zákazníkovi přes Resend
+   POST /api/potvrzeni — potvrzovací e-mail zákazníkovi přes Resend (MD-Therm)
    -------------------------------------------------------------------------
    Volá se z formuláře AŽ POTÉ, co Web3Forms potvrdí přijetí poptávky.
    Web3Forms je kritický systém (sběr poptávek), tenhle endpoint ne:
@@ -17,7 +17,7 @@
 import { greeting } from './_vocative.mjs';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
-const DEFAULT_FROM = 'Dušek <poptavky@dusekweb.com>';
+const DEFAULT_FROM = 'MD-Therm <poptavky@dusekweb.com>';
 const PHONE_HREF = '+420603479240';
 const PHONE_TEXT = '+420 603 479 240';
 
@@ -188,7 +188,7 @@ function buildEmail(d) {
         <tr><td style="height:3px; background-color:#d71920; font-size:0; line-height:0;">&nbsp;</td></tr>
         <tr>
           <td class="sm-p sm-p-top" style="padding:38px 44px 0 44px;">
-            <p style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:17px; font-weight:700; letter-spacing:-0.01em; color:#111111;">Dušek</p>
+            <p style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:17px; font-weight:700; letter-spacing:-0.01em; color:#111111;">MD‑Therm</p>
             <p style="margin:5px 0 0 0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:#6b7280;">
               Tepelná čerpadla &nbsp;•&nbsp; Klimatizace &nbsp;•&nbsp; Servis
             </p>
@@ -219,7 +219,7 @@ function buildEmail(d) {
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr><td style="border-top:1px solid #eceef1; font-size:0; line-height:0; padding-bottom:22px;">&nbsp;</td></tr>
               <tr><td style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-                <p style="margin:0; font-size:15px; font-weight:700; color:#111111;">Dušek</p>
+                <p style="margin:0; font-size:15px; font-weight:700; color:#111111;">MD‑Therm</p>
                 <p style="margin:4px 0 0 0; font-size:13px; line-height:20px; color:#6b7280;">
                   Tepelná čerpadla &nbsp;•&nbsp; Klimatizace &nbsp;•&nbsp; Servis
                 </p>
@@ -241,7 +241,7 @@ function buildEmail(d) {
 </body>
 </html>`;
 
-  const textLines = ['Poptávku jsme přijali — Dušek', '', hello, '',
+  const textLines = ['Poptávku jsme přijali — MD-Therm', '', hello, '',
     'děkujeme za vaši poptávku. Dorazila k nám v pořádku a ozveme se vám',
     'co nejdříve, abychom domluvili další postup.', ''];
   if (summary.length) {
@@ -249,7 +249,7 @@ function buildEmail(d) {
     summary.forEach(function (pair) { textLines.push(pair[0] + ':', pair[1], ''); });
   }
   textLines.push('Pokud potřebujete něco řešit urgentně, můžete nám zavolat',
-    'na ' + PHONE_TEXT + '.', '', 'Dušek',
+    'na ' + PHONE_TEXT + '.', '', 'MD-Therm',
     'Tepelná čerpadla • Klimatizace • Servis', '', '--',
     'Tento e-mail vám přišel jako potvrzení poptávky odeslané z webu dusekweb.com.');
 
@@ -296,7 +296,7 @@ export default async function handler(req, res) {
       from: process.env.RESEND_FROM || DEFAULT_FROM,
       to: [recipient],
       reply_to: d.email,
-      subject: 'Poptávku jsme přijali — Dušek',
+      subject: 'Poptávku jsme přijali — MD-Therm',
       html: mail.html,
       text: mail.text,
       tags: [{ name: 'typ', value: 'potvrzeni-poptavky' }]

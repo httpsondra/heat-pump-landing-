@@ -1,4 +1,4 @@
-# Milan Dušek — landing page
+# MD-Therm — landing page
 
 Statická landing page (HTML + CSS + JS, GSAP z CDN) zaměřená na tepelná čerpadla,
 klimatizace, plynové kotle a servis. Vizuálním těžištěm je hero, ve kterém se při

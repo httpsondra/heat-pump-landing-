@@ -1,5 +1,5 @@
 /* =========================================================================
-   Milan Dušek — landing page
+   MD-Therm — landing page
    - sticky bar stav
    - reveal animace (IntersectionObserver)
    - scroll-scrub tepelného čerpadla (obrázková sekvence na canvasu + GSAP)
@@ -413,7 +413,7 @@
     }
 
     // Načtení manifestu a přednačtení snímků
-    fetch('/images/sequence/manifest.json?v=35', { cache: 'force-cache' })
+    fetch('/images/sequence/manifest.json?v=36', { cache: 'force-cache' })
       .then(function (r) {
         if (!r.ok) throw new Error('manifest ' + r.status);
         return r.json();

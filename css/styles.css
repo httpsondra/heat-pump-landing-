@@ -1,5 +1,5 @@
 /* =========================================================================
-   Milan Dušek — landing page
+   MD-Therm — landing page
    Tepelná čerpadla · klimatizace · servis topení
    ========================================================================= */
 
@@ -459,7 +459,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* =========================================================================
    Výrobci – minimalistický nekonečný marquee banner
-   (Milan Dušek zůstává hlavní značkou; loga monochromní a tlumená)
+   (MD-Therm zůstává hlavní značkou; loga monochromní a tlumená)
    ========================================================================= */
 /* Pozadí navazuje na spodní tón hero gradientu a rozpustí se do bílé — plynulý přechod z animace */
 .brands { padding: clamp(64px, 10vh, 128px) 0 clamp(48px, 8vh, 96px); background: linear-gradient(180deg, #edeff1 0%, #ffffff 42%); }
