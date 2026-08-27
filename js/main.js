@@ -147,13 +147,22 @@
         indicator.style.opacity = '0';
       }
     };
+    /* Pilulka sleduje myš, ale aktivní sekci určuje dál jen scrollspy.
+       `hoveredLink` je tedy čistě dočasný překryv — jakmile myš odejde,
+       indikátor se vrátí tam, kde podle scrollu opravdu jsme. */
+    var hoveredLink = null;
+    var indicatorTarget = function () {
+      return hoveredLink || (activeSpyId && spyMap[activeSpyId]) || null;
+    };
+    var refreshIndicator = function () { moveIndicator(indicatorTarget()); };
+
     var setActive = function (id) {
       if (id === activeSpyId) return;
       activeSpyId = id;
       spyLinks.forEach(function (l) { l.classList.remove('is-active'); l.removeAttribute('aria-current'); });
       var link = id && spyMap[id];
       if (link) { link.classList.add('is-active'); link.setAttribute('aria-current', 'true'); }
-      moveIndicator(link);
+      refreshIndicator();
     };
     var updateSpy = function () {
       var currentId = null;
@@ -169,10 +178,31 @@
       var prev = indicator && indicator.style.transition;
       if (indicator) indicator.style.transition = 'none';
       updateSpy();
-      var link = activeSpyId && spyMap[activeSpyId];
-      if (indicator && link) { moveIndicator(link); void indicator.offsetWidth; }
+      if (indicator && indicatorTarget()) { refreshIndicator(); void indicator.offsetWidth; }
       if (indicator) indicator.style.transition = prev;
     }, { passive: true });
+
+    /* ---- hover-follow (jen myš) ----
+       Pouhé najetí nikam nenaviguje ani nescrolluje — mění se jedině
+       poloha pilulky. Na dotyku se neváže vůbec (pointerType) a při
+       prefers-reduced-motion se hover nesleduje, aby pilulka nepodskakovala
+       bez animace. Indikátor je pod 961 px stejně skrytý. */
+    var navEl = doc.getElementById('topnav');
+    if (navEl && !prefersReduced && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      spyLinks.forEach(function (l) {
+        l.addEventListener('pointerenter', function (e) {
+          if (e.pointerType && e.pointerType !== 'mouse') return;
+          hoveredLink = l;
+          refreshIndicator();
+        });
+      });
+      navEl.addEventListener('pointerleave', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        hoveredLink = null;
+        refreshIndicator();
+      });
+    }
+
     updateSpy();
   }
 
@@ -383,7 +413,7 @@
     }
 
     // Načtení manifestu a přednačtení snímků
-    fetch('/images/sequence/manifest.json?v=34', { cache: 'force-cache' })
+    fetch('/images/sequence/manifest.json?v=35', { cache: 'force-cache' })
       .then(function (r) {
         if (!r.ok) throw new Error('manifest ' + r.status);
         return r.json();
