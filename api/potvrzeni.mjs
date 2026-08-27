@@ -5,22 +5,19 @@
    Web3Forms je kritický systém (sběr poptávek), tenhle endpoint ne:
    když selže, zákazník o tom nesmí vědět a poptávka zůstává v pořádku.
 
-   Tajemství žijí výhradně v proměnných prostředí na Vercelu:
-     RESEND_API_KEY      … povinné, klíč z resend.com  (NIKDY do gitu)
-     TEST_EMAIL_OVERRIDE … volitelné; když je vyplněné, VŠECHNY potvrzovací
-                           e-maily jdou na tuhle adresu místo zákazníkovi.
-                           Používá se teď, dokud nemáme ověřenou doménu —
-                           Resend přes testovacího odesílatele doručí jen
-                           na adresu majitele účtu. Až doménu ověříme,
-                           stačí proměnnou SMAZAT a nic víc.
-     RESEND_FROM         … volitelné; výchozí je testovací odesílatel.
-                           Po ověření domény sem přijde např.
-                           "Dušek <poptavky@dusekweb.com>".
+   Konfigurace žije v proměnných prostředí na Vercelu:
+     RESEND_API_KEY … povinné, klíč z resend.com  (NIKDY do gitu)
+     RESEND_FROM    … volitelné; odesílatel. Výchozí je adresa níže.
+                      Až firma přejde na jinou doménu, stačí přepsat
+                      tuhle proměnnou — v kódu se nemění nic.
+
+   Příjemce se NEBERE z požadavku: server použije e-mail z formuláře,
+   který si sám zvaliduje. Odesílatele klient neovlivní vůbec.
    ========================================================================= */
 import { greeting } from './_vocative.mjs';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
-const DEFAULT_FROM = 'Dušek <onboarding@resend.dev>';
+const DEFAULT_FROM = 'Dušek <poptavky@dusekweb.com>';
 const PHONE_HREF = '+420603479240';
 const PHONE_TEXT = '+420 603 479 240';
 
@@ -252,13 +249,9 @@ export default async function handler(req, res) {
 
   if (!EMAIL_RE.test(d.email)) return res.status(400).json({ ok: false });
 
-  /* Dočasné omezení příjemce. Dokud nemáme ověřenou doménu, Resend přes
-     testovacího odesílatele doručí jen majiteli účtu. Adresa z formuláře
-     se nezahazuje — jde dál jako Reply-To a v hlavičce, ať je vidět, komu
-     by e-mail v ostrém provozu šel. Zrušení = smazat proměnnou. */
-  const override = clean(process.env.TEST_EMAIL_OVERRIDE, 160);
-  const recipient = override || d.email;
-  const isTestMode = Boolean(override) && override !== d.email;
+  /* Příjemce = e-mail z formuláře, který prošel validací výš.
+     Z požadavku se nikdy nebere `to` ani `from`. */
+  const recipient = d.email;
 
   const mail = buildEmail(d);
 
@@ -272,8 +265,6 @@ export default async function handler(req, res) {
       text: mail.text,
       tags: [{ name: 'typ', value: 'potvrzeni-poptavky' }]
     };
-    if (isTestMode) payload.headers = { 'X-Original-Recipient': d.email };
-
     const resp = await fetch(RESEND_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -292,7 +283,7 @@ export default async function handler(req, res) {
     }
 
     const data = await resp.json().catch(function () { return {}; });
-    console.log('[potvrzeni] odeslano id=' + (data.id || '?') + ' test_mode=' + isTestMode);
+    console.log('[potvrzeni] odeslano id=' + (data.id || '?'));
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('[potvrzeni] Odeslani selhalo:', err && err.message);
