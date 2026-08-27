@@ -96,17 +96,20 @@ function formatPsc(raw) {
   return d.length === 5 ? d.slice(0, 3) + ' ' + d.slice(3) : d;
 }
 
-function summaryRow(label, value, first, multiline) {
+function summaryRow(label, value, first, secondary) {
   const divider = first ? '' : `
                     <tr><td style="border-top:1px solid #eceef1; font-size:0; line-height:0;">&nbsp;</td></tr>`;
-  /* Volný text zákazníka sází normální vahou a s odřádkováním — tučný
-     16px jako u krátkých hodnot by u odstavce působil těžkopádně. */
-  const valueStyle = multiline
+  /* Dvě váhy hodnot:
+       · hlavní údaje (služba, objekt, situace, lokalita) tučně 16px,
+       · doplňkové údaje od zákazníka (popis, zařízení) normální vahou —
+         obojí je „něco navíc", tak ať to má i stejnou váhu.
+     Popisky zůstávají v obou případech stejné. */
+  const valueStyle = secondary
     ? 'display:block; margin-top:5px; font-size:15px; line-height:23px; font-weight:400; color:#3b4149;'
     : 'display:block; margin-top:3px; font-size:16px; font-weight:600; color:#111111;';
-  const rendered = multiline
-    ? esc(value).replace(/\n/g, '<br>')
-    : esc(value);
+  /* Odřádkování se převádí vždy; reálně ho může obsahovat jen „popis",
+     ostatní pole projdou clean(), který konce řádků slučuje na mezeru. */
+  const rendered = esc(value).replace(/\n/g, '<br>');
   return `${divider}
                     <tr>
                       <td style="padding:${first ? '0 0 14px 0' : '14px 0 0 0'}; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
@@ -129,8 +132,8 @@ function buildEmail(d) {
     ['Objekt', d.objekt, false],
     ['Situace', d.situace, false],
     ['Lokalita', lokalita, false],
-    ['Zařízení', d.zarizeni, false],
-    ['Doplňující informace', d.popis, true]
+    ['Doplňující informace', d.popis, true],
+    ['Zařízení', d.zarizeni, true]
   ].filter(function (pair) { return pair[1]; });
 
   const rowsHtml = summary.map(function (pair, i) {
