@@ -576,6 +576,33 @@
     return p;
   }
 
+  /* =======================================================================
+     Potvrzovací e-mail zákazníkovi
+     -----------------------------------------------------------------------
+     Volá se AŽ POTÉ, co Web3Forms potvrdí přijetí poptávky. Poptávka je
+     v tu chvíli bezpečně zachycená, takže tenhle krok už je jen bonus:
+     když selže, zákazník o tom nesmí vědět a úspěšná obrazovka se ukáže
+     tak jako tak. Proto se na výsledek nečeká a chyba se jen zaznamená.
+
+     Klíč k Resendu tady nikde není — endpoint běží na serveru. */
+  function sendConfirmation(d) {
+    try {
+      fetch('/api/potvrzeni', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,          /* přežije i odklik ze stránky */
+        body: JSON.stringify({
+          jmeno: d.jmeno, email: d.email, sluzba: d.sluzba, objekt: d.objekt,
+          situace: d.situace, mesto: d.mesto, psc: d.psc
+        })
+      }).then(function (r) {
+        track(r.ok ? 'confirmation_sent' : 'confirmation_error', { status: r.status });
+      }).catch(function () {
+        track('confirmation_error', { status: 'network' });
+      });
+    } catch (e) { /* potvrzení nikdy nesmí shodit odeslání poptávky */ }
+  }
+
   /* ---- přepínání stavů karty ---- */
   function hideFormChrome() {
     panels.forEach(function (p) { p.hidden = true; });
@@ -656,6 +683,9 @@
       .then(function (j) {
         window.clearTimeout(timer);
         if (!j || !j.success) throw new Error((j && j.message) || 'odeslání selhalo');
+        /* Poptávka je zachycená. Potvrzení zákazníkovi je až druhotné —
+           posíláme ho na pozadí a na výsledek nečekáme. */
+        sendConfirmation(data);
         showDone();
       })
       .catch(function (err) {
