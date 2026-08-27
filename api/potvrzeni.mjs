@@ -17,7 +17,7 @@
 import { greeting } from './_vocative.mjs';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
-const DEFAULT_FROM = 'MD-Therm <poptavky@dusekweb.com>';
+const DEFAULT_FROM = 'MD-Therm <noreply@md-therm.cz>';
 const PHONE_HREF = '+420603479240';
 const PHONE_TEXT = '+420 603 479 240';
 
@@ -231,7 +231,7 @@ function buildEmail(d) {
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px;">
         <tr><td class="sm-p" style="padding:20px 44px 0 44px; text-align:center;">
           <p style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; line-height:19px; color:#8b9199;">
-            Tento e-mail vám přišel jako potvrzení poptávky odeslané z webu dusekweb.com.
+            Tento e-mail vám přišel jako potvrzení poptávky odeslané z webu md-therm.cz.
           </p>
         </td></tr>
       </table>
@@ -251,7 +251,7 @@ function buildEmail(d) {
   textLines.push('Pokud potřebujete něco řešit urgentně, můžete nám zavolat',
     'na ' + PHONE_TEXT + '.', '', 'MD-Therm',
     'Tepelná čerpadla • Klimatizace • Servis', '', '--',
-    'Tento e-mail vám přišel jako potvrzení poptávky odeslané z webu dusekweb.com.');
+    'Tento e-mail vám přišel jako potvrzení poptávky odeslané z webu md-therm.cz.');
 
   return { html: html, text: textLines.join('\n') };
 }
