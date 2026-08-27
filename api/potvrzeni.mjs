@@ -30,7 +30,8 @@ const FIELDS = {
   objekt: 60,
   situace: 80,
   mesto: 80,
-  psc: 10
+  psc: 10,
+  zarizeni: 120
 };
 
 /* Volný text od zákazníka. Řeší se zvlášť, protože jako jediný smí
@@ -128,6 +129,7 @@ function buildEmail(d) {
     ['Objekt', d.objekt, false],
     ['Situace', d.situace, false],
     ['Lokalita', lokalita, false],
+    ['Zařízení', d.zarizeni, false],
     ['Doplňující informace', d.popis, true]
   ].filter(function (pair) { return pair[1]; });
 
