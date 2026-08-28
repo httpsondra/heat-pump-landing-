@@ -1,7 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="8" fill="#111111"/>
-  <rect x="1.5" y="1.5" width="29" height="29" rx="6.5" fill="none" stroke="#d71920" stroke-width="0" />
-  <text x="16" y="17" text-anchor="middle" dominant-baseline="central"
-        font-family="'Helvetica Neue', Arial, sans-serif" font-weight="700" font-size="13"
-        letter-spacing="0.2" fill="#ffffff">MD</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="MD-Therm">
+  <!-- Favicon = zjednodušená značka. Plná sestava (vločka + M + D) je v 16 px
+       nečitelná, proto zůstává jen M a D-slunce, což dohromady dává „MD".
+       Tvary jsou převzaté 1:1 z /images/logo.svg (pM a pD), nic se nepřekresluje.
+       M je bílé, protože dlaždice je tmavá — na světlém podkladu má logo M
+       v grafitu (#22282C). Tmavá dlaždice drží čitelnost ve světlém i tmavém
+       panelu prohlížeče. -->
+  <rect width="64" height="64" rx="14" fill="#22282C"/>
+  <g transform="translate(5.75 13.8) scale(0.7)"
+     fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#FFFFFF" d="M4 48 L4 4 L20 26 L36 4 L36 48"/>
+    <path stroke="#F4550E" transform="translate(45 0)" d="M4 4 A22 22 0 0 1 4 48"/>
+  </g>
 </svg>

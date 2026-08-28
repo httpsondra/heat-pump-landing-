@@ -26,8 +26,11 @@
   <meta name="format-detection" content="telephone=no" />
   <meta name="geo.region" content="CZ-PR" />
   <meta name="geo.placename" content="Praha" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <!-- ?v= je nutné: prohlížeče favicony cachují velmi dlouho a bez něj
+       by se stará čtvercová „MD" držela ještě dlouho po nasazení. -->
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <!-- iOS ikonu v SVG ignoruje, proto PNG 180×180 bez zaoblení (maskuje si ho sám). -->
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -736,7 +739,7 @@
   {"@context":"https://schema.org","@graph":[
     {"@type":"WebSite","@id":"https://www.md-therm.cz/#website","url":"https://www.md-therm.cz/","name":"MD-Therm","inLanguage":"cs-CZ","publisher":{"@id":"https://www.md-therm.cz/#business"}},
     {"@type":"WebPage","@id":"https://www.md-therm.cz/#webpage","url":"https://www.md-therm.cz/","name":"Tepelná čerpadla a klimatizace Praha | MD-Therm","description":"Montáž a servis tepelných čerpadel, klimatizací a plynových kotlů v Praze a okolí.","inLanguage":"cs-CZ","isPartOf":{"@id":"https://www.md-therm.cz/#website"},"about":{"@id":"https://www.md-therm.cz/#business"}},
-    {"@type":"HVACBusiness","@id":"https://www.md-therm.cz/#business","name":"MD-Therm","legalName":"Milan Dušek","url":"https://www.md-therm.cz/","telephone":"+420603479240","email":"dusekmilan@volny.cz","image":"https://www.md-therm.cz/images/og-cover.jpg","logo":"https://www.md-therm.cz/favicon.svg",
+    {"@type":"HVACBusiness","@id":"https://www.md-therm.cz/#business","name":"MD-Therm","legalName":"Milan Dušek","url":"https://www.md-therm.cz/","telephone":"+420603479240","email":"dusekmilan@volny.cz","image":"https://www.md-therm.cz/images/og-cover.jpg","logo":"https://www.md-therm.cz/images/logo.svg",
       "identifier":[{"@type":"PropertyValue","propertyID":"ICO","value":"67267092"}],
       "address":{"@type":"PostalAddress","streetAddress":"Severovýchodní VI. 1525/29","addressLocality":"Praha 4","postalCode":"141 00","addressRegion":"Praha","addressCountry":"CZ"},
       "geo":{"@type":"GeoCoordinates","latitude":50.0466541,"longitude":14.4816725},
