@@ -1,12 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="MD-Therm">
-  <!-- Favicon = celá značka, přesně jak vypadá na tmavém podkladu:
-       vločka + M + D-slunce. Geometrie i barvy jsou převzaté 1:1
-       z /images/logo.svg, nic se nezjednodušuje ani nepřekresluje.
-       Dlaždice má #15181B (surface z brand desky), M zůstává v #22282C —
-       je tedy jen nepatrně světlejší než pozadí, což je ten záměrný
-       „duchový" efekt z podkladu. -->
-  <rect width="64" height="64" rx="14" fill="#15181B"/>
-  <g transform="translate(3.55 21.94) scale(0.387)"
+  <!-- Favicon = celá značka (vločka + M + D-slunce), geometrie i barvy
+       převzaté 1:1 z /images/logo.svg. Nic se nezjednodušuje.
+
+       Dlaždice je SVĚTLÁ schválně. Na tmavém podkladu má M barvu #22282C,
+       tedy skoro splývá s pozadím — v logu je to záměrný „duchový" efekt,
+       ale ve 16px ikoně z něj zbyde nečitelná šmouha. Na světlé dlaždici
+       drží grafitové M plný kontrast a žádná barva se nemusí měnit;
+       navíc je to přesně ta podoba, v jaké logo sedí v hlavičce webu. -->
+  <rect width="64" height="64" rx="14" fill="#FFFFFF"/>
+  <g transform="translate(1.44 21.19) scale(0.4158)"
      fill="none" stroke-linecap="round" stroke-linejoin="round">
     <!-- Vločka — chlazení -->
     <g stroke="#1560E8" stroke-width="6.5" transform="translate(22 26)">
