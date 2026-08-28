@@ -51,7 +51,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=40" />
+  <link rel="stylesheet" href="/css/styles.css?v=41" />
 </head>
 <body>
 
@@ -584,34 +584,48 @@
     </section>
 
 
-    <!-- ================= REALIZACE (marquee) =================
-         TODO (Ondra): sekce je hotová, ale SKRYTÁ atributem `hidden`, protože
-         zatím nemáme skutečné fotky z montáží. Až fotky budou:
-           1) uložit je jako /images/realizace/01.jpg … 05.jpg (poměr 4:3),
-           2) smazat atribut `hidden` z <section> níže.
-         Popisky se záměrně nepoužívají — lokalitu ani typ montáže nevymýšlet.
-         Fotky musí být reálné, žádné generované ani stockové. ================= -->
-    <section class="section section--soft" id="realizace" hidden>
+    <!--
+      REALIZACE:
+      Replace placeholder assets below with real MD-Therm installation photos.
+      Keep filenames / structure where possible.
+      Do not use stock photography.
+
+      Až budou skutečné fotky:
+        1) přepiš soubory /images/realizace/realizace-01…08.webp (poměr 3:2),
+        2) v alt nahraď „Zástupný obrázek…“ za „Realizace MD-Therm“
+           (jednorázově: sed -i '' 's/Zástupný obrázek — místo pro fotku realizace/Realizace MD-Therm/g'),
+        3) NEVYMÝŠLET lokality, modely zařízení ani jména zákazníků —
+           popisek se přidává jen tehdy, když údaj opravdu známe.
+      Fotky musí být reálné, žádné generované ani stockové.
+    -->
+    <section class="section section--soft" id="realizace">
       <div class="container">
         <header class="section__head reveal">
           <p class="kicker">Realizace</p>
-          <h2>Několik našich realizací</h2>
+          <h2>Z našich realizací</h2>
         </header>
       </div>
 
       <div class="marquee marquee--work">
         <ul class="marquee__track">
-        <li class="marquee__item"><img src="/images/realizace/01.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <li class="marquee__item"><img src="/images/realizace/02.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <li class="marquee__item"><img src="/images/realizace/03.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <li class="marquee__item"><img src="/images/realizace/04.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <li class="marquee__item"><img src="/images/realizace/05.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <!-- duplikát pro plynulou smyčku — pro odečítače skrytý -->
-        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/01.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/02.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/03.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/04.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
-        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/05.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+          <!-- skupina A — jediné položky, které čte odečítač -->
+          <li class="marquee__item"><img src="/images/realizace/realizace-01.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-02.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-03.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-04.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-05.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-06.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-07.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-08.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <!-- skupina B — identická kopie, aby posun o -50 % navazoval -->
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-01.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-02.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-03.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-04.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-05.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-06.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-07.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-08.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
         </ul>
       </div>
     </section>
@@ -785,11 +799,11 @@
     })();
   </script>
 
-  <script src="/js/main.js?v=40" defer></script>
+  <script src="/js/main.js?v=41" defer></script>
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=40" defer></script>
+  <script src="/js/form.js?v=41" defer></script>
 
   <!-- PostHog až po zbytku — analytika nepatří na kritickou cestu vykreslení. -->
   <script>

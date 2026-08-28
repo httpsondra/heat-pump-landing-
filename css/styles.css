@@ -1036,21 +1036,36 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 }
 .inquiry__done p { color: var(--ink-2); margin-top: .7rem; max-width: 46ch; margin-inline: auto; }
 
-/* ---------- Realizace (marquee fotek) ---------- */
-.marquee--work { --work-h: clamp(160px, 20vw, 240px); }
-.marquee--work .marquee__track { gap: clamp(14px, 1.6vw, 22px); animation-duration: 60s; }
-.marquee--work .marquee__item { display: block; }
-.marquee--work img {
-  height: var(--work-h); width: auto; aspect-ratio: 4 / 3;
-  object-fit: cover; border-radius: var(--r-md); background: var(--bg-soft);
+/* ---------- Realizace (marquee fotek) ----------
+   Stejný mechanismus jako u partnerských log, ale záměrně jiný charakter:
+   větší dlaždice a výrazně pomalejší posun. Práce má stránkou tiše projít,
+   ne soutěžit s obsahem. Šířka dlaždice řídí, kolik jich je vidět naráz —
+   ~3,5 na desktopu, ~3 na tabletu, ~1,4 na mobilu (aby bylo poznat,
+   že pás pokračuje za okraj). */
+.marquee--work .marquee__track {
+  gap: clamp(14px, 1.6vw, 20px);
+  animation-duration: 90s;
+  list-style: none; margin: 0; padding: 0;
 }
-/* Na dotykových zařízeních se místo animace posouvá prstem. */
+.marquee--work .marquee__item { display: block; width: clamp(240px, 27vw, 360px); }
+.marquee--work img {
+  width: 100%; height: auto; aspect-ratio: 3 / 2;
+  object-fit: cover; border-radius: var(--r-md);
+  background: var(--bg-soft);
+}
+/* Najetím myší se pás zastaví — kdo si chce fotku prohlédnout, může. */
+@media (hover: hover) and (pointer: fine) {
+  .marquee--work:hover .marquee__track { animation-play-state: paused; }
+}
+/* Na dotyku nemá smysl animace ani hover: posouvá se prstem. */
 @media (hover: none) {
   .marquee--work { overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
   .marquee--work .marquee__track { animation: none; }
   .marquee--work .marquee__item { scroll-snap-align: center; }
 }
-@media (prefers-reduced-motion: reduce) { .marquee--work { overflow-x: auto; } }
+@media (prefers-reduced-motion: reduce) {
+  .marquee--work { overflow-x: auto; }
+}
 
 /* ---------- FAQ ---------- */
 .faq { max-width: 820px; margin-inline: auto; }
