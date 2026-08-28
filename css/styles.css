@@ -24,7 +24,7 @@
   --accent-cta: #D2470A;         /* výplň tlačítek – bílý text na ní má 4,52:1 */
   --accent-deep: #A23707;        /* text a odkazy na bílé + hover tlačítek (6,8:1) */
   --accent-dark: #802B06;        /* nejtmavší – ikony na světlém tónu (9,3:1) */
-  --accent-soft: #FEF0E9;        /* velmi jemný oranžový nádech (pozadí ikon) */
+  --accent-soft: #FEF0E9;        /* velmi jemný oranžový nádech (pozadí hlášky) */
 
   /* Typografie */
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -579,13 +579,19 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   display: flex; flex-direction: column;
   transition: transform 380ms var(--ease-out), box-shadow 380ms var(--ease-out), border-color 380ms var(--ease-out);
 }
+/* Ikona služby: samostatný monochromní symbol z ikonové sady MD-Therm.
+   Žádná dlaždice, rámeček ani barevné pozadí — kresba stojí sama.
+   Všechny čtyři se kreslí ve stejné velikosti záměrně: sada je opticky
+   srovnaná už na mřížce 24×24 (viz komentář u <defs> v index.html),
+   takže dodatečné přeškálování jednotlivých ikon by ji naopak rozhodilo. */
 .card__icon {
-  width: 44px; height: 44px; border-radius: 12px; margin-bottom: 1.2rem;
-  display: grid; place-items: center;
-  background: var(--accent-soft); color: var(--accent-dark);
-  transition: background 320ms var(--ease-out);
+  display: block;
+  width: 46px; height: 46px;
+  margin-bottom: 1.45rem;
+  color: var(--ink);
+  fill: none; stroke: currentColor;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
 }
-.card__icon svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .card h3 { font-size: var(--fs-h3); letter-spacing: -.02em; font-weight: 700; }
 .card p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .55rem; }
 
@@ -595,7 +601,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     box-shadow: 0 6px 20px rgba(16,22,26,.05), 0 18px 40px rgba(16,22,26,.08);
     border-color: var(--line-strong);
   }
-  .card:hover .card__icon { background: #FCDFD1; }
 }
 
 /* ---------- Postup ---------- */
@@ -902,10 +907,10 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   .reveal { opacity: 1; transform: none; transition: none; }
   .section__head h2 .muted { opacity: 1; transform: none; transition: none; }
   .hero__line { color: var(--ink); transition: none; }
-  /* Ostatní pohyb také ztlumit: menu, klouzavý indikátor, záře karet, ikony */
+  /* Ostatní pohyb také ztlumit: menu, klouzavý indikátor, karty */
   .topnav.is-open a { animation: none; }
   .topnav__indicator { transition: opacity .1s linear; }
-  .card, .card::before, .card::after, .card__icon, .card__num { transition: none; }
+  .card { transition: none; }
   .btn { transition: background 120ms linear, border-color 120ms linear, color 120ms linear; }
   .btn:hover, .card:hover { transform: none; }
 }

@@ -54,9 +54,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=45" />
+  <link rel="stylesheet" href="/css/styles.css?v=46" />
 </head>
 <body>
+
+  <!-- Ikonový systém MD-Therm. Symboly jsou definované jednou a v kartách se
+       jen odkazují přes <use>, aby se stejná kresba neopakovala čtyřikrát.
+       Tvary jsou převzaté 1:1 z ikonové sady značky — nepřekreslovat je
+       a nenahrazovat knihovnou (Lucide, FontAwesome apod.).
+       Všechny leží na mřížce 24×24 a jsou už opticky srovnané: i-hp, i-ac
+       a i-bo mají shodný optický čtverec 18 j., i-sv je záměrně o ~7 % menší,
+       protože diagonální tvar při stejném rámečku působí větší. -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+    <defs>
+      <symbol id="i-hp" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="4.2"/><path d="M12 7.8v8.4M7.8 12h8.4"/></symbol>
+      <symbol id="i-ac" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="7" rx="1.6"/><path d="M6.2 8h11.6"/><path d="M7 15c1.3 0 1.3 2.2 2.6 2.2M12 15c1.3 0 1.3 2.2 2.6 2.2M17 15c.9 0 .9 1.6 1.8 1.6"/></symbol>
+      <symbol id="i-bo" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="15" rx="2"/><path d="M8.5 21h7"/><path d="M12 6.6c2.2 2 3 3.3 3 4.9a3 3 0 0 1-6 0c0-1.6.8-2.9 3-4.9Z"/></symbol>
+      <symbol id="i-sv" viewBox="0 0 24 24"><path d="M15.9 3.1a5.6 5.6 0 0 0-6.9 7.1l-6 6a2 2 0 0 0 2.8 2.8l6-6a5.6 5.6 0 0 0 7.1-6.9l-3 3-2.9-.6-.6-2.9 3-3Z"/></symbol>
+    </defs>
+  </svg>
+
 
   <a class="skip-link" href="#top">Přeskočit na obsah</a>
 
@@ -185,36 +202,28 @@
 
         <div class="grid grid--services">
           <article class="card reveal">
-            <span class="card__icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32"><rect x="5" y="7" width="22" height="18" rx="3"/><circle cx="13" cy="16" r="5"/><path d="M20 12h3M20 16h3M20 20h3"/></svg>
-            </span>
+            <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-hp" /></svg>
             <h3>Tepelná čerpadla</h3>
             <p>Návrh, montáž a nastavení systému podle konkrétního domu.</p>
             <a class="card__cta card__link" href="#poptavka" data-sluzba="tepelne-cerpadlo">Nezávazně poptat <i aria-hidden="true">→</i></a>
           </article>
 
           <article class="card reveal">
-            <span class="card__icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32"><path d="M16 4v24M16 4l-4 4M16 4l4 4M16 28l-4-4M16 28l4-4"/><path d="M5.6 10 26.4 22M5.6 10l5.5.4M5.6 10 6 4.5M26.4 22l-5.5-.4M26.4 22 26 27.5"/><path d="M26.4 10 5.6 22M26.4 10l-5.5.4M26.4 10 26 4.5M5.6 22l5.5-.4M5.6 22 6 27.5"/></svg>
-            </span>
+            <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ac" /></svg>
             <h3>Klimatizace</h3>
             <p>Instalace do bytů i domů, včetně přitápění v přechodném období.</p>
             <a class="card__cta card__link" href="#poptavka" data-sluzba="klimatizace">Nezávazně poptat <i aria-hidden="true">→</i></a>
           </article>
 
           <article class="card reveal">
-            <span class="card__icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32"><path d="M16 4c4 4 5 7 3 10-1.5 2.2-1 4 .5 5.5C21 22 22 20 22 17c3 3 4 6 2.5 9.2C23 29 19.8 30 16 30s-7-1-8.5-3.8C6 23 7 20 10 17c0 2 .4 3.4 1.5 4.5C13 20 13.5 18 12 16c-2-3-1-7 4-12z"/></svg>
-            </span>
+            <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bo" /></svg>
             <h3>Kotle</h3>
             <p>Výměna i nová montáž kondenzačních kotlů včetně uvedení do provozu.</p>
             <a class="card__cta card__link" href="#poptavka" data-sluzba="plynovy-kotel">Nezávazně poptat <i aria-hidden="true">→</i></a>
           </article>
 
           <article class="card reveal">
-            <span class="card__icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32"><path d="M21.5 6.5a5 5 0 0 0-6.4 6.4L6 22l4 4 9.1-9.1a5 5 0 0 0 6.4-6.4l-3 3-3-3z"/></svg>
-            </span>
+            <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sv" /></svg>
             <h3>Servis a revize</h3>
             <p>Servisujeme zařízení, která jsme montovali, i zařízení od jiných firem.</p>
             <a class="card__cta card__link" href="#poptavka" data-sluzba="servis">Nezávazně poptat <i aria-hidden="true">→</i></a>
@@ -811,11 +820,11 @@
     })();
   </script>
 
-  <script src="/js/main.js?v=45" defer></script>
+  <script src="/js/main.js?v=46" defer></script>
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=45" defer></script>
+  <script src="/js/form.js?v=46" defer></script>
 
   <!-- PostHog až po zbytku — analytika nepatří na kritickou cestu vykreslení. -->
   <script>
