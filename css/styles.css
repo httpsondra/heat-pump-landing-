@@ -207,25 +207,25 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .topbar.is-stuck .topbar__inner { min-height: 62px; }
 .topbar__inner { transition: min-height .4s var(--ease-out); }
 
-.brand { display: flex; align-items: baseline; gap: .55rem; margin-right: auto; }
+/* flex: none — .brand je flex položkou lišty a smršťovala se; protože reset
+   dává obrázkům max-width: 100 %, logo se pak ořízlo na zúženou šířku rodiče. */
+.brand { display: flex; align-items: center; margin-right: auto; flex: none; }
 .brand__mark {
   display: grid; place-items: center; align-self: center;
   width: 34px; height: 34px; border-radius: 9px;
   background: var(--ink); color: #fff;
   font-weight: 700; font-size: .82rem; letter-spacing: .02em;
 }
-/* Značka v liště. Pevná výška (stejně jako dřív čtvereček MD — nezmenšuje se
-   ani po odscrollování), šířka dopočítá poměr 152:63, takže se nedeformuje. */
-.brand__logo { align-self: center; height: 24px; width: auto; }
-.brand__name { font-weight: 700; letter-spacing: -.02em; font-size: 1.05rem; }
-/* Popisek „topení · chlazení" je v liště skrytý: logo je široká sestava
-   (84 px místo 34 px čtverečku) a na popisek už vedle navigace nezbývá místo —
-   text se překrýval s odkazem „Služby". Význam nemizí, vločka a slunce
-   v logu říkají totéž. Odkrytím se překryv vrátí. */
-.brand__role {
-  display: none;
-  font-family: var(--mono); font-size: .68rem; color: var(--ink-soft);
-  text-transform: uppercase; letter-spacing: .06em;
+/* Značka v liště je jediný obrázek — sestava i název „MD-Therm" jsou
+   součástí kresby, žádný doprovodný text už vedle nestojí. Pevná výška
+   (nezmenšuje se ani po odscrollování), šířku dopočítá poměr 1544:339. */
+/* flex: none je nutné — obrázek je flex položkou uvnitř .brand a bez něj
+   se při zúžení lišty smrskne na šířku, zatímco výška zůstane; logo se
+   tím vodorovně deformovalo (155 px → 144 px, tj. o 7 %).
+   object-fit: contain je pojistka, aby se kresba nikdy nemohla roztáhnout. */
+.brand__logo {
+  align-self: center; height: 34px; width: auto;
+  flex: none; max-width: none; object-fit: contain;
 }
 
 /* Segmentovaná „pill" navigace – ohraničená, zaoblená, aktivní záložka světle šedá */
@@ -863,7 +863,6 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 }
 
 @media (max-width: 480px) {
-  .brand__name { display: none; }                 /* na úzkém mobilu stačí samotné logo */
   .footer__contact { text-align: left; }
   .footer__inner { gap: 1.2rem; }
   .contact__row--primary .contact__value { font-size: 1.3rem; }

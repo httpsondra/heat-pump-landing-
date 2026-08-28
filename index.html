@@ -54,7 +54,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=42" />
+  <link rel="stylesheet" href="/css/styles.css?v=44" />
 </head>
 <body>
 
@@ -68,9 +68,9 @@
   <header class="topbar" id="topbar">
     <div class="container topbar__inner">
       <a class="brand" href="#top" aria-label="MD-Therm — domů">
-        <img class="brand__logo" src="/images/logo.svg" alt="" width="152" height="63" />
-        <span class="brand__name">MD‑Therm</span>
-        <span class="brand__role">topení&nbsp;·&nbsp;chlazení</span>
+        <!-- Celá sestava včetně názvu je součástí obrázku, proto tu už není
+             textový „MD-Therm". Název nese aria-label odkazu výše. -->
+        <img class="brand__logo" src="/images/logo-wordmark.png" alt="" width="1544" height="339" />
       </a>
 
       <nav class="topnav" id="topnav" aria-label="Hlavní">
@@ -811,11 +811,11 @@
     })();
   </script>
 
-  <script src="/js/main.js?v=42" defer></script>
+  <script src="/js/main.js?v=44" defer></script>
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=42" defer></script>
+  <script src="/js/form.js?v=44" defer></script>
 
   <!-- PostHog až po zbytku — analytika nepatří na kritickou cestu vykreslení. -->
   <script>
