@@ -51,7 +51,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=37" />
+  <link rel="stylesheet" href="/css/styles.css?v=39" />
 </head>
 <body>
 
@@ -65,7 +65,7 @@
   <header class="topbar" id="topbar">
     <div class="container topbar__inner">
       <a class="brand" href="#top" aria-label="MD-Therm — domů">
-        <span class="brand__mark" aria-hidden="true">MD</span>
+        <img class="brand__logo" src="/images/logo.svg" alt="" width="152" height="63" />
         <span class="brand__name">MD‑Therm</span>
         <span class="brand__role">topení&nbsp;·&nbsp;chlazení</span>
       </a>
@@ -153,7 +153,14 @@
           <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
           <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
           <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
-          <!-- skupina B (identická kopie pro plynulou smyčku) -->
+          <!-- TODO (Ondra): Gree a Bosch. Poslal jsi je jako obrázky vložené do chatu,
+           takže z nich nevznikl soubor na disku — nemám co nakopírovat a překreslovat
+           je nechci. Ulož originály jako /images/gree-logo.(svg|png) a
+           /images/bosch-logo.(svg|png) a přidej sem dvě položky ve tvaru:
+             <span class="marquee__item"><img src="/images/gree-logo.svg" class="brand-logo brand-logo--gree" alt="Gree" width="…" height="…" loading="lazy" decoding="async" /></span>
+           plus jejich aria-hidden duplikáty do skupiny B. Třídy .brand-logo--gree
+           a .brand-logo--bosch už v CSS připravené jsou. -->
+      <!-- skupina B (identická kopie pro plynulou smyčku) -->
           <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
           <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
           <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
@@ -177,54 +184,95 @@
 
         <div class="grid grid--services">
           <article class="card reveal">
-            <span class="card__num" aria-hidden="true">.01</span>
             <span class="card__icon" aria-hidden="true">
               <svg viewBox="0 0 32 32"><rect x="5" y="7" width="22" height="18" rx="3"/><circle cx="13" cy="16" r="5"/><path d="M20 12h3M20 16h3M20 20h3"/></svg>
             </span>
-            <p class="card__tag">Vzduch–voda</p>
             <h3>Tepelná čerpadla</h3>
-            <p>Navrhneme výkon podle vašeho domu a napojíme čerpadlo na stávající otopnou soustavu.</p>
-            <a class="card__cta card__link" href="#poptavka" data-sluzba="tepelne-cerpadlo">Poptat tepelné čerpadlo <i aria-hidden="true">→</i></a>
+            <p>Návrh, montáž a nastavení systému podle konkrétního domu.</p>
+            <a class="card__cta card__link" href="#poptavka" data-sluzba="tepelne-cerpadlo">Nezávazně poptat <i aria-hidden="true">→</i></a>
           </article>
 
           <article class="card reveal">
-            <span class="card__num" aria-hidden="true">.02</span>
             <span class="card__icon" aria-hidden="true">
               <svg viewBox="0 0 32 32"><path d="M16 4v24M16 4l-4 4M16 4l4 4M16 28l-4-4M16 28l4-4"/><path d="M5.6 10 26.4 22M5.6 10l5.5.4M5.6 10 6 4.5M26.4 22l-5.5-.4M26.4 22 26 27.5"/><path d="M26.4 10 5.6 22M26.4 10l-5.5.4M26.4 10 26 4.5M5.6 22l5.5-.4M5.6 22 6 27.5"/></svg>
             </span>
-            <p class="card__tag">Chlazení i přitápění</p>
             <h3>Klimatizace</h3>
-            <p>Instalace do bytů i domů tak, aby v létě chladila a v přechodném období levně přitápěla.</p>
-            <a class="card__cta card__link" href="#poptavka" data-sluzba="klimatizace">Poptat klimatizaci <i aria-hidden="true">→</i></a>
+            <p>Instalace do bytů i domů, včetně přitápění v přechodném období.</p>
+            <a class="card__cta card__link" href="#poptavka" data-sluzba="klimatizace">Nezávazně poptat <i aria-hidden="true">→</i></a>
           </article>
 
           <article class="card reveal">
-            <span class="card__num" aria-hidden="true">.03</span>
             <span class="card__icon" aria-hidden="true">
               <svg viewBox="0 0 32 32"><path d="M16 4c4 4 5 7 3 10-1.5 2.2-1 4 .5 5.5C21 22 22 20 22 17c3 3 4 6 2.5 9.2C23 29 19.8 30 16 30s-7-1-8.5-3.8C6 23 7 20 10 17c0 2 .4 3.4 1.5 4.5C13 20 13.5 18 12 16c-2-3-1-7 4-12z"/></svg>
             </span>
-            <p class="card__tag">Kondenzační kotle</p>
-            <h3>Plynové kotle</h3>
-            <p>Výměna i nová montáž včetně uvedení do provozu — starý kotel odpojíme, nový necháme běžet.</p>
-            <a class="card__cta card__link" href="#poptavka" data-sluzba="plynovy-kotel">Poptat výměnu kotle <i aria-hidden="true">→</i></a>
+            <h3>Kotle</h3>
+            <p>Výměna i nová montáž kondenzačních kotlů včetně uvedení do provozu.</p>
+            <a class="card__cta card__link" href="#poptavka" data-sluzba="plynovy-kotel">Nezávazně poptat <i aria-hidden="true">→</i></a>
           </article>
 
           <article class="card reveal">
-            <span class="card__num" aria-hidden="true">.04</span>
             <span class="card__icon" aria-hidden="true">
               <svg viewBox="0 0 32 32"><path d="M21.5 6.5a5 5 0 0 0-6.4 6.4L6 22l4 4 9.1-9.1a5 5 0 0 0 6.4-6.4l-3 3-3-3z"/></svg>
             </span>
-            <p class="card__tag">Pravidelná péče</p>
             <h3>Servis a revize</h3>
-            <p>Čištění, kontroly a řešení poruch — u zařízení, která jsme montovali, i u cizích.</p>
-            <a class="card__cta card__link" href="#poptavka" data-sluzba="servis">Objednat servis <i aria-hidden="true">→</i></a>
+            <p>Servisujeme zařízení, která jsme montovali, i zařízení od jiných firem.</p>
+            <a class="card__cta card__link" href="#poptavka" data-sluzba="servis">Nezávazně poptat <i aria-hidden="true">→</i></a>
           </article>
         </div>
       </div>
     </section>
 
+
+    <!-- ================= KOTEL, NEBO ČERPADLO =================
+         Regulatorní tvrzení jsou ověřená (EPBD (EU) 2024/1275, pokyny EK z 10/2024
+         k ukončení podpory samostatných fosilních kotlů od 1. 1. 2025).
+         NEPSAT „plynové kotle budou zakázané“ — zákaz neexistuje.
+         Při aktualizaci znovu ověřit u EK / EUR-Lex / MPO. =================== -->
+    <section class="section" id="rozhodovani">
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker">Rozhodování</p>
+          <h2>Plynový kotel,<br><span class="muted">nebo tepelné čerpadlo?</span></h2>
+          <p class="section__sub" style="margin-inline:auto">Neexistuje jedno řešení pro každý dům. Záleží na současném vytápění, tepelných ztrátách, investici a způsobu používání domu.</p>
+        </header>
+
+        <div class="compare">
+          <div class="compare__col reveal">
+            <p class="compare__label">Plynový kotel</p>
+            <p class="compare__lead">Dává smysl především tam, kde:</p>
+            <ul class="compare__list">
+              <li>už je zavedená plynová přípojka</li>
+              <li>je otopná soustava navržená na vyšší teploty</li>
+              <li>rozhoduje nižší pořizovací investice</li>
+            </ul>
+          </div>
+
+          <div class="compare__col compare__col--warm reveal">
+            <p class="compare__label">Tepelné čerpadlo</p>
+            <p class="compare__lead">Dává smysl především tam, kde:</p>
+            <ul class="compare__list">
+              <li>chcete zdroj tepla s nízkými emisemi</li>
+              <li>se topí nízkoteplotně — podlahovým vytápěním nebo většími radiátory</li>
+              <li>hraje roli dlouhodobá účinnost provozu</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="notice reveal">
+          <p><strong>Jak to je dnes.</strong> Plynové kotle zakázané nejsou, nadále je možné je instalovat i provozovat. Od roku 2025 ale členské státy EU nesmějí z veřejných peněz podporovat instalaci samostatných kotlů na fosilní paliva. V Česku plynové kondenzační kotle z dotací vypadly ještě dřív.</p>
+          <p><strong>Kam to směřuje.</strong> Evropská směrnice o energetické náročnosti budov (EU) 2024/1275 počítá s postupným útlumem fosilních paliv ve vytápění budov do roku 2040. Konkrétní kroky si stanovuje každý stát ve svém plánu renovací budov.</p>
+          <p><strong>Co to znamená pro váš dům.</strong> Zatím nemusíte měnit nic. Když ale zdroj tepla stejně vyměňujete, dává smysl počítat s tím, kam se vytápění dlouhodobě posouvá.</p>
+        </div>
+
+        <div class="compare__cta reveal">
+          <p>Nejste si jistí, co dává smysl právě u vás?</p>
+          <div class="cta-row"><a class="btn btn--primary btn--lg" href="#poptavka">Zjistit vhodné řešení</a></div>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= JAK TO PROBÍHÁ ================= -->
-    <section class="section section--soft" id="postup">
+    <section class="section" id="postup">
       <div class="container">
         <header class="section__head section__head--split reveal">
           <div>
@@ -238,100 +286,61 @@
           <li class="step reveal">
             <span class="step__num">01</span>
             <h3>Konzultace</h3>
-            <p>Ozvete se, projdeme dům, současné vytápění a vaše potřeby. Nezávazně.</p>
+            <p>Projdeme dům, současné vytápění a co potřebujete.</p>
           </li>
           <li class="step reveal">
             <span class="step__num">02</span>
             <h3>Návrh řešení</h3>
-            <p>Doporučíme konkrétní zařízení a výkon a řekneme orientační cenu. Rozmyslet si to můžete v klidu.</p>
+            <p>Doporučíme konkrétní zařízení a výkon.</p>
           </li>
           <li class="step reveal">
             <span class="step__num">03</span>
             <h3>Montáž</h3>
-            <p>Domluvíme termín. Odvedeme montáž, zprovozníme zařízení a ukážeme vám, jak ho ovládat.</p>
+            <p>Zařízení namontujeme a zprovozníme.</p>
           </li>
           <li class="step reveal">
             <span class="step__num">04</span>
             <h3>Servis</h3>
-            <p>Po montáži nekončíme. Zařízení dál servisujeme a pomůžeme i s poruchou.</p>
+            <p>Zůstáváme k dispozici i po montáži.</p>
           </li>
         </ol>
       </div>
     </section>
 
-    <!-- ================= PROČ JÁ ================= -->
-    <section class="section" id="proc">
+    <!-- ================= PROČ MD-THERM ================= -->
+    <section class="section section--soft" id="proc">
       <div class="container">
-        <div class="why">
-          <header class="section__head section__head--left reveal">
-            <p class="kicker">03 — Proč my</p>
-            <h2>Za svou prací<br><span class="muted">si stojíme</span></h2>
-            <p class="section__sub">Nevoláte do call centra. Jednáte přímo s technikem, který řešení navrhne, namontuje a následně servisuje.</p>
-            <a class="btn btn--primary btn--lg why__cta" href="#poptavka">Nezávazně poptat</a>
-          </header>
-
-          <ul class="reasons">
-            <li class="reason reveal">
-              <h3>Osobní přístup</h3>
-              <p>Jednáte přímo s technikem. Kdo přijede, ten práci i odvede.</p>
-            </li>
-            <li class="reason reveal">
-              <h3>Rychlá domluva</h3>
-              <p>Zavoláte, domluvíme se. Bez dispečinku a čekání na zpětné volání.</p>
-            </li>
-            <li class="reason reveal">
-              <h3>Praha a okolí</h3>
-              <p>Pracujeme v Praze a okolí, takže to k vám nemáme daleko.</p>
-            </li>
-            <li class="reason reveal">
-              <h3>Servis po montáži</h3>
-              <p>Po montáži nezmizíme. Zařízení dál servisujeme.</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= VYBRANÉ REALIZACE =================
-         TODO (Milan): sekce je připravená, ale zatím SKRYTÁ atributem `hidden`,
-         protože nemáme reálné fotky ani souhlas zákazníků. Až fotky budou:
-           1) doplnit skutečné soubory do /images/realizace/ (poměr 4:3),
-           2) přepsat popisky (typ zařízení — lokalita, jedna věta o rozsahu),
-           3) smazat atribut `hidden` z <section> níže,
-           4) přidat odkaz „Realizace" do navigace v .topnav.
-         Nevyplňujte smyšlené lokality ani parametry. =================== -->
-    <section class="section section--soft" id="realizace" hidden>
-      <div class="container">
-        <header class="section__head section__head--split reveal">
-          <div>
-            <p class="kicker">04 — Realizace</p>
-            <h2>Vybrané realizace<br><span class="muted">v Praze a okolí</span></h2>
-          </div>
-          <p class="section__sub">Ukázky z toho, co nám prošlo rukama. Fotky z konkrétních montáží.</p>
+        <header class="section__head reveal">
+          <p class="kicker">03 — Proč MD-Therm</p>
+          <h2>Jedno místo pro vytápění,<br><span class="muted">chlazení i servis</span></h2>
+          <p class="section__sub" style="margin-inline:auto">Kotle, tepelná čerpadla i klimatizace řešíme pod jednou hlavičkou, od návrhu až po servis.</p>
         </header>
 
-        <div class="grid grid--work">
-          <article class="work reveal">
-            <div class="work__media"><img src="/images/realizace/01.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></div>
-            <p class="work__meta">Tepelné čerpadlo</p>
-            <h3>Tepelné čerpadlo — [lokalita]</h3>
-            <p>[Rodinný dům, výměna plynového kotle za čerpadlo vzduch–voda.]</p>
-          </article>
-          <article class="work reveal">
-            <div class="work__media"><img src="/images/realizace/02.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></div>
-            <p class="work__meta">Klimatizace</p>
-            <h3>Klimatizace — [lokalita]</h3>
-            <p>[Byt, multisplit do dvou místností.]</p>
-          </article>
-          <article class="work reveal">
-            <div class="work__media"><img src="/images/realizace/03.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></div>
-            <p class="work__meta">Plynový kotel</p>
-            <h3>Výměna kotle — [lokalita]</h3>
-            <p>[Kondenzační kotel včetně úpravy odkouření.]</p>
-          </article>
-        </div>
+        <ul class="reasons">
+          <li class="reason reveal">
+            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M21.5 6.5a5 5 0 0 0-6.4 6.4L6 22l4 4 9.1-9.1a5 5 0 0 0 6.4-6.4l-3 3-3-3z"/></svg></span>
+            <h3>Odbornost</h3>
+            <p>Zkušenosti s kotli, tepelnými čerpadly i klimatizacemi.</p>
+          </li>
+          <li class="reason reveal">
+            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M27 19a3 3 0 0 1-3 3H11l-6 5V8a3 3 0 0 1 3-3h16a3 3 0 0 1 3 3z"/><path d="M11 11h10M11 16h6"/></svg></span>
+            <h3>Přímá domluva</h3>
+            <p>Jednáte přímo s technikem, ne s dispečinkem.</p>
+          </li>
+          <li class="reason reveal">
+            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3a9 9 0 0 0-9 9c0 6.6 9 17 9 17s9-10.4 9-17a9 9 0 0 0-9-9z"/><circle cx="16" cy="12" r="3.4"/></svg></span>
+            <h3>Praha a Středočeský kraj</h3>
+            <p>Jasně vymezená oblast, kam jezdíme.</p>
+          </li>
+          <li class="reason reveal">
+            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3 6 7v8c0 6.2 4.2 11.8 10 14 5.8-2.2 10-7.8 10-14V7z"/><path d="m11.5 15.5 3.2 3.2 6-6.4"/></svg></span>
+            <h3>Servis i po montáži</h3>
+            <p>Montáží to nekončí, zařízení dál servisujeme.</p>
+          </li>
+        </ul>
       </div>
     </section>
+
 
     <!-- ================= POPTÁVKOVÝ FORMULÁŘ ================= -->
     <section class="section section--airy" id="poptavka">
@@ -518,7 +527,7 @@
     <section class="section" id="reference" hidden>
       <div class="container">
         <header class="section__head reveal">
-          <p class="kicker">05 — Reference</p>
+          <p class="kicker">Reference</p>
           <h2>Reference<br><span class="muted">zákazníků</span></h2>
         </header>
       </div>
@@ -528,7 +537,7 @@
     <section class="section section--tight" id="faq">
       <div class="container">
         <header class="section__head reveal">
-          <p class="kicker">06 — Časté dotazy</p>
+          <p class="kicker">05 — Časté dotazy</p>
           <h2>Časté dotazy k tepelným čerpadlům<br><span class="muted">a klimatizacím</span></h2>
         </header>
 
@@ -576,6 +585,39 @@
       </div>
     </section>
 
+
+    <!-- ================= REALIZACE (marquee) =================
+         TODO (Ondra): sekce je hotová, ale SKRYTÁ atributem `hidden`, protože
+         zatím nemáme skutečné fotky z montáží. Až fotky budou:
+           1) uložit je jako /images/realizace/01.jpg … 05.jpg (poměr 4:3),
+           2) smazat atribut `hidden` z <section> níže.
+         Popisky se záměrně nepoužívají — lokalitu ani typ montáže nevymýšlet.
+         Fotky musí být reálné, žádné generované ani stockové. ================= -->
+    <section class="section section--soft" id="realizace" hidden>
+      <div class="container">
+        <header class="section__head reveal">
+          <p class="kicker">Realizace</p>
+          <h2>Několik našich realizací</h2>
+        </header>
+      </div>
+
+      <div class="marquee marquee--work">
+        <ul class="marquee__track">
+        <li class="marquee__item"><img src="/images/realizace/01.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <li class="marquee__item"><img src="/images/realizace/02.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <li class="marquee__item"><img src="/images/realizace/03.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <li class="marquee__item"><img src="/images/realizace/04.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <li class="marquee__item"><img src="/images/realizace/05.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <!-- duplikát pro plynulou smyčku — pro odečítače skrytý -->
+        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/01.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/02.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/03.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/04.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/05.jpg" alt="" width="800" height="600" loading="lazy" decoding="async" /></li>
+        </ul>
+      </div>
+    </section>
+
     <!-- ================= ZÁVĚREČNÉ CTA ================= -->
     <section class="section section--airy cta-band">
       <div class="container">
@@ -595,7 +637,7 @@
       <div class="container">
         <header class="section__head section__head--split reveal">
           <div>
-            <p class="kicker">07 — Kontakt</p>
+            <p class="kicker">06 — Kontakt</p>
             <h2>Kontakt — MD-Therm<br><span class="muted">Praha 4</span></h2>
           </div>
           <p class="section__sub">Nejrychleji telefonicky.</p>
@@ -745,11 +787,11 @@
     })();
   </script>
 
-  <script src="/js/main.js?v=37" defer></script>
+  <script src="/js/main.js?v=39" defer></script>
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=37" defer></script>
+  <script src="/js/form.js?v=39" defer></script>
 
   <!-- PostHog až po zbytku — analytika nepatří na kritickou cestu vykreslení. -->
   <script>

@@ -214,8 +214,16 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   background: var(--ink); color: #fff;
   font-weight: 700; font-size: .82rem; letter-spacing: .02em;
 }
+/* Značka v liště. Pevná výška (stejně jako dřív čtvereček MD — nezmenšuje se
+   ani po odscrollování), šířka dopočítá poměr 152:63, takže se nedeformuje. */
+.brand__logo { align-self: center; height: 24px; width: auto; }
 .brand__name { font-weight: 700; letter-spacing: -.02em; font-size: 1.05rem; }
+/* Popisek „topení · chlazení" je v liště skrytý: logo je široká sestava
+   (84 px místo 34 px čtverečku) a na popisek už vedle navigace nezbývá místo —
+   text se překrýval s odkazem „Služby". Význam nemizí, vločka a slunce
+   v logu říkají totéž. Odkrytím se překryv vrátí. */
 .brand__role {
+  display: none;
   font-family: var(--mono); font-size: .68rem; color: var(--ink-soft);
   text-transform: uppercase; letter-spacing: .06em;
 }
@@ -255,8 +263,11 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .topnav a:hover { color: var(--ink); }
 }
 
-/* Mobile menu dropdown */
-@media (max-width: 960px) {
+/* Mobile menu dropdown.
+   Práh je 1180 px, ne 960: mezi 961 a ~1180 px se značka + navigace + dvě CTA
+   do kontejneru nevejdou a tlačítko „Nezávazně poptat" vyjíždělo mimo obrazovku
+   (na 1000 px o 98 px). Nad 1180 px má lišta ~73 px rezervy. */
+@media (max-width: 1180px) {
   .topnav {
     display: none;
     position: absolute;
@@ -313,7 +324,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .btn--menu[aria-expanded="true"] { transform: rotate(90deg); }
 
 /* Animate menu items on open */
-@media (max-width: 960px) {
+@media (max-width: 1180px) {
   .topnav.is-open a { animation: menuItemFadeIn 300ms var(--ease) backwards; }
   .topnav.is-open a:nth-child(1) { animation-delay: 50ms; }
   .topnav.is-open a:nth-child(2) { animation-delay: 100ms; }
@@ -498,6 +509,10 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* Výšky vyrovnané kvůli rozdílnému vnitřnímu okraji v originálních souborech */
 .brand-logo--protherm { height: clamp(36px, 4.8vw, 56px); aspect-ratio: 1440 / 810; }
 .brand-logo--vaillant { height: clamp(54px, 7.2vw, 84px); aspect-ratio: 516 / 387; }
+/* TODO (Ondra): až dodáš originální soubory Gree a Bosch, dopočítej aspect-ratio
+   z jejich skutečných rozměrů a dolaď height tak, aby žádné logo opticky nepřevažovalo. */
+.brand-logo--gree  { height: clamp(26px, 3.4vw, 40px); aspect-ratio: 2000 / 1125; }
+.brand-logo--bosch { height: clamp(26px, 3.4vw, 40px); aspect-ratio: 2000 / 1125; }
 @media (hover: hover) and (pointer: fine) {
   .marquee__item:hover .brand-logo { opacity: .85; }
 }
@@ -543,105 +558,101 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .section__head--split .section__sub { margin-top: 0; padding-bottom: .4rem; }
 
 /* ---------- Služby ---------- */
-.grid { display: grid; gap: clamp(12px, 1.4vw, 18px); }
+.grid { display: grid; gap: clamp(14px, 1.5vw, 20px); }
 .grid--services { grid-template-columns: repeat(4, 1fr); }
 
+/* Karta nese jen ikonu, název, jednu větu a CTA. Žádná velká čísla, štítky
+   ani dekorativní efekty — sekce má být čitelná na první pohled. */
 .card {
-  position: relative; overflow: hidden;
+  position: relative;
   background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
-  padding: clamp(22px, 2vw, 30px) clamp(20px, 1.8vw, 26px) clamp(24px, 2.2vw, 30px);
-  display: flex; flex-direction: column; gap: .4rem;
+  padding: clamp(26px, 2.2vw, 34px) clamp(22px, 1.9vw, 28px) clamp(24px, 2vw, 30px);
+  display: flex; flex-direction: column;
   transition: transform 380ms var(--ease-out), box-shadow 380ms var(--ease-out), border-color 380ms var(--ease-out);
 }
-/* Reflektor sledující kurzor — jemná červená záře, která kartu oživí */
-.card::before {
-  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  border-radius: inherit;
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(215,25,32,.10), transparent 66%);
-  opacity: 0; transition: opacity .35s var(--ease-out);
-}
-/* Tenká akcentní linka, která se při najetí rozvine odshora */
-.card::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 2;
-  background: linear-gradient(90deg, var(--accent), var(--accent-deep));
-  transform: scaleX(0); transform-origin: left;
-  transition: transform .5s var(--ease-out);
-}
-.card > * { position: relative; z-index: 1; }
-.card__num {
-  position: absolute; top: clamp(16px, 1.8vw, 22px); right: clamp(18px, 1.8vw, 24px);
-  font-family: var(--mono); font-size: clamp(1.5rem, 2.8vw, 2.2rem); font-weight: 500;
-  color: var(--line); letter-spacing: -.02em; line-height: 1;
-  transition: color 380ms var(--ease-out), transform 380ms var(--ease-out);
-}
 .card__icon {
-  width: 42px; height: 42px; border-radius: 11px; margin-bottom: .7rem;
+  width: 44px; height: 44px; border-radius: 12px; margin-bottom: 1.2rem;
   display: grid; place-items: center;
   background: var(--accent-soft); color: var(--accent-dark);
-  transition: background 320ms var(--ease-out), transform 320ms var(--ease-out);
+  transition: background 320ms var(--ease-out);
 }
-.card__icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.card__tag { font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: .1rem; }
+.card__icon svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .card h3 { font-size: var(--fs-h3); letter-spacing: -.02em; font-weight: 700; }
-.card p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .15rem; }
+.card p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .55rem; }
 
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 6px 20px rgba(16,22,26,.06), 0 22px 48px rgba(16,22,26,.10);
-    border-color: rgba(215,25,32,.30);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(16,22,26,.05), 0 18px 40px rgba(16,22,26,.08);
+    border-color: var(--line-strong);
   }
-  .card:hover::before { opacity: 1; }
-  .card:hover::after { transform: scaleX(1); }
-  .card:hover .card__icon { background: #fbdedf; transform: translateY(-1px) scale(1.08); }
-  .card:hover .card__num { color: var(--accent); transform: translateY(-2px); }
+  .card:hover .card__icon { background: #fbdedf; }
 }
 
 /* ---------- Postup ---------- */
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(16px, 2vw, 28px); }
-.step {
-  position: relative; padding-top: 1.6rem;
-  --fill: 30%;
+/* Čtyři kroky spojené velmi jemnou linkou. Žádné rámečky ani pozadí —
+   rytmus drží typografie a bílé místo. */
+.steps {
+  --steps-gap: clamp(20px, 2.6vw, 44px);
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--steps-gap);
+  list-style: none;
 }
-/* Tenká vodorovná linka (track) nad každým krokem */
+.step { position: relative; }
+.step__num {
+  display: inline-block;
+  font-family: var(--mono); font-size: .9rem; font-weight: 600;
+  letter-spacing: .06em; color: var(--accent-deep);
+}
+/* Spojnice mezi čísly — od čísla přes mezeru k dalšímu kroku. */
 .step::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0;
-  height: 2px; background: var(--line); border-radius: 2px;
+  content: ''; position: absolute; top: .58em;
+  left: 3.1em; right: calc(var(--steps-gap) * -1);
+  height: 1px; background: var(--line);
 }
-/* Červený progress segment — šířka dle --fill, animuje se při reveal */
-.step::before {
-  content: ''; position: absolute; top: 0; left: 0; z-index: 1;
-  width: 0; height: 2px; background: var(--accent);
-  border-radius: 2px;
-  transition: width .7s var(--ease);
-  transition-delay: inherit;
-}
-.step.is-in::before { width: var(--fill); }
-.steps .step:nth-child(1) { --fill: 22%; }
-.steps .step:nth-child(2) { --fill: 46%; }
-.steps .step:nth-child(3) { --fill: 70%; }
-.steps .step:nth-child(4) { --fill: 94%; }
+.step:last-child::after { display: none; }
+.step h3 { font-size: var(--fs-h3); letter-spacing: -.025em; margin-top: .85rem; font-weight: 700; }
+.step p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .4rem; }
 
-.step__num { font-family: var(--mono); font-size: .92rem; color: var(--accent-deep); font-weight: 600; letter-spacing: .04em; }
-.step h3 { font-size: var(--fs-h3); letter-spacing: -.025em; margin-top: .5rem; font-weight: 700; }
-.step p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.55; margin-top: .4rem; }
-
-/* ---------- Proč já ---------- */
-.why { display: grid; grid-template-columns: 1fr 1.15fr; gap: clamp(32px, 5vw, 80px); align-items: start; }
-.why__cta { margin-top: 1.6rem; }
-.reasons { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(18px, 2.2vw, 32px); }
-.reason {
-  padding: 1.5rem 1.7rem;
-  background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
-  box-shadow: 0 1px 4px rgba(16,22,26,.035);
-  transition: border-color 320ms var(--ease-out), box-shadow 320ms var(--ease-out), transform 320ms var(--ease-out);
+/* ---------- Proč MD-Therm ---------- */
+/* Čtyři věcné body. Bez karet — jen ikona, nadpis a jedna věta. */
+.reasons {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: clamp(24px, 3vw, 48px); list-style: none;
 }
-.reason h3 { font-size: var(--fs-h3); letter-spacing: -.02em; font-weight: 700; }
-.reason p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.58; margin-top: .45rem; }
+.reason__icon { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 1rem; color: var(--accent-dark); }
+.reason__icon svg { width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.reason h3 { font-size: 1.02rem; letter-spacing: -.01em; font-weight: 700; }
+.reason p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .4rem; }
 
-@media (hover: hover) and (pointer: fine) {
-  .reason:hover { transform: translateY(-3px); border-color: var(--line-strong); box-shadow: var(--shadow-sm); }
+/* ---------- Kotel, nebo tepelné čerpadlo ---------- */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2vw, 28px); }
+.compare__col {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: clamp(24px, 2.4vw, 36px);
 }
+/* Jediný rozdíl mezi sloupci je barva štítku — žádné plameny ani vločky. */
+.compare__col--warm { border-color: rgba(215,25,32,.22); }
+.compare__label { font-family: var(--mono); font-size: var(--fs-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.compare__col--warm .compare__label { color: var(--accent-deep); }
+.compare__lead { margin-top: .9rem; font-size: 1.05rem; font-weight: 600; letter-spacing: -.015em; }
+.compare__list { margin-top: .9rem; padding: 0; list-style: none; }
+.compare__list li { position: relative; padding-left: 1.4rem; margin-top: .55rem; color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; }
+.compare__list li::before { content: ''; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--line-strong); }
+.compare__col--warm .compare__list li::before { background: var(--accent); }
+
+/* Věcná poznámka k regulaci — tichý blok, ne poplašná zpráva. */
+.notice {
+  margin-top: clamp(20px, 2.4vw, 32px); padding: clamp(22px, 2.4vw, 32px);
+  border-left: 2px solid var(--line-strong);
+  background: var(--bg-soft); border-radius: var(--r-md);
+}
+.notice p { color: var(--ink-2); font-size: var(--fs-sm); line-height: 1.7; }
+.notice p + p { margin-top: .85rem; }
+.notice strong { color: var(--ink); font-weight: 600; }
+
+.compare__cta { margin-top: clamp(28px, 3.4vw, 44px); text-align: center; }
+.compare__cta p { font-size: var(--fs-lede); color: var(--ink-2); }
+.compare__cta .cta-row { justify-content: center; margin-top: 1.2rem; }
 
 /* =========================================================================
    Kontakt
@@ -762,7 +773,9 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
      při pozdější úpravě menu tiše rozbije. */
   .grid--services { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(2, 1fr); }
-  .why { grid-template-columns: 1fr; gap: 2.2rem; }
+  /* Spojnice dává smysl jen v jedné řadě — ve 2×2 by vedla do prázdna. */
+  .step::after { display: none; }
+  .reasons { grid-template-columns: repeat(2, 1fr); }
   .contact { grid-template-columns: 1fr; }
   .footer__contact { text-align: left; }
   .section__head--split { grid-template-columns: 1fr; gap: 1rem; align-items: start; }
@@ -804,15 +817,14 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   .topbar__cta { gap: .5rem; }
   .topbar__cta .btn--phone span { display: none; }
   .topbar__cta .btn--phone { padding: 0 .75rem; background: #fff; color: var(--ink); border: 1px solid var(--line-strong); }
-  .brand__role { display: none; }
 
   /* Tišší vertikální rytmus na mobilu */
   .section { padding: clamp(48px, 7vh, 72px) 0; }
   .section__head { margin-bottom: clamp(28px, 5vh, 40px); }
 
   .grid--services { grid-template-columns: 1fr; }
-  .steps { grid-template-columns: 1fr; gap: 1.4rem; }
-  .reasons { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; gap: 1.8rem; }
+  .reasons { grid-template-columns: 1fr; gap: 1.9rem; }
   .hero__title { font-size: clamp(2.2rem, 8.5vw, 2.8rem); }
 
   /* Hero CTA: side-by-side buttons on mobile */
@@ -827,7 +839,7 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 }
 
 @media (max-width: 480px) {
-  .brand__name { display: none; }                 /* na úzkém mobilu stačí logo MD */
+  .brand__name { display: none; }                 /* na úzkém mobilu stačí samotné logo */
   .footer__contact { text-align: left; }
   .footer__inner { gap: 1.2rem; }
   .contact__row--primary .contact__value { font-size: 1.3rem; }
@@ -880,7 +892,7 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 
 /* ---------- Karty služeb: CTA řádek + celá karta klikatelná ---------- */
 .card__cta {
-  margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--line);
+  margin-top: auto; padding-top: 1.5rem;
   font-size: .92rem; font-weight: 600; color: var(--ink);
   display: inline-flex; align-items: center; gap: .4rem;
 }
@@ -1021,16 +1033,21 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 }
 .inquiry__done p { color: var(--ink-2); margin-top: .7rem; max-width: 46ch; margin-inline: auto; }
 
-/* ---------- Realizace ---------- */
-.grid--work { grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 24px); }
-.work__media { border-radius: var(--r-md); overflow: hidden; background: var(--bg-soft); aspect-ratio: 4 / 3; }
-.work__media img { width: 100%; height: 100%; object-fit: cover;
-  transition: transform 700ms var(--ease-out); }
-@media (hover: hover) and (pointer: fine) { .work:hover .work__media img { transform: scale(1.04); } }
-.work__meta { font-family: var(--mono); font-size: var(--fs-mono); letter-spacing: .1em;
-  text-transform: uppercase; color: var(--ink-soft); margin-top: .9rem; }
-.work h3 { font-size: var(--fs-h3); margin-top: .35rem; }
-.work p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .3rem; }
+/* ---------- Realizace (marquee fotek) ---------- */
+.marquee--work { --work-h: clamp(160px, 20vw, 240px); }
+.marquee--work .marquee__track { gap: clamp(14px, 1.6vw, 22px); animation-duration: 60s; }
+.marquee--work .marquee__item { display: block; }
+.marquee--work img {
+  height: var(--work-h); width: auto; aspect-ratio: 4 / 3;
+  object-fit: cover; border-radius: var(--r-md); background: var(--bg-soft);
+}
+/* Na dotykových zařízeních se místo animace posouvá prstem. */
+@media (hover: none) {
+  .marquee--work { overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
+  .marquee--work .marquee__track { animation: none; }
+  .marquee--work .marquee__item { scroll-snap-align: center; }
+}
+@media (prefers-reduced-motion: reduce) { .marquee--work { overflow-x: auto; } }
 
 /* ---------- FAQ ---------- */
 .faq { max-width: 820px; margin-inline: auto; }
@@ -1092,11 +1109,10 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 .menu-open .mobilebar { transform: translateY(115%); visibility: hidden; }
 
 /* ---------- Responsivita nových komponent ---------- */
-@media (max-width: 960px) {
-  .grid--work { grid-template-columns: repeat(2, 1fr); }
-}
+/* Dva sloupce porovnání se pod 860 px tísní — pod sebou se čtou líp. */
+@media (max-width: 860px) { .compare { grid-template-columns: 1fr; } }
+
 @media (max-width: 620px) {
-  .grid--work { grid-template-columns: 1fr; }
   .inquiry { border-radius: 18px; min-height: 400px; }
   /* `:not(.opts--wide)` je nutné — bez něj by tohle pravidlo (stejná
      specifičnost, ale později ve zdroji) přebilo jednosloupcový režim
@@ -1149,4 +1165,4 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 @media (max-width: 400px) { .section__head h2 br { display: none; } }
 
 /* Hamburger patří jen tam, kde je navigace schovaná. */
-@media (min-width: 961px) { .btn--menu { display: none; } }
+@media (min-width: 1181px) { .btn--menu { display: none; } }

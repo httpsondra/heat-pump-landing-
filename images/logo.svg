@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -5 152 63" role="img" aria-label="MD-Therm">
+  <!-- Značka MD-Therm (varianta C1 z finální desky): vločka — M — D jako slunce.
+       Geometrie i barvy jsou převzaté 1:1 z podkladu značky, nic se tu
+       nedokresluje od oka. Barvy: cold #1560E8, ink #22282C, hot #F4550E. -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Vločka — chlazení -->
+    <g stroke="#1560E8" stroke-width="6.5" transform="translate(22 26)">
+      <line x1="-15" x2="15"/>
+      <line x1="-15" x2="15" transform="rotate(60)"/>
+      <line x1="-15" x2="15" transform="rotate(120)"/>
+    </g>
+    <!-- M -->
+    <path stroke="#22282C" stroke-width="9" transform="translate(44 0)"
+          d="M4 48 L4 4 L20 26 L36 4 L36 48"/>
+    <!-- D jako oblouk slunce — topení -->
+    <path stroke="#F4550E" stroke-width="9" transform="translate(94 0)"
+          d="M4 4 A22 22 0 0 1 4 48"/>
+    <!-- Paprsky -->
+    <g stroke="#F4550E" stroke-width="6.5" transform="translate(98 26)">
+      <line x1="30" x2="42" transform="rotate(-38)"/>
+      <line x1="30" x2="42"/>
+      <line x1="30" x2="42" transform="rotate(38)"/>
+    </g>
+  </g>
+</svg>
