@@ -1,32 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="MD-Therm">
-  <!-- Favicon = celá značka (vločka + M + D-slunce), geometrie i barvy
-       převzaté 1:1 z /images/logo.svg. Nic se nezjednodušuje.
+  <!-- Favicon = výřez značky, ne celá sestava. Důvod je čistě rozměrový:
+       plná sestava (vločka + M + D) má poměr 4,5:1, takže ve čtvercové
+       ikoně zbyde na kresbu pruh o výšce ~1/5 dlaždice — při 16 px to je
+       asi 14,5 × 3,2 px, což je šmouha na jakémkoli podkladu. Vločka proto
+       ve faviconě není; M + D-slunce dává „MD" a vyplní čtverec.
+       Tvary jsou převzaté 1:1 z /images/logo.svg (pM a pD), nepřekreslené.
 
-       Dlaždice je SVĚTLÁ schválně. Na tmavém podkladu má M barvu #22282C,
-       tedy skoro splývá s pozadím — v logu je to záměrný „duchový" efekt,
-       ale ve 16px ikoně z něj zbyde nečitelná šmouha. Na světlé dlaždici
-       drží grafitové M plný kontrast a žádná barva se nemusí měnit;
-       navíc je to přesně ta podoba, v jaké logo sedí v hlavičce webu. -->
-  <rect width="64" height="64" rx="14" fill="#FFFFFF"/>
-  <g transform="translate(1.44 21.19) scale(0.4158)"
-     fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Vločka — chlazení -->
-    <g stroke="#1560E8" stroke-width="6.5" transform="translate(22 26)">
-      <line x1="-15" x2="15"/>
-      <line x1="-15" x2="15" transform="rotate(60)"/>
-      <line x1="-15" x2="15" transform="rotate(120)"/>
-    </g>
-    <!-- M -->
-    <path stroke="#22282C" stroke-width="9" transform="translate(44 0)"
-          d="M4 48 L4 4 L20 26 L36 4 L36 48"/>
-    <!-- D jako oblouk slunce — topení -->
-    <path stroke="#F4550E" stroke-width="9" transform="translate(94 0)"
-          d="M4 4 A22 22 0 0 1 4 48"/>
-    <!-- Paprsky -->
-    <g stroke="#F4550E" stroke-width="6.5" transform="translate(98 26)">
-      <line x1="30" x2="42" transform="rotate(-38)"/>
-      <line x1="30" x2="42"/>
-      <line x1="30" x2="42" transform="rotate(38)"/>
-    </g>
+       Dlaždice je tmavá (#22282C — grafit značky) záměrně: na světlém
+       panelu je to zřetelný tvar, na tmavém panelu ji nese bílé M
+       a oranžové slunce. Bílá dlaždice se na světlém panelu ztrácela. -->
+  <rect width="64" height="64" rx="14" fill="#22282C"/>
+  <g transform="translate(4.37 12.84) scale(0.7368)"
+     fill="none" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#FFFFFF" d="M4 48 L4 4 L20 26 L36 4 L36 48"/>
+    <path stroke="#F4550E" transform="translate(45 0)" d="M4 4 A22 22 0 0 1 4 48"/>
   </g>
 </svg>
