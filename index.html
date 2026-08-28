@@ -54,7 +54,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=41" />
+  <link rel="stylesheet" href="/css/styles.css?v=42" />
 </head>
 <body>
 
@@ -178,9 +178,9 @@
         <header class="section__head section__head--split reveal">
           <div>
             <p class="kicker">01 — Služby</p>
-            <h2>Tepelná čerpadla, klimatizace a kotle<br><span class="muted">co pro vás zajistíme</span></h2>
+            <h2>Tepelná čerpadla,<br><span class="muted">klimatizace a kotle</span></h2>
           </div>
-          <p class="section__sub">Od prvního návrhu po servis. Osobně, bez prostředníků.</p>
+          <p class="section__sub">Montáž, výměna a servis na jednom místě.</p>
         </header>
 
         <div class="grid grid--services">
@@ -260,9 +260,19 @@
         </div>
 
         <div class="notice reveal">
-          <p><strong>Jak to je dnes.</strong> Plynové kotle zakázané nejsou, nadále je možné je instalovat i provozovat. Od roku 2025 ale členské státy EU nesmějí z veřejných peněz podporovat instalaci samostatných kotlů na fosilní paliva. V Česku plynové kondenzační kotle z dotací vypadly ještě dřív.</p>
-          <p><strong>Kam to směřuje.</strong> Evropská směrnice o energetické náročnosti budov (EU) 2024/1275 počítá s postupným útlumem fosilních paliv ve vytápění budov do roku 2040. Konkrétní kroky si stanovuje každý stát ve svém plánu renovací budov.</p>
-          <p><strong>Co to znamená pro váš dům.</strong> Zatím nemusíte měnit nic. Když ale zdroj tepla stejně vyměňujete, dává smysl počítat s tím, kam se vytápění dlouhodobě posouvá.</p>
+          <p class="notice__lead">Plynové kotle dnes zakázané nejsou. Evropská energetika se ale dlouhodobě posouvá k vytápění s nižšími emisemi.</p>
+
+          <!-- Detail je schovaný schválně: hlavní sekce má jít přečíst na jeden nádech,
+               ale kdo chce vědět víc, najde tu původní ověřená fakta beze změny.
+               <details> je nativní — bez JS, s klávesnicí i odečítači funguje samo. -->
+          <details class="notice__more">
+            <summary>Jak se pravidla mění?</summary>
+            <div class="notice__detail">
+              <p><strong>Jak to je dnes.</strong> Plynové kotle zakázané nejsou, nadále je možné je instalovat i provozovat. Od roku 2025 ale členské státy EU nesmějí z veřejných peněz podporovat instalaci samostatných kotlů na fosilní paliva. V Česku plynové kondenzační kotle z dotací vypadly ještě dřív.</p>
+              <p><strong>Kam to směřuje.</strong> Evropská směrnice o energetické náročnosti budov (EU) 2024/1275 počítá s postupným útlumem fosilních paliv ve vytápění budov do roku 2040. Konkrétní kroky si stanovuje každý stát ve svém plánu renovací budov.</p>
+              <p><strong>Co to znamená pro váš dům.</strong> Zatím nemusíte měnit nic. Když ale zdroj tepla stejně vyměňujete, dává smysl počítat s tím, kam se vytápění dlouhodobě posouvá.</p>
+            </div>
+          </details>
         </div>
 
         <div class="compare__cta reveal">
@@ -278,9 +288,9 @@
         <header class="section__head section__head--split reveal">
           <div>
             <p class="kicker">02 — Postup</p>
-            <h2>Jak montáž probíhá<br><span class="muted">od konzultace po servis</span></h2>
+            <h2>Jak to probíhá</h2>
           </div>
-          <p class="section__sub">Od první domluvy po dlouhodobý servis. Poptávka vás k ničemu nezavazuje.</p>
+          <p class="section__sub">Čtyři jednoduché kroky od první domluvy po hotové řešení.</p>
         </header>
 
         <ol class="steps">
@@ -308,35 +318,34 @@
       </div>
     </section>
 
-    <!-- ================= PROČ MD-THERM ================= -->
+    <!-- ================= CO ZAJISTÍME ================= -->
     <section class="section section--soft" id="proc">
       <div class="container">
         <header class="section__head reveal">
-          <p class="kicker">03 — Proč MD-Therm</p>
-          <h2>Jedno místo pro vytápění,<br><span class="muted">chlazení i servis</span></h2>
-          <p class="section__sub" style="margin-inline:auto">Kotle, tepelná čerpadla i klimatizace řešíme pod jednou hlavičkou, od návrhu až po servis.</p>
+          <p class="kicker">03 — Co zajistíme</p>
+          <h2>Od návrhu<br><span class="muted">po funkční řešení</span></h2>
         </header>
 
         <ul class="reasons">
           <li class="reason reveal">
+            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 14 16 5l11 9"/><path d="M8 12.5V26h16V12.5"/><path d="M13 26v-7h6v7"/></svg></span>
+            <h3>Návrh podle domu</h3>
+            <p>Neprodáváme jedno řešení všem. Zařízení a výkon vybíráme podle konkrétního domu.</p>
+          </li>
+          <li class="reason reveal">
             <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M21.5 6.5a5 5 0 0 0-6.4 6.4L6 22l4 4 9.1-9.1a5 5 0 0 0 6.4-6.4l-3 3-3-3z"/></svg></span>
-            <h3>Odbornost</h3>
-            <p>Zkušenosti s kotli, tepelnými čerpadly i klimatizacemi.</p>
+            <h3>Montáž a zprovoznění</h3>
+            <p>Zařízení namontujeme, nastavíme a uvedeme do provozu.</p>
           </li>
           <li class="reason reveal">
-            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M27 19a3 3 0 0 1-3 3H11l-6 5V8a3 3 0 0 1 3-3h16a3 3 0 0 1 3 3z"/><path d="M11 11h10M11 16h6"/></svg></span>
-            <h3>Přímá domluva</h3>
-            <p>Jednáte přímo s technikem, ne s dispečinkem.</p>
-          </li>
-          <li class="reason reveal">
-            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3a9 9 0 0 0-9 9c0 6.6 9 17 9 17s9-10.4 9-17a9 9 0 0 0-9-9z"/><circle cx="16" cy="12" r="3.4"/></svg></span>
-            <h3>Praha a Středočeský kraj</h3>
-            <p>Jasně vymezená oblast, kam jezdíme.</p>
+            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 12h20M6 12l4.5-4.5M6 12l4.5 4.5"/><path d="M26 20H6M26 20l-4.5-4.5M26 20l-4.5 4.5"/></svg></span>
+            <h3>Kotle i tepelná čerpadla</h3>
+            <p>Podle situace můžeme porovnat obě varianty a doporučit vhodné řešení.</p>
           </li>
           <li class="reason reveal">
             <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3 6 7v8c0 6.2 4.2 11.8 10 14 5.8-2.2 10-7.8 10-14V7z"/><path d="m11.5 15.5 3.2 3.2 6-6.4"/></svg></span>
-            <h3>Servis i po montáži</h3>
-            <p>Montáží to nekončí, zařízení dál servisujeme.</p>
+            <h3>Následný servis</h3>
+            <p>Zařízení po montáži dál servisujeme a řešíme případné poruchy.</p>
           </li>
         </ul>
       </div>
@@ -539,7 +548,7 @@
       <div class="container">
         <header class="section__head reveal">
           <p class="kicker">05 — Časté dotazy</p>
-          <h2>Časté dotazy k tepelným čerpadlům<br><span class="muted">a klimatizacím</span></h2>
+          <h2>Časté dotazy</h2>
         </header>
 
         <div class="faq" id="faqList">
@@ -637,8 +646,8 @@
     <section class="section section--airy cta-band">
       <div class="container">
         <div class="cta-band__inner reveal">
-          <h2>Řešíte nové vytápění<br>nebo potřebujete servis?</h2>
-          <p>Popište nám během pár kroků, co potřebujete. Ozveme se a domluvíme další postup.</p>
+          <h2>Nevíte, co dává smysl<br>právě u vás?</h2>
+          <p>Ozvěte se. Projdeme možnosti a doporučíme další krok.</p>
           <div class="cta-row">
             <a class="btn btn--primary btn--lg" href="#poptavka">Nezávazně poptat</a>
             <a class="btn btn--onDark btn--lg" href="tel:+420603479240">Zavolat: +420 603 479 240</a>
@@ -802,11 +811,11 @@
     })();
   </script>
 
-  <script src="/js/main.js?v=41" defer></script>
+  <script src="/js/main.js?v=42" defer></script>
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=41" defer></script>
+  <script src="/js/form.js?v=42" defer></script>
 
   <!-- PostHog až po zbytku — analytika nepatří na kritickou cestu vykreslení. -->
   <script>
