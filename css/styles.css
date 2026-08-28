@@ -509,10 +509,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* Výšky vyrovnané kvůli rozdílnému vnitřnímu okraji v originálních souborech */
 .brand-logo--protherm { height: clamp(36px, 4.8vw, 56px); aspect-ratio: 1440 / 810; }
 .brand-logo--vaillant { height: clamp(54px, 7.2vw, 84px); aspect-ratio: 516 / 387; }
-/* TODO (Ondra): až dodáš originální soubory Gree a Bosch, dopočítej aspect-ratio
-   z jejich skutečných rozměrů a dolaď height tak, aby žádné logo opticky nepřevažovalo. */
-.brand-logo--gree  { height: clamp(26px, 3.4vw, 40px); aspect-ratio: 2000 / 1125; }
-.brand-logo--bosch { height: clamp(26px, 3.4vw, 40px); aspect-ratio: 2000 / 1125; }
+/* Gree a Bosch jsou oříznuté nadoraz (100 % plochy je kresba), zatímco Protherm
+   a Vaillant mají v souboru velký vnitřní okraj — vyplňují 37,9 % a 21,2 % výšky.
+   Aby žádná značka opticky nepřevažovala, srovnává se VÝŠKA SAMOTNÉ KRESBY:
+   Protherm ~21 px, Vaillant ~18 px — u těchhle dvou je ale celá výška kresba
+   samotného nápisu, takže opticky sedí ~17 px. */
+.brand-logo--gree  { height: clamp(11px, 1.45vw, 17px); aspect-ratio: 817 / 160; }
+.brand-logo--bosch { height: clamp(11px, 1.45vw, 17px); aspect-ratio: 718 / 160; }
 @media (hover: hover) and (pointer: fine) {
   .marquee__item:hover .brand-logo { opacity: .85; }
 }

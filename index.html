@@ -51,7 +51,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=39" />
+  <link rel="stylesheet" href="/css/styles.css?v=40" />
 </head>
 <body>
 
@@ -147,27 +147,25 @@
       <p class="brands__label">Pracujeme se zařízeními ověřených výrobců</p>
       <div class="marquee">
         <div class="marquee__track">
-          <span class="marquee__item"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="Protherm" width="1440" height="810" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="Vaillant" width="516" height="387" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
-          <!-- TODO (Ondra): Gree a Bosch. Poslal jsi je jako obrázky vložené do chatu,
-           takže z nich nevznikl soubor na disku — nemám co nakopírovat a překreslovat
-           je nechci. Ulož originály jako /images/gree-logo.(svg|png) a
-           /images/bosch-logo.(svg|png) a přidej sem dvě položky ve tvaru:
-             <span class="marquee__item"><img src="/images/gree-logo.svg" class="brand-logo brand-logo--gree" alt="Gree" width="…" height="…" loading="lazy" decoding="async" /></span>
-           plus jejich aria-hidden duplikáty do skupiny B. Třídy .brand-logo--gree
-           a .brand-logo--bosch už v CSS připravené jsou. -->
-      <!-- skupina B (identická kopie pro plynulou smyčku) -->
-          <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
-          <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
-        </div>
+        <!-- skupina A — jediné položky, které čte odečítač -->
+        <span class="marquee__item"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="Protherm" width="1440" height="810" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="Vaillant" width="516" height="387" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item"><img src="/images/gree-logo.png" class="brand-logo brand-logo--gree" alt="Gree" width="817" height="160" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item"><img src="/images/bosch-logo.png" class="brand-logo brand-logo--bosch" alt="Bosch" width="718" height="160" loading="lazy" decoding="async" /></span>
+        <!-- opakování pro dostatečnou šířku stopy -->
+        <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/gree-logo.png" class="brand-logo brand-logo--gree" alt="" width="817" height="160" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/bosch-logo.png" class="brand-logo brand-logo--bosch" alt="" width="718" height="160" loading="lazy" decoding="async" /></span>
+        <!-- skupina B — identická kopie, aby posun o -50 % navazoval -->
+        <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/gree-logo.png" class="brand-logo brand-logo--gree" alt="" width="817" height="160" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/bosch-logo.png" class="brand-logo brand-logo--bosch" alt="" width="718" height="160" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/protherm-logo.jpg" class="brand-logo brand-logo--protherm" alt="" width="1440" height="810" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/vaillant-logo.jpeg" class="brand-logo brand-logo--vaillant" alt="" width="516" height="387" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/gree-logo.png" class="brand-logo brand-logo--gree" alt="" width="817" height="160" loading="lazy" decoding="async" /></span>
+        <span class="marquee__item" aria-hidden="true"><img src="/images/bosch-logo.png" class="brand-logo brand-logo--bosch" alt="" width="718" height="160" loading="lazy" decoding="async" /></span>
       </div>
     </section>
 
@@ -787,11 +785,11 @@
     })();
   </script>
 
-  <script src="/js/main.js?v=39" defer></script>
+  <script src="/js/main.js?v=40" defer></script>
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=39" defer></script>
+  <script src="/js/form.js?v=40" defer></script>
 
   <!-- PostHog až po zbytku — analytika nepatří na kritickou cestu vykreslení. -->
   <script>
