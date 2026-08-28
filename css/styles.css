@@ -15,10 +15,16 @@
   --line-strong: #d5d5d5;
 
   /* Akcent – červená inspirovaná Prothermem, používat střídmě (CTA, odkazy, ikony) */
-  --accent: #d71920;
-  --accent-deep: #b51218;        /* tmavší červená – hover, čitelná na bílé (text/odkazy) */
-  --accent-dark: #8f1116;        /* nejtmavší – ikony na světlém podkladu, kontrast */
-  --accent-soft: #fdecec;        /* velmi jemný červený nádech (pozadí ikon) */
+  /* Oranžová řada odvozená ze značkové #F4550E (odstín 18,5°).
+     Značková oranžová je světlá — bílý text na ní má jen 3,41:1, což na
+     tlačítku neprojde (text .95rem = běžná velikost, potřebuje 4,5:1).
+     Proto se výplň tlačítek bere z --accent-cta; --accent zůstává přesně
+     značkový a používá se na grafiku, kde stačí 3:1. */
+  --accent: #F4550E;             /* značková oranžová – grafika, tečky, výplně */
+  --accent-cta: #D2470A;         /* výplň tlačítek – bílý text na ní má 4,52:1 */
+  --accent-deep: #A23707;        /* text a odkazy na bílé + hover tlačítek (6,8:1) */
+  --accent-dark: #802B06;        /* nejtmavší – ikony na světlém tónu (9,3:1) */
+  --accent-soft: #FEF0E9;        /* velmi jemný oranžový nádech (pozadí ikon) */
 
   /* Typografie */
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -159,7 +165,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .btn:active { transform: scale(0.97); transition-duration: 80ms; }
 .btn:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 3px; }
 
-.btn--primary { background: var(--accent); color: #fff; }
+.btn--primary { background: var(--accent-cta); color: #fff; }
 .btn--primary:active { background: var(--accent-deep); }
 
 .btn--phone { background: #fff; color: var(--ink); border-color: var(--line-strong); }
@@ -314,7 +320,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent);
+  background: var(--accent-cta);
   color: #fff;
   padding: 0 .75rem;
   transition: transform 300ms var(--ease);
@@ -589,7 +595,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     box-shadow: 0 6px 20px rgba(16,22,26,.05), 0 18px 40px rgba(16,22,26,.08);
     border-color: var(--line-strong);
   }
-  .card:hover .card__icon { background: #fbdedf; }
+  .card:hover .card__icon { background: #FCDFD1; }
 }
 
 /* ---------- Postup ---------- */
@@ -634,7 +640,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   padding: clamp(24px, 2.4vw, 36px);
 }
 /* Jediný rozdíl mezi sloupci je barva štítku — žádné plameny ani vločky. */
-.compare__col--warm { border-color: rgba(215,25,32,.22); }
+.compare__col--warm { border-color: rgba(244,85,14,.30); }
 .compare__label { font-family: var(--mono); font-size: var(--fs-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
 .compare__col--warm .compare__label { color: var(--accent-deep); }
 .compare__lead { margin-top: .9rem; font-size: 1.05rem; font-weight: 600; letter-spacing: -.015em; }
@@ -1025,7 +1031,7 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 .inquiry__micro { font-size: .86rem; color: var(--ink-soft); margin-top: .8rem; }
 .inquiry__alert {
   margin-top: 1rem; padding: .8rem 1rem; border-radius: var(--r-sm);
-  background: var(--accent-soft); border: 1px solid #f4c9c9;
+  background: var(--accent-soft); border: 1px solid #F7D2BC;
   color: var(--accent-dark); font-size: .9rem; font-weight: 500;
 }
 /* Souhrn odpovědí na posledním kroku */

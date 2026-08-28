@@ -168,7 +168,7 @@ function buildEmail(d) {
   body { margin:0; padding:0; width:100% !important; }
   table { border-collapse:collapse; }
   img { border:0; line-height:100%; outline:none; text-decoration:none; }
-  a { color:#b51218; }
+  a { color:#A23707; }
   @media only screen and (max-width:600px) {
     .sm-p { padding-left:22px !important; padding-right:22px !important; }
     .sm-p-top { padding-top:28px !important; }
@@ -185,7 +185,7 @@ function buildEmail(d) {
   <tr>
     <td align="center" style="padding:32px 16px;">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:600px; background-color:#ffffff; border:1px solid #e6e8eb; border-radius:14px; overflow:hidden;">
-        <tr><td style="height:3px; background-color:#d71920; font-size:0; line-height:0;">&nbsp;</td></tr>
+        <tr><td style="height:3px; background-color:#F4550E; font-size:0; line-height:0;">&nbsp;</td></tr>
         <tr>
           <td class="sm-p sm-p-top" style="padding:38px 44px 0 44px;">
             <p style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:17px; font-weight:700; letter-spacing:-0.01em; color:#111111;">MD‑Therm</p>
@@ -210,7 +210,7 @@ function buildEmail(d) {
           <td class="sm-p" style="padding:28px 44px 0 44px;">
             <p style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:16px; line-height:26px; color:#3b4149;">
               Pokud potřebujete něco řešit urgentně, můžete nám zavolat na
-              <a href="tel:${PHONE_HREF}" style="color:#b51218; font-weight:600; text-decoration:none; white-space:nowrap;">+420&nbsp;603&nbsp;479&nbsp;240</a>.
+              <a href="tel:${PHONE_HREF}" style="color:#A23707; font-weight:600; text-decoration:none; white-space:nowrap;">+420&nbsp;603&nbsp;479&nbsp;240</a>.
             </p>
           </td>
         </tr>
