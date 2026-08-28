@@ -35,6 +35,12 @@
   --r-md: 14px;
   --r-lg: 20px;
   --maxw: 1180px;
+  /* Lišta je širší než obsah schválně. Aby šla navigace vycentrovat,
+     musí se po obou stranách vejít ten širší z krajních bloků: tlačítka
+     mají 380 px, logo 155 px, navigace 512 px → 2×380 + 512 + 2×24 = 1320.
+     V 1180 se to nevejde a navigace by seděla o 107 px vlevo od středu.
+     Hero je stejně přes celou šířku, takže širší lišta nedrhne. */
+  --maxw-bar: 1384px;
   --pad: clamp(20px, 5vw, 48px);
 
   /* Stíny — měkké, vrstvené, nízká sytost (prémiový, difúzní dojem) */
@@ -206,8 +212,20 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   border-bottom-color: var(--line);
   box-shadow: 0 1px 0 rgba(16,22,26,.02), 0 10px 30px rgba(16,22,26,.045);
 }
+/* Vlastní, užší vnitřní okraj: na vycentrování navigace je potřeba 1320 px
+   ČISTÉ šířky (2×380 tlačítka + 512 navigace + 2×24 mezery). S běžným
+   --pad 48 px by lišta musela mít 1416 px a lepila by se na okraj okna. */
+.topbar .container {
+  max-width: var(--maxw-bar);
+  padding-inline: max(clamp(16px, 2.2vw, 32px), env(safe-area-inset-left)) max(clamp(16px, 2.2vw, 32px), env(safe-area-inset-right));
+}
+/* Tři sloupce: krajní jsou 1fr, takže prostřední (navigace) sedí přesně
+   na středu lišty. Sloupce jsou přiřazené natvrdo — na mobilu je .topnav
+   position:absolute, vypadne z gridu, a bez explicitního zařazení by
+   tlačítka spadla do prostředního sloupce. */
 .topbar__inner {
-  display: flex; align-items: center; gap: 1.5rem;
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: 1.5rem;
   min-height: 72px;
 }
 .topbar.is-stuck .topbar__inner { min-height: 62px; }
@@ -215,7 +233,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* flex: none — .brand je flex položkou lišty a smršťovala se; protože reset
    dává obrázkům max-width: 100 %, logo se pak ořízlo na zúženou šířku rodiče. */
-.brand { display: flex; align-items: center; margin-right: auto; flex: none; }
+.brand { display: flex; align-items: center; flex: none; grid-column: 1; justify-self: start; }
 .brand__mark {
   display: grid; place-items: center; align-self: center;
   width: 34px; height: 34px; border-radius: 9px;
@@ -237,6 +255,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* Segmentovaná „pill" navigace – ohraničená, zaoblená, aktivní záložka světle šedá */
 .topnav {
   position: relative;
+  grid-column: 2; justify-self: center;
   display: flex; gap: .25rem;
   padding: .28rem;
   background: rgba(255,255,255,.6);
@@ -275,6 +294,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
    (na 1000 px o 98 px). Nad 1180 px má lišta ~73 px rezervy. */
 @media (max-width: 1180px) {
   .topnav {
+    /* Rozbalené menu musí přetáhnout celou lištu. Bez tohohle ho zařazení
+       do prostředního sloupce gridu srazí na úzký proužek uprostřed. */
+    grid-column: 1 / -1; justify-self: stretch;
     display: none;
     position: absolute;
     top: 100%;
@@ -314,7 +336,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   to { opacity: 1; transform: translateX(0); }
 }
 
-.topbar__cta { display: flex; gap: .6rem; margin-left: auto; }
+.topbar__cta { display: flex; gap: .6rem; grid-column: 3; justify-self: end; }
 
 .btn--menu {
   display: flex;
