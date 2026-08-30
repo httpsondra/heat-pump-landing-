@@ -565,7 +565,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* Záměrně nepravidelný vertikální rytmus — některé sekce dýchají víc, jiné jsou sevřenější */
 #sluzby  { padding-block: clamp(64px, 10vh, 132px) clamp(60px, 9vh, 116px); }
 #postup  { padding-block: clamp(56px, 8vh, 104px); }
-#proc    { padding-block: clamp(80px, 13vh, 168px); }
+#reseni  { padding-block: clamp(80px, 13vh, 168px); }
 #kontakt { padding-block: clamp(56px, 8vh, 104px) clamp(48px, 7vh, 92px); }
 
 .section__head { max-width: 720px; margin: 0 auto clamp(48px, 7vh, 88px); text-align: center; }
@@ -626,39 +626,101 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 
 /* ---------- Postup ---------- */
-/* Čtyři kroky spojené velmi jemnou linkou. Žádné rámečky ani pozadí —
-   rytmus drží typografie a bílé místo. */
+/* Čtyři kroky vedené ikonou. Bez karet, bez čísel a bez spojnice — sekce
+   má být klidný přehled, ne stepper. Strukturu drží ikony a bílé místo,
+   stejně jako u ostatních čtyřsloupců na stránce. */
 .steps {
-  --steps-gap: clamp(20px, 2.6vw, 44px);
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--steps-gap);
-  list-style: none;
-}
-.step { position: relative; }
-.step__num {
-  display: inline-block;
-  font-family: var(--mono); font-size: .9rem; font-weight: 600;
-  letter-spacing: .06em; color: var(--accent-deep);
-}
-/* Spojnice mezi čísly — od čísla přes mezeru k dalšímu kroku. */
-.step::after {
-  content: ''; position: absolute; top: .58em;
-  left: 3.1em; right: calc(var(--steps-gap) * -1);
-  height: 1px; background: var(--line);
-}
-.step:last-child::after { display: none; }
-.step h3 { font-size: var(--fs-h3); letter-spacing: -.025em; margin-top: .85rem; font-weight: 700; }
-.step p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .4rem; }
-
-/* ---------- Proč MD-Therm ---------- */
-/* Čtyři věcné body. Bez karet — jen ikona, nadpis a jedna věta. */
-.reasons {
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: clamp(24px, 3vw, 48px); list-style: none;
 }
-.reason__icon { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 1rem; color: var(--accent-dark); }
-.reason__icon svg { width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.reason h3 { font-size: 1.02rem; letter-spacing: -.01em; font-weight: 700; }
-.reason p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .4rem; }
+.step__icon { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 1rem; color: var(--accent-dark); }
+.step__icon svg { width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.step h3 { font-size: 1.02rem; letter-spacing: -.01em; font-weight: 700; }
+.step p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .4rem; }
+
+/* ---------- Jedno řešení pro celý dům ---------- */
+/* Dům vlevo, výběr vpravo. Stav drží čtyři radia před oběma bloky, takže
+   `:checked ~` dosáhne na obojí — žádné JS, funguje klávesnicí i dotykem.
+   Popisky jsou vidět pořád; výběr mění jen zvýraznění v domě. */
+.house {
+  display: grid; grid-template-columns: 1.1fr .9fr;
+  gap: clamp(32px, 5vw, 76px); align-items: center;
+}
+
+/* Schovaná, ale zaostřitelná — proto ne display:none. */
+.house__radio {
+  position: absolute; width: 1px; height: 1px; margin: 0; padding: 0; border: 0;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+/* width:100% schválně — bez něj se <figure> ve složeném layoutu smrskne
+   na výchozí vnitřní šířku SVG (300 px) místo aby vyplnil sloupec. */
+.house__stage { margin: 0; width: 100%; }
+.house__svg { display: block; width: 100%; height: auto; }
+
+/* Konstrukce domu — tichá linka, nesoupeří se zařízeními. */
+.h-base { fill: none; stroke: #c9c9c9; }
+.h-ground { fill: none; stroke: var(--line-strong); }
+.h-base, .h-ground { stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Zařízení — bílá výplň, ať nepropadají konstrukcí. */
+.h-part {
+  fill: #fff; stroke: #787878; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+  transition: stroke .45s var(--ease), fill .45s var(--ease);
+}
+
+/* Vybraná část se rozsvítí. „Servis" schválně zvýrazní všechna zařízení —
+   servisujeme celý systém, ne jednu krabici. */
+#house-hp:checked ~ .house__stage .p-hp,
+#house-ac:checked ~ .house__stage .p-ac,
+#house-bo:checked ~ .house__stage .p-bo,
+#house-sv:checked ~ .house__stage .h-part {
+  stroke: var(--accent); fill: var(--accent-soft);
+}
+
+.house__list { list-style: none; }
+.house__item { border-top: 1px solid var(--line); }
+.house__item:last-child { border-bottom: 1px solid var(--line); }
+.house__label {
+  display: block; position: relative; cursor: pointer;
+  padding: clamp(15px, 1.7vw, 21px) 0 clamp(15px, 1.7vw, 21px) 20px;
+}
+/* Aktivní řádek značí tenký akcentový praporek, ne rámeček. */
+.house__label::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 0; background: var(--accent);
+  transition: height .35s var(--ease);
+}
+.house__name {
+  display: block; font-size: var(--fs-h3); font-weight: 700; letter-spacing: -.02em;
+  transition: color .3s var(--ease);
+}
+.house__desc { display: block; margin-top: .3rem; color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; }
+
+#house-hp:checked ~ .house__list .i-hp .house__label::before,
+#house-ac:checked ~ .house__list .i-ac .house__label::before,
+#house-bo:checked ~ .house__list .i-bo .house__label::before,
+#house-sv:checked ~ .house__list .i-sv .house__label::before { height: 62%; }
+
+#house-hp:checked ~ .house__list .i-hp .house__name,
+#house-ac:checked ~ .house__list .i-ac .house__name,
+#house-bo:checked ~ .house__list .i-bo .house__name,
+#house-sv:checked ~ .house__list .i-sv .house__name { color: var(--accent-deep); }
+
+#house-hp:focus-visible ~ .house__list .i-hp .house__label,
+#house-ac:focus-visible ~ .house__list .i-ac .house__label,
+#house-bo:focus-visible ~ .house__list .i-bo .house__label,
+#house-sv:focus-visible ~ .house__list .i-sv .house__label {
+  outline: 2px solid var(--accent-deep); outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .house__label:hover .house__name { color: var(--accent-deep); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .h-part, .house__name, .house__label::before { transition: none; }
+}
 
 /* ---------- Kotel, nebo tepelné čerpadlo ---------- */
 .compare { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2vw, 28px); }
@@ -830,9 +892,9 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
      při pozdější úpravě menu tiše rozbije. */
   .grid--services { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(2, 1fr); }
-  /* Spojnice dává smysl jen v jedné řadě — ve 2×2 by vedla do prázdna. */
-  .step::after { display: none; }
-  .reasons { grid-template-columns: repeat(2, 1fr); }
+  /* Dům nad seznam. Nezmenšovat do šířky sloupce — popisky by se slily. */
+  .house { grid-template-columns: 1fr; gap: clamp(28px, 5vw, 44px); }
+  .house__stage { max-width: 460px; margin-inline: auto; }
   .contact { grid-template-columns: 1fr; }
   .footer__contact { text-align: left; }
   .section__head--split { grid-template-columns: 1fr; gap: 1rem; align-items: start; }
@@ -880,8 +942,13 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   .section__head { margin-bottom: clamp(28px, 5vh, 40px); }
 
   .grid--services { grid-template-columns: 1fr; }
-  .steps { grid-template-columns: 1fr; gap: 1.8rem; }
-  .reasons { grid-template-columns: 1fr; gap: 1.9rem; }
+  /* 2x2 zůstává i na telefonu — jeden sloupec by sekci zbytečně natáhl. */
+  .steps { gap: 1.9rem 1.4rem; }
+  .house { gap: 22px; }
+  /* Dům má na mobilu jen uvést kontext — pod ním musí být hned vidět,
+     že se dá vybírat. Proto zůstává menší, než kolik by se vešlo. */
+  .house__stage { max-width: 300px; margin-inline: auto; }
+  .house__label { padding-left: 16px; }
   .hero__title { font-size: clamp(2.2rem, 8.5vw, 2.8rem); }
 
   /* Hero CTA: side-by-side buttons on mobile */
@@ -906,6 +973,8 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 @media (max-width: 374px) {
   .hero__copy .cta-row { flex-direction: column; align-items: stretch; }
   .hero__copy .cta-row .btn { flex: none; width: 100%; }
+  /* Pod 375 px už se do dvou sloupců krátký popisek neláme čitelně. */
+  .steps { grid-template-columns: 1fr; gap: 1.7rem; }
 }
 
 /* =========================================================================

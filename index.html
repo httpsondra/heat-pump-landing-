@@ -54,7 +54,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=49" />
+  <link rel="stylesheet" href="/css/styles.css?v=50" />
 </head>
 <body>
 
@@ -93,7 +93,7 @@
       <nav class="topnav" id="topnav" aria-label="Hlavní">
         <span class="topnav__indicator" aria-hidden="true"></span>
         <a href="#sluzby">Služby</a>
-        <a href="#postup">Jak to probíhá</a>
+        <a href="#postup">Postup</a>
         <a href="#poptavka">Poptávka</a>
         <a href="#faq">Časté dotazy</a>
         <a href="#kontakt">Kontakt</a>
@@ -294,69 +294,126 @@
     <!-- ================= JAK TO PROBÍHÁ ================= -->
     <section class="section" id="postup">
       <div class="container">
-        <header class="section__head section__head--split reveal">
-          <div>
-            <p class="kicker">02 — Postup</p>
-            <h2>Jak to probíhá</h2>
-          </div>
-          <p class="section__sub">Čtyři jednoduché kroky od první domluvy po hotové řešení.</p>
+        <header class="section__head reveal">
+          <p class="kicker">02 — Postup</p>
+          <h2>Od návrhu <br><span class="muted">po servis</span></h2>
         </header>
 
         <ol class="steps">
           <li class="step reveal">
-            <span class="step__num">01</span>
-            <h3>Konzultace</h3>
-            <p>Projdeme dům, současné vytápění a co potřebujete.</p>
+            <span class="step__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 14 16 5l11 9"/><path d="M8 12.5V26h16V12.5"/><path d="M13 26v-7h6v7"/></svg></span>
+            <h3>Posouzení</h3>
+            <p>Zjistíme stav objektu a požadavky.</p>
           </li>
           <li class="step reveal">
-            <span class="step__num">02</span>
-            <h3>Návrh řešení</h3>
-            <p>Doporučíme konkrétní zařízení a výkon.</p>
+            <span class="step__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 5h13l5 5v17H7z"/><path d="M20 5v5h5"/><path d="M11 16h10M11 21h10"/></svg></span>
+            <h3>Návrh</h3>
+            <p>Navrhneme vhodné zařízení a výkon.</p>
           </li>
           <li class="step reveal">
-            <span class="step__num">03</span>
+            <span class="step__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M21.5 6.5a5 5 0 0 0-6.4 6.4L6 22l4 4 9.1-9.1a5 5 0 0 0 6.4-6.4l-3 3-3-3z"/></svg></span>
             <h3>Montáž</h3>
-            <p>Zařízení namontujeme a zprovozníme.</p>
+            <p>Namontujeme a zprovozníme.</p>
           </li>
           <li class="step reveal">
-            <span class="step__num">04</span>
+            <span class="step__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3 6 7v8c0 6.2 4.2 11.8 10 14 5.8-2.2 10-7.8 10-14V7z"/><path d="m11.5 15.5 3.2 3.2 6-6.4"/></svg></span>
             <h3>Servis</h3>
-            <p>Zůstáváme k dispozici i po montáži.</p>
+            <p>Zůstáváme k dispozici i potom.</p>
           </li>
         </ol>
       </div>
     </section>
 
-    <!-- ================= CO ZAJISTÍME ================= -->
-    <section class="section section--soft" id="proc">
+    <!-- ================= JEDNO ŘEŠENÍ PRO CELÝ DŮM ================= -->
+    <!-- Dům je tu hlavní vizuál, ne dekorace: ukazuje, KDE v objektu která
+         služba sedí. Ovládá se výběrem v seznamu (radio + :checked), takže
+         to funguje bez JS, klávesnicí i na dotyku úplně stejně. Popisky jsou
+         vidět pořád — výběr mění jen zvýraznění v domě, nic neschovává. -->
+    <section class="section section--soft" id="reseni">
       <div class="container">
-        <header class="section__head reveal">
-          <p class="kicker">03 — Co zajistíme</p>
-          <h2>Od návrhu<br><span class="muted">po funkční řešení</span></h2>
+        <header class="section__head section__head--split reveal">
+          <div>
+            <p class="kicker">03 — Řešení</p>
+            <h2>Jedno řešení<br><span class="muted">pro celý dům</span></h2>
+          </div>
+          <p class="section__sub">Vytápění, chlazení i servis podle konkrétního objektu.</p>
         </header>
 
-        <ul class="reasons">
-          <li class="reason reveal">
-            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 14 16 5l11 9"/><path d="M8 12.5V26h16V12.5"/><path d="M13 26v-7h6v7"/></svg></span>
-            <h3>Návrh podle domu</h3>
-            <p>Neprodáváme jedno řešení všem. Zařízení a výkon vybíráme podle konkrétního domu.</p>
-          </li>
-          <li class="reason reveal">
-            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M21.5 6.5a5 5 0 0 0-6.4 6.4L6 22l4 4 9.1-9.1a5 5 0 0 0 6.4-6.4l-3 3-3-3z"/></svg></span>
-            <h3>Montáž a zprovoznění</h3>
-            <p>Zařízení namontujeme, nastavíme a uvedeme do provozu.</p>
-          </li>
-          <li class="reason reveal">
-            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 12h20M6 12l4.5-4.5M6 12l4.5 4.5"/><path d="M26 20H6M26 20l-4.5-4.5M26 20l-4.5 4.5"/></svg></span>
-            <h3>Kotle i tepelná čerpadla</h3>
-            <p>Podle situace můžeme porovnat obě varianty a doporučit vhodné řešení.</p>
-          </li>
-          <li class="reason reveal">
-            <span class="reason__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3 6 7v8c0 6.2 4.2 11.8 10 14 5.8-2.2 10-7.8 10-14V7z"/><path d="m11.5 15.5 3.2 3.2 6-6.4"/></svg></span>
-            <h3>Následný servis</h3>
-            <p>Zařízení po montáži dál servisujeme a řešíme případné poruchy.</p>
-          </li>
-        </ul>
+        <div class="house reveal">
+          <input class="house__radio" type="radio" name="house-part" id="house-hp" checked>
+          <input class="house__radio" type="radio" name="house-part" id="house-ac">
+          <input class="house__radio" type="radio" name="house-part" id="house-bo">
+          <input class="house__radio" type="radio" name="house-part" id="house-sv">
+
+          <figure class="house__stage">
+            <svg class="house__svg" viewBox="0 40 420 250" role="img"
+                 aria-label="Zjednodušené schéma domu: tepelné čerpadlo venku u domu, klimatizace v patře a kotel v přízemí.">
+              <!-- Konstrukce: silueta domu, strop mezi patry a jedna příčka.
+                   Víc čar tam schválně není — dům se má přečíst na první pohled. -->
+              <g class="h-base">
+                <path d="M108 134 227 56 346 134" />
+                <path d="M132 134V272M322 134V272" />
+                <path d="M132 200H322" />
+                <path d="M252 134V200" />
+                <rect x="266" y="146" width="36" height="30" />
+                <path d="M284 146v30" />
+                <path d="M268 272v-44h32v44" />
+                <circle cx="275" cy="251" r="1.8" />
+              </g>
+
+              <!-- Venkovní jednotka tepelného čerpadla: tělo, ventilátor, nožky. -->
+              <g class="h-part p-hp">
+                <rect x="44" y="222" width="60" height="46" rx="4" />
+                <circle cx="74" cy="245" r="13" />
+                <circle cx="74" cy="245" r="2" />
+                <path d="M52 268v4M96 268v4" />
+              </g>
+
+              <!-- Nástěnná klimatizace: podlouhlá jednotka se zaoblenými konci
+                   (schválně jiný tvar než okno) a naznačený proud vzduchu. -->
+              <g class="h-part p-ac">
+                <rect x="152" y="142" width="62" height="14" rx="7" />
+                <path d="M164 163l-4 8M180 163l-4 8M196 163l-4 8" />
+              </g>
+
+              <!-- Závěsný kotel: skříň, ovládací lišta a dvě přípojky dolů. -->
+              <g class="h-part p-bo">
+                <rect x="152" y="206" width="42" height="46" rx="4" />
+                <path d="M158 242h30" />
+                <path d="M163 252v8M183 252v8" />
+              </g>
+
+              <path class="h-ground" d="M8 272h404" />
+            </svg>
+          </figure>
+
+          <ul class="house__list">
+            <li class="house__item i-hp">
+              <label class="house__label" for="house-hp">
+                <span class="house__name">Tepelné čerpadlo</span>
+                <span class="house__desc">Návrh, montáž a nastavení systému.</span>
+              </label>
+            </li>
+            <li class="house__item i-ac">
+              <label class="house__label" for="house-ac">
+                <span class="house__name">Klimatizace</span>
+                <span class="house__desc">Chlazení i přitápění podle prostoru.</span>
+              </label>
+            </li>
+            <li class="house__item i-bo">
+              <label class="house__label" for="house-bo">
+                <span class="house__name">Kotel</span>
+                <span class="house__desc">Výměna, montáž a uvedení do provozu.</span>
+              </label>
+            </li>
+            <li class="house__item i-sv">
+              <label class="house__label" for="house-sv">
+                <span class="house__name">Servis</span>
+                <span class="house__desc">Údržba a opravy i po montáži.</span>
+              </label>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
 
