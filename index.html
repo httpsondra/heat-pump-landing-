@@ -54,7 +54,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=51" />
+  <link rel="stylesheet" href="/css/styles.css?v=52" />
 </head>
 <body>
 
@@ -422,6 +422,49 @@
               </label>
             </li>
           </ul>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================= O NÁS ================= -->
+    <!-- Jediná sekce na stránce, která neodpovídá na „co se dělá", ale na
+         „kdo za to ručí". Proto schválně jiný rytmus: velká fotka, málo textu
+         a hodně místa — kontrast vůči hustším sekcím okolo.
+         Linka vpravo není stepper: rozestupy jsou nepravidelné a body nemají
+         popisy, jde o nit, která drží ta čtyři slova pohromadě.
+         Mezera před <br> je záměrná — pod 400 px se <br> v nadpisech skrývá
+         a bez ní by se slova slepila. -->
+    <section class="section section--airy" id="o-nas">
+      <div class="container">
+        <div class="about">
+
+          <figure class="about__photo reveal">
+            <div class="about__frame">
+              <span class="about__note">Foto — doplnit</span>
+            </div>
+            <figcaption class="about__cap">Milan Dušek <span>— MD-Therm</span></figcaption>
+          </figure>
+
+          <ol class="about__route reveal">
+            <li class="about__step">Posouzení</li>
+            <li class="about__step">Návrh</li>
+            <li class="about__step">Montáž</li>
+            <li class="about__step">Servis</li>
+          </ol>
+
+          <div class="about__text reveal">
+            <p class="kicker">O nás</p>
+            <h2>To, co navrhneme, <br><span class="muted">také namontujeme.</span></h2>
+            <p class="about__lead">Od prvního posouzení přes montáž až po následný servis
+              zůstává odpovědnost na jednom místě.</p>
+          </div>
+
+          <p class="about__meta reveal">
+            <span class="about__metaKey">Praha a okolí</span>
+            Montáže i následný servis
+          </p>
+
         </div>
       </div>
     </section>

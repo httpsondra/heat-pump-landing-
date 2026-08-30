@@ -746,6 +746,105 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .house__label:hover .house__name, .house__label:hover .house__desc { transform: none; }
 }
 
+/* ---------- O nás ---------- */
+/* Editorialní rozvrh: fotka — anotační linka — text. Žádné karty, žádné
+   stejně široké sloupce. Sekce má schválně víc místa než okolní, aby se
+   po hustém „Řešení" dalo nadechnout. Pořadí na mobilu je jiné než na
+   desktopu, proto grid-template-areas a ne jen stohování. */
+.about {
+  display: grid;
+  grid-template-columns: 1.12fr auto 0.88fr;
+  grid-template-areas:
+    "text route photo"
+    "meta route photo";
+  grid-template-rows: min-content min-content;
+  column-gap: clamp(28px, 4vw, 64px);
+  row-gap: 0;
+  align-content: center;
+}
+.about__photo { grid-area: photo; margin: 0; align-self: center; }
+.about__route { grid-area: route; align-self: center; }
+.about__text  { grid-area: text; }
+.about__meta  { grid-area: meta; }
+
+/* --- fotka --- */
+/* 4:5 na výšku = cílový poměr. Až přijde reálná fotka, mění se jen zdroj
+   obrázku uvnitř .about__frame, rozvrh zůstává. */
+.about__frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--bg-soft);
+  overflow: hidden;
+}
+/* Dva protilehlé rohy místo rámečku — značka pro umístění obrazu, ne karta. */
+.about__frame::before,
+.about__frame::after {
+  content: ''; position: absolute; width: 24px; height: 24px;
+  border: 1px solid var(--line-strong);
+}
+.about__frame::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
+.about__frame::after { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
+.about__note {
+  position: absolute; left: 16px; bottom: 14px;
+  font-family: var(--mono); font-size: var(--fs-mono);
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft);
+}
+.about__cap {
+  margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--ink);
+}
+.about__cap span { font-weight: 400; color: var(--ink-soft); }
+
+/* --- anotační linka --- */
+/* Páteř + loket doleva k fotce. Rozestupy kroků jsou schválně nestejné,
+   aby to nečetlo jako stepper. */
+.about__route {
+  position: relative; list-style: none;
+  padding-right: 30px; text-align: right; align-self: center;
+}
+.about__route::before {
+  content: ''; position: absolute; right: 0; top: .55em; bottom: .5em;
+  width: 1px; background: var(--line-strong);
+}
+.about__route::after {                    /* loket směrem k fotce (vpravo) */
+  content: ''; position: absolute; right: calc(clamp(28px, 4vw, 64px) * -1);
+  top: .55em; width: clamp(28px, 4vw, 64px); height: 1px; background: var(--line-strong);
+}
+.about__step {
+  position: relative;
+  font-family: var(--mono); font-size: var(--fs-mono);
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft);
+  white-space: nowrap;
+}
+.about__step::before {                    /* ryska k páteři */
+  content: ''; position: absolute; right: -30px; top: .55em;
+  width: 18px; height: 1px; background: var(--line-strong);
+}
+.about__step + .about__step { margin-top: 3.1rem; }
+.about__step:nth-child(3) { margin-top: 2.2rem; }
+.about__step:nth-child(4) { margin-top: 4.2rem; }
+/* Konec cesty — jediný oranžový bod v celé sekci. */
+.about__step:last-child { color: var(--ink-2); }
+.about__step:last-child::before { background: var(--accent); width: 22px; }
+
+/* --- text --- */
+.about__text h2 { font-size: var(--fs-h2); letter-spacing: -.035em; }
+.about__text h2 .muted { color: var(--ink-soft); }
+.about__lead {
+  margin-top: 1.5rem; font-size: var(--fs-lede); line-height: 1.55;
+  color: var(--ink-2); max-width: 38ch;
+}
+.about__meta {
+  margin-top: clamp(28px, 4vh, 48px); padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-sm); color: var(--ink-soft); max-width: 34ch;
+}
+.about__metaKey {
+  display: block; margin-bottom: .3rem;
+  font-family: var(--mono); font-size: var(--fs-mono);
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink);
+}
+
 /* ---------- Kotel, nebo tepelné čerpadlo ---------- */
 .compare { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2vw, 28px); }
 .compare__col {
@@ -917,6 +1016,27 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   .grid--services { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(2, 1fr); }
   /* Dům nad seznam. Nezmenšovat do šířky sloupce — popisky by se slily. */
+  /* Mobilní pořadí je jiné než desktopové: nejdřív text, pak fotka,
+     nakonec linka a údaje. Proto se přerovnávají oblasti, ne jen sloupce. */
+  .about {
+    grid-template-columns: 1fr;
+    grid-template-areas: "text" "photo" "route" "meta";
+    grid-template-rows: auto;
+    row-gap: clamp(30px, 6vw, 48px);
+    align-content: start;
+  }
+  .about__photo { max-width: 460px; }
+  /* Na mobilu se nezrcadlí: linka zůstává vlevo, protože obsah jde pod sebe. */
+  .about__route { padding-left: 26px; padding-right: 0; text-align: left; align-self: start; }
+  .about__route::before { right: auto; left: 0; }
+  .about__route::after { display: none; }   /* loket na mobilu nemá kam vést */
+  .about__step::before { right: auto; }
+  .about__step + .about__step { margin-top: 2.1rem; }
+  .about__step:nth-child(3) { margin-top: 1.7rem; }
+  .about__step:nth-child(4) { margin-top: 2.6rem; }
+  .about__step::before { left: -26px; width: 15px; }
+  .about__lead, .about__meta { max-width: none; }
+
   .house { grid-template-columns: 1fr; gap: clamp(28px, 5vw, 44px); }
   .house__stage { max-width: 460px; margin-inline: auto; }
   .contact { grid-template-columns: 1fr; }
@@ -968,6 +1088,9 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   .grid--services { grid-template-columns: 1fr; }
   /* 2x2 zůstává i na telefonu — jeden sloupec by sekci zbytečně natáhl. */
   .steps { gap: 1.9rem 1.4rem; }
+  .about { gap: 26px; }
+  .about__photo { max-width: 100%; }
+  .about__frame::before, .about__frame::after { width: 18px; height: 18px; }
   .house { gap: 22px; }
   /* Dům má na mobilu jen uvést kontext — pod ním musí být hned vidět,
      že se dá vybírat. Proto zůstává menší, než kolik by se vešlo. */
