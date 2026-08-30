@@ -170,6 +170,37 @@ describe('po úspěšném odeslání poptávky', () => {
   });
 });
 
+describe('oslovení v odeslaném e-mailu', () => {
+  /* Jednotkové testy oslovení jsou v `_vocative.test.mjs`. Tady jde o to,
+     že se zákazníkovo jméno vůbec dostane z formuláře až do těla e-mailu —
+     přesně ten článek řetězu, na kterém by se ztratilo tiše. */
+  const odeslanyText = async (jmeno) => {
+    const calls = stubFetch();
+    await handler(fakeReq(submission({ jmeno }), nextIp()), fakeRes());
+    assert.equal(calls.mail.length, 1, 'e-mail se měl odeslat');
+    const telo = JSON.parse(calls.mail[0].init.body);
+    return { text: telo.text, html: telo.html };
+  };
+
+  it('muž z tabulky dostane 5. pád (regrese „Ondřej Hrubeš")', async () => {
+    const { text, html } = await odeslanyText('Ondřej Hrubeš');
+    assert.match(text, /^Dobrý den, pane Hrubeši,$/m);
+    assert.ok(html.includes('Dobrý den, pane Hrubeši,'));
+    assert.ok(!text.includes('pane Hrubeš,'), 'nesmí projít 1. pád příjmení');
+  });
+
+  it('žena dostane oslovení bez ohýbání', async () => {
+    const { text } = await odeslanyText('Žofie Křížová');
+    assert.match(text, /^Dobrý den, paní Křížová,$/m);
+  });
+
+  it('neznámé příjmení nechá obecné oslovení', async () => {
+    const { text } = await odeslanyText('Ondřej Vomáčka');
+    assert.match(text, /^Dobrý den,$/m);
+    assert.ok(!text.includes('Vomáčka'), 'příjmení se nesmí objevit v oslovení');
+  });
+});
+
 describe('co se nesmí dostat ven', () => {
   it('odpověď neobsahuje tajemství ani podrobnosti o CRM', async () => {
     stubFetch({

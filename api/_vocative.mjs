@@ -5,9 +5,12 @@
    podle sluchu. Používají se jen dvě věci:
 
      1) ověřená tabulka 5. pádů běžných mužských příjmení,
-     2) dvě pravidla, která v češtině výjimku nemají:
+     2) tři pravidla, která v češtině výjimku nemají:
           · přídavná jména (-ý / -í) mají 5. pád shodný s 1. (pane Novotný),
-          · ženská příjmení na -ová / -á se neskloňují (paní Nováková).
+          · ženská příjmení na -ová / -á se neskloňují (paní Nováková),
+          · mužská příjmení na měkkou souhlásku (-š -ž -č -ř -j) mají
+            5. pád na -i (pane Hrubeši). Bez -c: jména na -ec se chovají
+            jinak (Němec → Němče) a zůstávají na tabulce.
 
    Rod se určuje ze jména, ne z odhadu: buď příjmení končí na -ová/-á,
    nebo je křestní jméno v mužské/ženské tabulce. Když si nejsme jistí
@@ -103,6 +106,24 @@ function isFemaleSurname(s) {
   return /(ová|á)$/.test(s);
 }
 
+/* Mužské příjmení na měkkou souhlásku → 5. pád na -i.
+   Platí pro -š -ž -č -ř -j (Hrubeš → Hrubeši, Kovář → Kováři, Kříž → Kříži).
+   Ověřeno proti tabulce výše: u všech 14 ručně zapsaných příjmení téhle
+   skupiny dává pravidlo přesně ten samý tvar, ani jednou se nerozchází.
+
+   Schválně sem NEPATŘÍ -c. Jména na -ec se chovají jinak (Němec → Němče,
+   ne „Němeci"), takže Moravec, Kadlec i Švec dál spadnou na tabulku, a když
+   v ní nejsou, na obecné oslovení. Žádné jiné zobecňování se tu nedělá.
+
+   Tvar se skládá z malých písmen, aby „HRUBEŠ" i „hrubeš" daly „Hrubeši" —
+   stejně, jako to dělá tabulka. */
+const SOFT_CONSONANT = /[šžčřj]$/;
+
+function softConsonantVocative(lastLc) {
+  if (!SOFT_CONSONANT.test(lastLc)) return '';
+  return lastLc.charAt(0).toUpperCase() + lastLc.slice(1) + 'i';
+}
+
 /**
  * Formální oslovení, nebo '' když si nejsme jistí.
  * Vyžaduje jméno i příjmení — z jednoho slova nepoznáme, co je co.
@@ -137,7 +158,10 @@ export function formalGreetingName(raw) {
   if (!maleByFirst && !isAdjectivalMale(last)) return '';   // rod neznámý
 
   if (isAdjectivalMale(last)) return 'pane ' + last;        // Novotný → Novotný
-  const voc = SURNAME_VOCATIVE[lastLc];
+
+  /* Pořadí je záměrné: ověřená tabulka má vždy přednost před pravidlem,
+     takže případná výjimka se dá kdykoli přebít ručním zápisem. */
+  const voc = SURNAME_VOCATIVE[lastLc] || softConsonantVocative(lastLc);
   return voc ? 'pane ' + voc : '';
 }
 
