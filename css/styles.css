@@ -655,8 +655,16 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* width:100% schválně — bez něj se <figure> ve složeném layoutu smrskne
    na výchozí vnitřní šířku SVG (300 px) místo aby vyplnil sloupec. */
-.house__stage { margin: 0; width: 100%; }
+.house__stage { margin: 0; width: 100%; position: relative; }
 .house__svg { display: block; width: 100%; height: auto; }
+
+/* Klikací plošky nad zařízeními. V procentech, protože SVG má pevný poměr
+   (viewBox 0 40 420 250) — plošky tak sedí na kresbě v každé velikosti.
+   Jsou větší než samotná kresba: i na nejužším mobilu vychází přes 44 px. */
+.house__hit { position: absolute; z-index: 2; cursor: pointer; }
+.house__hit--hp { left: 8.5714%;  top: 67.2%; width: 18.0952%; height: 27.2%; }
+.house__hit--ac { left: 33.8095%; top: 32.8%; width: 19.5238%; height: 28%; }
+.house__hit--bo { left: 33.3333%; top: 63.2%; width: 16.6667%; height: 27.2%; }
 
 /* Konstrukce domu — tichá linka, nesoupeří se zařízeními. */
 .h-base { fill: none; stroke: #c9c9c9; }
@@ -694,9 +702,12 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .house__name {
   display: block; font-size: var(--fs-h3); font-weight: 700; letter-spacing: -.02em;
-  transition: color .3s var(--ease);
+  transition: color .3s var(--ease), transform .25s var(--ease);
 }
-.house__desc { display: block; margin-top: .3rem; color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; }
+.house__desc {
+  display: block; margin-top: .3rem; color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6;
+  transition: color .3s var(--ease), transform .25s var(--ease);
+}
 
 #house-hp:checked ~ .house__list .i-hp .house__label::before,
 #house-ac:checked ~ .house__list .i-ac .house__label::before,
@@ -716,10 +727,23 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 
 @media (hover: hover) and (pointer: fine) {
+  /* Řádek: obsah se posune o kousek doprava. Praporek aktivního řádku
+     zůstává stát — posouvá se text, ne celý rámec. */
+  .house__label:hover .house__name,
+  .house__label:hover .house__desc { transform: translateX(4px); }
   .house__label:hover .house__name { color: var(--accent-deep); }
+  .house__label:hover .house__desc { color: var(--ink-2); }
+
+  /* Dům: najetí jen ztmaví obrys. Vybírá se až klikem — hover schválně
+     nepřepíná stav. Aktivní (oranžové) zařízení přebije pravidlo
+     s #id výš, takže se hoverem nezešedne. */
+  .house__hit--hp:hover ~ .house__svg .p-hp,
+  .house__hit--ac:hover ~ .house__svg .p-ac,
+  .house__hit--bo:hover ~ .house__svg .p-bo { stroke: var(--ink-2); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .h-part, .house__name, .house__label::before { transition: none; }
+  .h-part, .house__name, .house__desc, .house__label::before { transition: none; }
+  .house__label:hover .house__name, .house__label:hover .house__desc { transform: none; }
 }
 
 /* ---------- Kotel, nebo tepelné čerpadlo ---------- */

@@ -54,7 +54,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/images/heat-pump-fallback.jpg" fetchpriority="high" />
 
-  <link rel="stylesheet" href="/css/styles.css?v=50" />
+  <link rel="stylesheet" href="/css/styles.css?v=51" />
 </head>
 <body>
 
@@ -346,6 +346,15 @@
           <input class="house__radio" type="radio" name="house-part" id="house-sv">
 
           <figure class="house__stage">
+            <!-- Průhledné plošky nad zařízeními. Jsou to <label> pro tatáž
+                 radia jako v seznamu, takže klik v domě a klik v seznamu vedou
+                 na JEDEN stav — nic se nedubluje a nepotřebuje to JS. Leží před
+                 <svg>, aby na něj dosáhl `~` při :hover. Pro odečítač jsou
+                 schované: ovládá se seznamem, tohle je jen zkratka myší/prstem.
+                 Plocha je schválně větší než kresba, ať se to dá trefit prstem. -->
+            <label class="house__hit house__hit--hp" for="house-hp" aria-hidden="true"></label>
+            <label class="house__hit house__hit--ac" for="house-ac" aria-hidden="true"></label>
+            <label class="house__hit house__hit--bo" for="house-bo" aria-hidden="true"></label>
             <svg class="house__svg" viewBox="0 40 420 250" role="img"
                  aria-label="Zjednodušené schéma domu: tepelné čerpadlo venku u domu, klimatizace v patře a kotel v přízemí.">
               <!-- Konstrukce: silueta domu, strop mezi patry a jedna příčka.
