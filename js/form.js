@@ -515,6 +515,25 @@
     if (step < TOTAL) { e.preventDefault(); if (validate(step)) go(step + 1); }
   });
 
+  /* Náhodný identifikátor JEDNOHO odeslání.
+     Server si z něj udělá klíč pro CRM (Idempotency-Key), takže když se
+     tentýž požadavek doručí dvakrát, vznikne v CRM jen jedna poptávka.
+     Není to identifikátor člověka ani zařízení — vzniká při odeslání
+     a nikam se neukládá. */
+  function newSubmissionId() {
+    try {
+      if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+      if (window.crypto && window.crypto.getRandomValues) {
+        var a = new Uint8Array(16);
+        window.crypto.getRandomValues(a);
+        return Array.prototype.map.call(a, function (b) {
+          return ('0' + b.toString(16)).slice(-2);
+        }).join('');
+      }
+    } catch (e) { /* projde se na náhradní řešení níž */ }
+    return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+  }
+
   /* ---- sestavení poptávky ---- */
   function collect() {
     function val(id) { var el = doc.getElementById('f-' + id); return el ? el.value.trim() : ''; }
@@ -584,7 +603,9 @@
      když selže, zákazník o tom nesmí vědět a úspěšná obrazovka se ukáže
      tak jako tak. Proto se na výsledek nečeká a chyba se jen zaznamená.
 
-     Klíč k Resendu tady nikde není — endpoint běží na serveru. */
+     Endpoint kromě potvrzení posílá i kopii poptávky do CRM. Obojí běží
+     na serveru: klíč k Resendu ani tajemství pro CRM se do prohlížeče
+     nikdy nedostanou. */
   function sendConfirmation(d) {
     try {
       fetch('/api/potvrzeni', {
@@ -595,7 +616,12 @@
           jmeno: d.jmeno, email: d.email, sluzba: d.sluzba, objekt: d.objekt,
           situace: d.situace, mesto: d.mesto, psc: d.psc,
           /* nepovinná pole z 5. kroku */
-          popis: d.popis, zarizeni: d.zarizeni
+          popis: d.popis, zarizeni: d.zarizeni,
+          /* Telefon do potvrzovacího e-mailu nepatří (a nevypisuje se v něm),
+             ale CRM ho vyžaduje — server ho předá dál a nikam jinam. */
+          telefon: d.telefon, telefonE164: d.telefonE164,
+          /* Identita jednoho odeslání kvůli idempotenci na straně CRM. */
+          submissionId: d.submissionId
         })
       }).then(function (r) {
         track(r.ok ? 'confirmation_sent' : 'confirmation_error', { status: r.status });
@@ -655,6 +681,7 @@
     if (doc.getElementById('f-web').value) return;      // honeypot — robot
 
     var data = collect();
+    data.submissionId = newSubmissionId();
     track('inquiry_submit', { sluzba: data.sluzba, objekt: data.objekt, mesto: data.mesto });
 
     /* Chybějící klíč = špatná konfigurace, ne chyba uživatele. Nic se neodesílá

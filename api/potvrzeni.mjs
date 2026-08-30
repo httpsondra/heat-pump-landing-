@@ -1,9 +1,18 @@
 /* =========================================================================
-   POST /api/potvrzeni — potvrzovací e-mail zákazníkovi přes Resend (MD-Therm)
+   POST /api/potvrzeni — co se stane PO úspěšném odeslání poptávky
    -------------------------------------------------------------------------
    Volá se z formuláře AŽ POTÉ, co Web3Forms potvrdí přijetí poptávky.
    Web3Forms je kritický systém (sběr poptávek), tenhle endpoint ne:
    když selže, zákazník o tom nesmí vědět a poptávka zůstává v pořádku.
+
+   Dělá dvě NEZÁVISLÉ věci:
+     1) pošle zákazníkovi potvrzovací e-mail (Resend),
+     2) pošle kopii poptávky do CRM (viz `_crm.mjs`).
+
+   Nezávislé znamená doopravdy nezávislé: běží souběžně, jedno nečeká na
+   druhé a selhání jednoho nesmí zabránit druhému. Nenastavený Resend proto
+   nesmí zastavit odeslání do CRM — a naopak. Odpověď pro prohlížeč se řídí
+   jenom e-mailem, aby se chování formuláře přidáním CRM nezměnilo.
 
    Konfigurace žije v proměnných prostředí na Vercelu:
      RESEND_API_KEY … povinné, klíč z resend.com  (NIKDY do gitu)
@@ -15,6 +24,7 @@
    který si sám zvaliduje. Odesílatele klient neovlivní vůbec.
    ========================================================================= */
 import { greeting } from './_vocative.mjs';
+import { forwardInquiryToCrm } from './_crm.mjs';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 const DEFAULT_FROM = 'MD-Therm <noreply@md-therm.cz>';
@@ -256,45 +266,26 @@ function buildEmail(d) {
   return { html: html, text: textLines.join('\n') };
 }
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    return res.status(405).json({ ok: false });
-  }
-
-  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
-  if (rateLimited(ip)) return res.status(429).json({ ok: false });
-
+/**
+ * Potvrzovací e-mail zákazníkovi. Vrací stavový kód, který se má vrátit
+ * prohlížeči — chování se oproti dřívějšku nemění.
+ */
+async function sendConfirmationEmail(d) {
   // Chybějící klíč = špatná konfigurace. Ven jde jen obecná chyba.
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error('[potvrzeni] RESEND_API_KEY neni nastaveny - e-mail se neodeslal.');
-    return res.status(500).json({ ok: false });
+    return 500;
   }
-
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { return res.status(400).json({ ok: false }); }
-  }
-  if (!body || typeof body !== 'object') return res.status(400).json({ ok: false });
-
-  // Whitelist — cokoli navíc se zahodí.
-  const d = {};
-  Object.keys(FIELDS).forEach(function (key) { d[key] = clean(body[key], FIELDS[key]); });
-  d.popis = cleanMultiline(body.popis, POPIS_MAX);   // jediné pole s odřádkováním
-
-  if (!EMAIL_RE.test(d.email)) return res.status(400).json({ ok: false });
-
-  /* Příjemce = e-mail z formuláře, který prošel validací výš.
-     Z požadavku se nikdy nebere `to` ani `from`. */
-  const recipient = d.email;
 
   const mail = buildEmail(d);
 
   try {
     const payload = {
       from: process.env.RESEND_FROM || DEFAULT_FROM,
-      to: [recipient],
+      /* Příjemce = e-mail z formuláře, který prošel validací.
+         Z požadavku se nikdy nebere `to` ani `from`. */
+      to: [d.email],
       reply_to: d.email,
       subject: 'Poptávku jsme přijali — MD-Therm',
       html: mail.html,
@@ -315,14 +306,51 @@ export default async function handler(req, res) {
       let detail = '';
       try { detail = JSON.stringify(await resp.json()).slice(0, 400); } catch (e) { /* ignore */ }
       console.error('[potvrzeni] Resend odmitl odeslani: HTTP ' + resp.status + ' ' + detail);
-      return res.status(502).json({ ok: false });
+      return 502;
     }
 
     const data = await resp.json().catch(function () { return {}; });
     console.log('[potvrzeni] odeslano id=' + (data.id || '?'));
-    return res.status(200).json({ ok: true });
+    return 200;
   } catch (err) {
     console.error('[potvrzeni] Odeslani selhalo:', err && err.message);
-    return res.status(502).json({ ok: false });
+    return 502;
   }
+}
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ ok: false });
+  }
+
+  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
+  if (rateLimited(ip)) return res.status(429).json({ ok: false });
+
+  let body = req.body;
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch (e) { return res.status(400).json({ ok: false }); }
+  }
+  if (!body || typeof body !== 'object') return res.status(400).json({ ok: false });
+
+  // Whitelist pro e-mail — cokoli navíc se zahodí.
+  const d = {};
+  Object.keys(FIELDS).forEach(function (key) { d[key] = clean(body[key], FIELDS[key]); });
+  d.popis = cleanMultiline(body.popis, POPIS_MAX);   // jediné pole s odřádkováním
+
+  if (!EMAIL_RE.test(d.email)) return res.status(400).json({ ok: false });
+
+  /* Dvě nezávislé věci naráz. `allSettled` schválně: ani výjimka v jedné
+     větvi nesmí shodit druhou. Do CRM jde původní tělo požadavku — svůj
+     výběr a ořez polí si adaptér dělá sám podle smlouvy CRM. */
+  const [mail] = await Promise.allSettled([
+    sendConfirmationEmail(d),
+    forwardInquiryToCrm(body)
+  ]);
+
+  /* Odpověď se řídí JEN potvrzovacím e-mailem. Stav CRM se ven nehlásí:
+     prohlížeči do něj nic není a chybová hláška zvenčí by mohla
+     prozradit něco o vnitřním systému. */
+  const status = mail.status === 'fulfilled' ? mail.value : 502;
+  return res.status(status).json({ ok: status === 200 });
 }
