@@ -25,7 +25,7 @@
 
      NASTAVENÍ (jednorázově, ~5 minut):
        1) Na https://web3forms.com nechat vygenerovat access key na adresu
-          dusekmilan@volny.cz (klíč přijde e-mailem).
+          dusek@md-therm.cz (klíč přijde e-mailem).
        2) Vložit ho níže do WEB3FORMS_ACCESS_KEY.
        3) Zvýšit ?v= u js/form.js v index.html, ať se nová verze nekešuje.
        CSP už api.web3forms.com povoluje (connect-src ve vercel.json),

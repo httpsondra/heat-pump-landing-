@@ -1075,11 +1075,16 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   }
 }
 
+/* Číslo v liště zůstává viditelné, dokud se skutečně vejde. Změřeno:
+   plné „+420 603 479 240" se bez přetečení vejde do ~440 px; pod 460 px
+   proto zbývá jen ikona (rezerva na delší logo/odsazení systémů). */
+@media (max-width: 460px) {
+  .topbar__cta .btn--phone span { display: none; }
+}
+
 @media (max-width: 620px) {
   .topbar__inner { gap: .6rem; }
   .topbar__cta { gap: .5rem; }
-  .topbar__cta .btn--phone span { display: none; }
-  .topbar__cta .btn--phone { padding: 0 .75rem; background: #fff; color: var(--ink); border: 1px solid var(--line-strong); }
 
   /* Tišší vertikální rytmus na mobilu */
   .section { padding: clamp(48px, 7vh, 72px) 0; }
