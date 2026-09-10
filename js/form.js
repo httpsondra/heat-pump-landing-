@@ -12,11 +12,182 @@
   var doc = document, html = doc.documentElement;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- drobný pomocník pro analytiku (PostHog se načítá později) ---- */
-  function track(name, props) {
-    try { if (window.posthog && window.posthog.capture) window.posthog.capture(name, props || {}); }
-    catch (e) { /* analytika nikdy nesmí shodit formulář */ }
+  /* =======================================================================
+     ANALYTIKA
+     -----------------------------------------------------------------------
+     Posílají se jen vlastní pojmenované události (autocapture je vypnutý)
+     a jen nepovinné kategorie — nikdy jméno, telefon, e-mail, město, PSČ
+     ani volný text. Schéma popisuje docs/analytics.md.
+
+     PostHog se stahuje až v nečinnosti, takže v prvních vteřinách ještě
+     nemusí existovat. Kdo ťukne na „Zavolat" hned po načtení, by o událost
+     přišel — proto fronta. index.html po inicializaci zavolá flush.
+     ======================================================================= */
+  var ANALYTICS_QUEUE = [];
+  var QUEUE_MAX = 20;                  // pojistka, kdyby PostHog nedorazil vůbec
+
+  function posthogReady() {
+    return !!(window.posthog && typeof window.posthog.capture === 'function');
   }
+  function track(name, props) {
+    try {
+      if (posthogReady()) { window.posthog.capture(name, props || {}); return; }
+      if (ANALYTICS_QUEUE.length < QUEUE_MAX) ANALYTICS_QUEUE.push([name, props || {}]);
+    } catch (e) { /* analytika nikdy nesmí shodit formulář */ }
+  }
+  window.__mdthermFlush = function () {
+    try {
+      if (!posthogReady()) return;
+      while (ANALYTICS_QUEUE.length) {
+        var ev = ANALYTICS_QUEUE.shift();
+        window.posthog.capture(ev[0], ev[1]);
+      }
+    } catch (e) {}
+  };
+
+  /* České popisky → stabilní klíče. Kdyby se text volby přepsal, report se
+     nerozpadne. Neznámá hodnota končí jako 'other' — nikdy se neposílá
+     surový text formuláře. Po přidání volby doplnit i sem. */
+  var SERVICE_KEYS = {
+    'Tepelné čerpadlo': 'heat_pump', 'Klimatizace': 'air_conditioning',
+    'Plynový kotel': 'gas_boiler', 'Servis nebo oprava': 'service',
+    'Nejsem si jistý': 'unsure'
+  };
+  var BUILDING_KEYS = {
+    'Rodinný dům': 'house', 'Byt': 'apartment',
+    'Firemní objekt': 'commercial', 'Jiný objekt': 'other_building'
+  };
+  var SITUATION_KEYS = {
+    'Zjišťuji možnosti': 'exploring', 'Stavím nebo rekonstruuji': 'building_renovating',
+    'Měním starý zdroj tepla': 'replacing_source', 'Chci nacenit konkrétní řešení': 'quote_request',
+    'Zařízení nefunguje': 'not_working', 'Hlásí chybu': 'error_code',
+    'Divný zvuk nebo slabý výkon': 'poor_performance', 'Pravidelná prohlídka nebo revize': 'maintenance'
+  };
+  /* Slug z karty služby (data-sluzba) → stejné klíče jako výše. */
+  var CARD_SERVICE_KEYS = {
+    'tepelne-cerpadlo': 'heat_pump', 'klimatizace': 'air_conditioning',
+    'plynovy-kotel': 'gas_boiler', 'servis': 'service'
+  };
+  function normalize(map, value) {
+    if (!value) return undefined;
+    return map[value] || 'other';
+  }
+
+  /* Důvody selhání — uzavřený číselník. Do analytiky se NIKDY nesmí dostat
+     text výjimky ani odpověď poskytovatele: nese cizí formulace, mění se bez
+     naší kontroly a rozstřelil by kardinalitu události. Cokoli mimo seznam
+     spadne na 'unknown'. */
+  var FAIL_REASONS = ['network_error', 'provider_rejected', 'timeout', 'missing_config', 'unknown'];
+  function failReason(r) {
+    return FAIL_REASONS.indexOf(r) >= 0 ? r : 'unknown';
+  }
+
+  /* Kontext jednoho pokusu o poptávku: odkud člověk k formuláři přišel.
+     Vlastní klíč (ne koncept `save()`), aby obnova rozepsané poptávky
+     nezačala omylem považovat pouhý klik na CTA za zahájený formulář. */
+  var CTX_STORE = 'md-poptavka-ctx-v1';
+  function readCtx() {
+    try { return JSON.parse(sessionStorage.getItem(CTX_STORE) || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+  function writeCtx(patch) {
+    try {
+      var c = readCtx();
+      Object.keys(patch).forEach(function (k) { c[k] = patch[k]; });
+      sessionStorage.setItem(CTX_STORE, JSON.stringify(c));
+    } catch (e) {}
+  }
+  function clearCtx() { try { sessionStorage.removeItem(CTX_STORE); } catch (e) {} }
+
+  /* Vlastnosti, které nese inquiry_started i inquiry_submitted. */
+  function ctxProps() {
+    var c = readCtx();
+    var p = { entry_point: c.entry_point || 'direct' };
+    if (c.service) p.service = c.service;
+    return p;
+  }
+
+  /* -----------------------------------------------------------------------
+     První dotyk (first-touch) — podklad pro pozdější spojení s CRM.
+     Drží kampaň, přes kterou člověk přišel poprvé, i když se pak vrátí přímo.
+     Platnost 90 dní: uvnitř okna se nepřepisuje, po vypršení smí příští
+     návštěva založit nový snímek. Jen marketingové
+     parametry, žádné osobní údaje. Ve Fázi 1 se nikam neodesílá — čeká na
+     rozšíření CRM kontraktu. Podrobnosti v docs/analytics.md.
+     ----------------------------------------------------------------------- */
+  var FIRST_TOUCH_STORE = 'md-first-touch-v1';
+  var FIRST_TOUCH_MAX_AGE_MS = 90 * 24 * 60 * 60 * 1000;   // 90 dní
+
+  /* Platí, dokud je snímku míň než 90 dní. Uvnitř okna se NEPŘEPISUJE ani
+     neobnovuje `captured_at` — jinak by z prvního dotyku vznikl posuvný
+     poslední dotyk. Po vypršení smí příští návštěva založit nový. */
+  function firstTouchAlive(snap) {
+    if (!snap || !snap.captured_at) return false;
+    var t = Date.parse(snap.captured_at);
+    if (!t) return false;
+    return (Date.now() - t) < FIRST_TOUCH_MAX_AGE_MS;
+  }
+
+  (function captureFirstTouch() {
+    try {
+      var existing = null;
+      try { existing = JSON.parse(localStorage.getItem(FIRST_TOUCH_STORE) || 'null'); } catch (e) {}
+      if (firstTouchAlive(existing)) return;               // v okně → nesahat
+
+      var q = new URLSearchParams(location.search);
+      var snap = { captured_at: new Date().toISOString(), landing_page: location.pathname };
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
+        var v = q.get(k); if (v) snap[k] = String(v).slice(0, 120);
+      });
+      ['gclid', 'fbclid'].forEach(function (k) { if (q.get(k)) snap.click_id = k; });
+      var ref = doc.referrer || '';
+      if (ref) { try { snap.initial_referrer = new URL(ref).hostname; } catch (e) {} }
+      localStorage.setItem(FIRST_TOUCH_STORE, JSON.stringify(snap));
+    } catch (e) { /* privátní režim / zakázané úložiště — analytika se nevnucuje */ }
+  })();
+
+  /* -----------------------------------------------------------------------
+     Telefon a e-mail — jedno jméno události, místo nese vlastnost.
+     Delegovaně na dokumentu: odkazů je jedenáct a jsou i ve stavech, které
+     v DOM vzniknou až po odeslání (úspěch/chyba).
+     ----------------------------------------------------------------------- */
+  function contactLocation(el) {
+    if (el.closest('#mobilebar')) return 'mobilebar';
+    if (el.closest('.topbar')) return 'topbar';
+    if (el.closest('#hero')) return 'hero';
+    if (el.closest('#inquiryDone')) return 'form_success';
+    if (el.closest('#inquiryError')) return 'form_error';
+    if (el.closest('#poptavka')) return 'form_urgent';
+    if (el.closest('.cta-band')) return 'cta_band';
+    if (el.closest('#kontakt')) return 'contact';
+    if (el.closest('.footer')) return 'footer';
+    return 'other';
+  }
+  doc.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="tel:"], a[href^="mailto:"]');
+    if (!a) return;
+    var isTel = a.getAttribute('href').indexOf('tel:') === 0;
+    track(isTel ? 'phone_clicked' : 'email_clicked', { location: contactLocation(a) });
+  });
+
+  /* Odkud člověk míří do formuláře. Samo o sobě to není zahájená poptávka —
+     jen se poznamená kontext a čeká se na skutečnou interakci s formulářem. */
+  var ENTRY_POINTS = [
+    ['#mobilebar', 'mobilebar'], ['.topbar', 'topbar'], ['#hero', 'hero'],
+    ['#sluzby', 'services'], ['#rozhodovani', 'comparison'],
+    ['.cta-band', 'cta_band'], ['#kontakt', 'contact']
+  ];
+  doc.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href="#poptavka"]');
+    if (!a) return;
+    var patch = { entry_point: 'other' };
+    for (var i = 0; i < ENTRY_POINTS.length; i++) {
+      if (a.closest(ENTRY_POINTS[i][0])) { patch.entry_point = ENTRY_POINTS[i][1]; break; }
+    }
+    var slug = a.getAttribute('data-sluzba');
+    if (slug && CARD_SERVICE_KEYS[slug]) patch.service = CARD_SERVICE_KEYS[slug];
+    writeCtx(patch);
+  });
 
   /* =======================================================================
      ODESLÁNÍ POPTÁVKY — konfigurace
@@ -71,7 +242,6 @@
         // vynutit reflow, aby přechod 0fr → 1fr proběhl
         void panel.offsetHeight;
         item.classList.add('is-open');
-        track('faq_open', { question: btn.textContent.trim().slice(0, 80) });
       }
     });
   })();
@@ -472,13 +642,16 @@
     }
   }
 
-  function go(n, focusIt) {
+  function go(n, focusIt, silent) {
     var from = step;
     step = Math.min(TOTAL, Math.max(1, n));
     setAlert('');
     render(focusIt !== false);
-    track('inquiry_step', { step: step, label: LABELS[step - 1] });
-    if (step > from) track('inquiry_step_completed', { step: from, label: LABELS[from - 1] });
+    /* Jen posun vpřed a jen číslo — u šestikrokového formuláře je vidět,
+       kde lidé odpadají, a nic z toho nenese obsah odpovědí.
+       `silent` je pro skok z karty služby: ten krok vyplnil program, ne
+       člověk, a měřit ho dřív než inquiry_started by nafouklo trychtýř. */
+    if (step > from && !silent) track('inquiry_step_completed', { step: from });
   }
 
   /* ---- ovládání ---- */
@@ -491,7 +664,7 @@
       branch = t.getAttribute('data-next') || 'instalace';
       syncBranch();
     }
-    if (!started) { started = true; track('inquiry_start', {}); }
+    if (!started) { started = true; track('inquiry_started', ctxProps()); }
     save();
 
     // Automatický posun u kroků s jedinou volbou — ušetří polovinu kliků.
@@ -504,7 +677,7 @@
   });
 
   form.addEventListener('input', function () {
-    if (!started) { started = true; track('inquiry_start', {}); }
+    if (!started) { started = true; track('inquiry_started', ctxProps()); }
     save();
   });
 
@@ -624,9 +797,11 @@
           submissionId: d.submissionId
         })
       }).then(function (r) {
-        track(r.ok ? 'confirmation_sent' : 'confirmation_error', { status: r.status });
+        /* Úspěch se nehlásí — zajímavé je jen selhání: poptávka je ve
+           Web3Forms, ale potvrzení/kopie do CRM neprošly. */
+        if (!r.ok) track('confirmation_failed', { status: Number(r.status) || 'unknown' });
       }).catch(function () {
-        track('confirmation_error', { status: 'network' });
+        track('confirmation_failed', { status: 'network_error' });
       });
     } catch (e) { /* potvrzení nikdy nesmí shodit odeslání poptávky */ }
   }
@@ -639,6 +814,7 @@
     navEl.hidden = true;
     setAlert('');
   }
+  var submitted = {};                  // kategorie poslední odeslané poptávky (pro analytiku)
   function showDone() {
     hideFormChrome();
     errorEl.hidden = true;
@@ -646,7 +822,19 @@
     doneEl.focus({ preventScroll: true });
     keepInView();
     clearSaved();                      // odesláno → rozepsaná kopie už není potřeba
-    track('inquiry_success', {});
+
+    /* JEDINÉ místo, kde vzniká konverze. Sem se doteče jen po success:true
+       od Web3Forms. Posílají se pouze kategorie z přepínačů — žádné jméno,
+       telefon, e-mail, město, PSČ ani volný text. submission_id je náhodné
+       UUID (crypto.randomUUID) a slouží k pozdějšímu spojení s poptávkou
+       v CRM; sám o sobě nikoho neidentifikuje. */
+    var props = ctxProps();
+    props.service = normalize(SERVICE_KEYS, submitted.sluzba) || props.service;
+    props.building_type = normalize(BUILDING_KEYS, submitted.objekt);
+    props.situation = normalize(SITUATION_KEYS, submitted.situace);
+    props.submission_id = submitted.submissionId;
+    track('inquiry_submitted', props);
+    clearCtx();                        // pokus skončil → kontext vstupu pryč
   }
   function showError(reason) {
     hideFormChrome();
@@ -655,7 +843,7 @@
     errorEl.focus({ preventScroll: true });
     keepInView();
     // Data zůstávají ve formuláři i v sessionStorage — „Zkusit znovu" je vrátí.
-    track('inquiry_error', { reason: reason || 'unknown' });
+    track('inquiry_failed', { reason: failReason(reason) });
   }
   function resetSubmitBtn() {
     form.removeAttribute('aria-busy');
@@ -682,7 +870,9 @@
 
     var data = collect();
     data.submissionId = newSubmissionId();
-    track('inquiry_submit', { sluzba: data.sluzba, objekt: data.objekt, mesto: data.mesto });
+    /* Tady se ZÁMĚRNĚ nic neměří. Kliknutí na odeslat není konverze:
+       může selhat síť, Web3Forms i konfigurace klíče. Konverzi hlásí až
+       showDone(), tedy po success:true. */
 
     /* Chybějící klíč = špatná konfigurace, ne chyba uživatele. Nic se neodesílá
        a hlavně se nepředstírá úspěch — jinak by se poptávky tiše ztrácely. */
@@ -690,7 +880,7 @@
       if (window.console && console.warn) {
         console.warn('[poptávka] Chybí WEB3FORMS_ACCESS_KEY v js/form.js — formulář nic neodeslal.');
       }
-      showError('missing_access_key');
+      showError('missing_config');
       return;
     }
 
@@ -711,16 +901,24 @@
       .then(function (r) { return r.json().catch(function () { return null; }); })
       .then(function (j) {
         window.clearTimeout(timer);
-        if (!j || !j.success) throw new Error((j && j.message) || 'odeslání selhalo');
+        if (!j || !j.success) {
+          /* Zpráva od Web3Forms se do analytiky úmyslně nedostane — jde jen
+             kód. Pro ladění zůstává v konzoli. */
+          if (j && j.message && window.console) console.warn('[poptávka] Web3Forms:', j.message);
+          var rejected = new Error('provider_rejected');
+          rejected.code = 'provider_rejected';
+          throw rejected;
+        }
         /* Poptávka je zachycená. Potvrzení zákazníkovi je až druhotné —
            posíláme ho na pozadí a na výsledek nečekáme. */
         sendConfirmation(data);
+        submitted = data;
         showDone();
       })
       .catch(function (err) {
         window.clearTimeout(timer);
         resetSubmitBtn();
-        showError(timedOut ? 'timeout' : (err && err.message) || 'network');
+        showError(timedOut ? 'timeout' : ((err && err.code) || 'network_error'));
       });
   });
 
@@ -747,8 +945,10 @@
       input.checked = true;
       branch = input.getAttribute('data-next') || 'instalace';
       syncBranch();
-      if (!started) { started = true; track('inquiry_start', { from: 'service_card' }); }
-      go(2, false);
+      /* Klik na kartu je jen vstup do formuláře, ne zahájená poptávka —
+         inquiry_started čeká na první opravdovou interakci. Kontext už
+         uložil delegovaný posluchač výše. */
+      go(2, false, true);
     });
   });
 })();
