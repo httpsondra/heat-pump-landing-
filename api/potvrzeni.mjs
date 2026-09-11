@@ -28,8 +28,8 @@ import { forwardInquiryToCrm } from './_crm.mjs';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 const DEFAULT_FROM = 'MD-Therm <noreply@md-therm.cz>';
-const PHONE_HREF = '+420603479240';
-const PHONE_TEXT = '+420 603 479 240';
+const PHONE_HREF = '+420703888830';
+const PHONE_TEXT = '+420 703 888 830';
 
 /* Přijímáme jen tahle pole a nic jiného. Hodnoty se ořežou na rozumnou
    délku, ať se do e-mailu nedá propašovat román. */
@@ -220,7 +220,7 @@ function buildEmail(d) {
           <td class="sm-p" style="padding:28px 44px 0 44px;">
             <p style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:16px; line-height:26px; color:#3b4149;">
               Pokud potřebujete něco řešit urgentně, můžete nám zavolat na
-              <a href="tel:${PHONE_HREF}" style="color:#A23707; font-weight:600; text-decoration:none; white-space:nowrap;">+420&nbsp;603&nbsp;479&nbsp;240</a>.
+              <a href="tel:${PHONE_HREF}" style="color:#A23707; font-weight:600; text-decoration:none; white-space:nowrap;">+420&nbsp;703&nbsp;888&nbsp;830</a>.
             </p>
           </td>
         </tr>

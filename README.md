@@ -52,5 +52,5 @@ npx serve .
 
 ## Kontakt (obsah stránky)
 
-Milan Dušek · +420 603 479 240 · dusek@md-therm.cz
+Milan Dušek · +420 703 888 830 · dusek@md-therm.cz
 Severovýchodní VI. 1525/29, 141 00 Praha 4 · IČO 67267092 · DIČ CZ7107250183

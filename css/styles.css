@@ -1076,7 +1076,7 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 }
 
 /* Číslo v liště zůstává viditelné, dokud se skutečně vejde. Změřeno:
-   plné „+420 603 479 240" se bez přetečení vejde do ~440 px; pod 460 px
+   plné „+420 703 888 830" se bez přetečení vejde do ~440 px; pod 460 px
    proto zbývá jen ikona (rezerva na delší logo/odsazení systémů). */
 @media (max-width: 460px) {
   .topbar__cta .btn--phone span { display: none; }
