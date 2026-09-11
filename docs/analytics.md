@@ -179,14 +179,18 @@ Okno je pevné, ne posuvné: návrat po 30 i po 89 dnech drží původní kampa�
 teprve 91. den smí vzniknout nový první dotyk. Konstanta
 `FIRST_TOUCH_MAX_AGE_MS` v `js/form.js`.
 
-Neobsahuje osobní údaje. Ve Fázi 1 se **nikam neodesílá** — čeká na rozšíření
-kontraktu CRM.
+Neobsahuje osobní údaje. Od Fáze 2A se **přikládá k odeslané poptávce**
+(`sendConfirmation` v `js/form.js`) a CRM si ho uloží k poptávce natrvalo.
+Snímek se přitom jen **čte**: nezakládá se nový, `captured_at` se nemění
+a platnost zůstává 90 dní. Když je snímek neplatný, vypršelý, rozbitý nebo
+`localStorage` nedostupné, poptávka pokračuje **bez původu** — analytika
+nikdy nesmí zdržet ani shodit lead.
 
 ---
 
-## Budoucí spojení s CRM (nestaví se)
+## Spojení s CRM
 
-Most už existuje: `submissionId` = náhodné `crypto.randomUUID()`, které formulář
+Most stojí: `submissionId` = náhodné `crypto.randomUUID()`, které formulář
 posílá do Web3Forms i do `/api/potvrzeni` → CRM.
 
 Od Fáze 1 jde stejná hodnota i do PostHogu jako `submission_id`
@@ -206,9 +210,31 @@ PostHog  inquiry_submitted { submission_id }
 CRM      poptávka { submissionId, jméno, telefon, e-mail }
 ```
 
-Až se bude chtít zdroj i v CRM, přidá se snímek prvního dotyku do payloadu
-poptávky. **Vyžaduje změnu v obou repozitářích** — `MAPPING` v `api/_crm.mjs`
-i `validateIngest` v CRM jsou přísné whitelisty. Není součástí Fáze 1.
+### Fáze 2A — most je hotový
+
+Od září 2026 jede s poptávkou do CRM i **surový `submissionId`** a **snímek
+prvního dotyku**. Obojí má vlastní přísný whitelist v `api/_crm.mjs`
+(`submissionId()` a `ATTRIBUTION_FIELDS`); co v něm není, neodejde.
+
+Dvě role jedné hodnoty, které se **nesmí slít**:
+
+| | |
+|---|---|
+| **tělo poptávky** | surový `submissionId` → sloupec `submission_id` v CRM, spojka na PostHog |
+| **hlavička** | `Idempotency-Key: web-<sha256>` odvozený z téže hodnoty, ochrana proti dvojímu zápisu |
+
+Mapování na sloupce CRM:
+
+| snímek na webu | sloupec v CRM |
+|---|---|
+| `utm_source` … `utm_term` | `utm_source` … `utm_term` |
+| `click_id` (jen NÁZEV parametru) | `click_id_type` |
+| `initial_referrer` | `initial_referrer` |
+| `landing_page` | `landing_page` |
+| `captured_at` | `attribution_captured_at` |
+
+Skutečná hodnota `gclid`/`fbclid` se do CRM **neposílá nikdy** — je to
+jednoznačný identifikátor jednoho člověka u Googlu nebo Meta.
 
 ID zákazníka z CRM do PostHogu **nikdy**.
 

@@ -11,6 +11,11 @@
    nikde jinde v odesílací cestě se o CRM neví. Popisky, texty ani pořadí
    kroků formuláře na tuhle vrstvu nemají žádný vliv.
 
+   Kromě polí formuláře veze požadavek ještě DOPROVOD JEDNÉ SUBMISSION:
+   surový `submissionId` (spojka na PostHog) a snímek prvního dotyku
+   (`attribution`). Obojí je nepovinné, obojí má vlastní whitelist a ani
+   jedno nesmí rozhodovat o tom, jestli poptávka projde.
+
    Tajemství (MDT_LEAD_INGEST_SECRET) žije výhradně v proměnné prostředí na
    serveru. Do prohlížeče, do HTML ani do logu se nedostane.
    ========================================================================= */
@@ -102,6 +107,24 @@ export function normalizeWebsiteInquiry(body) {
     if (value || required) out[crmField] = value;
   }
 
+  /*
+   * SUROVÝ IDENTIFIKÁTOR ODESLÁNÍ A SNÍMEK PŮVODU.
+   *
+   * Nejsou v MAPPING schválně: MAPPING překládá pole formuláře, tohle je
+   * doprovod jedné submission. Obojí je NEPOVINNÉ — starší verze skriptu
+   * v mezipaměti prohlížeče je neposílá a poptávka musí projít stejně.
+   *
+   * Identifikátor tu nemá roli klíče: klíč idempotence se z něj počítá
+   * otiskem a jde hlavičkou (viz `submissionKey`). V těle je proto, aby se
+   * poptávka v CRM dala spárovat s konverzí v PostHogu — dvě různé práce,
+   * které se nesmí slít.
+   */
+  const submission = submissionId(source);
+  if (submission) out.submissionId = submission;
+
+  const attribution = normalizeAttribution(source);
+  if (attribution) out.attribution = attribution;
+
   return out;
 }
 
@@ -124,12 +147,76 @@ export function normalizeWebsiteInquiry(body) {
  */
 export function submissionKey(body, deps = {}) {
   const uuid = deps.randomUUID || randomUUID;
-  const raw = body && typeof body.submissionId === 'string' ? body.submissionId.trim() : '';
+  const raw = submissionId(body);
 
-  if (/^[A-Za-z0-9._:-]{8,128}$/.test(raw)) {
+  if (raw) {
     return 'web-' + createHash('sha256').update('mdt-poptavka:' + raw).digest('hex').slice(0, 40);
   }
   return 'web-nahodny-' + uuid();
+}
+
+/**
+ * Identifikátor jednoho odeslání, pokud má očekávaný tvar.
+ *
+ * JEDNO pravidlo pro dvě různé role. Z téhle hodnoty se odvozuje klíč
+ * idempotence (výš) a od září 2026 se tatáž hodnota posílá i v těle
+ * poptávky, aby se v CRM dala webová konverze spárovat s událostí
+ * v PostHogu. Kdyby každá role měla vlastní kontrolu tvaru, mohl by
+ * nastat stav, kdy CRM dostane identifikátor, ze kterého klíč NEVZNIKL —
+ * a spárování by ukazovalo na jinou poptávku.
+ *
+ * Tvar je týž, jaký si ověřuje CRM (`parseSubmissionId`).
+ */
+export function submissionId(body) {
+  const raw = body && typeof body.submissionId === 'string' ? body.submissionId.trim() : '';
+  return /^[A-Za-z0-9._:-]{8,128}$/.test(raw) ? raw : '';
+}
+
+/**
+ * Snímek prvního dotyku — VÝSLOVNÝ seznam polí, nic navíc.
+ *
+ * Prohlížeč si ho ukládá při první návštěvě (`md-first-touch-v1`) a drží
+ * ho 90 dní. Web ho jen PŘEDÁVÁ: nic nedopočítává, nic nevyrábí z hlaviček
+ * požadavku a nesahá na `captured_at`.
+ *
+ * `click_id` nese jen NÁZEV parametru („gclid" / „fbclid"), nikdy jeho
+ * hodnotu — ta je jednoznačný identifikátor jednoho člověka u Googlu nebo
+ * Meta. V CRM se proto sloupec jmenuje `click_id_type`.
+ */
+export const ATTRIBUTION_FIELDS = Object.freeze([
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+  'click_id',
+  'initial_referrer',
+  'landing_page',
+  'captured_at'
+]);
+
+/* Štědrá, ale konečná mez. CRM si délky měří znovu podle svých sloupců. */
+const ATTRIBUTION_MAX = 253;
+
+/**
+ * Snímek z prohlížeče → snímek pro CRM.
+ *
+ * Přísný whitelist jako u ostatních polí: co v seznamu není, neodejde —
+ * a to platí i pro vnořený objekt, který si někdo přilepí do požadavku.
+ * Prázdný snímek se neposílá vůbec; „nevíme, odkud přišel" je v CRM
+ * platný stav a nemá se předstírat objektem plným prázdných řetězců.
+ */
+export function normalizeAttribution(body) {
+  const snapshot = body && typeof body === 'object' ? body.attribution : null;
+  if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) return null;
+
+  const out = {};
+  for (const field of ATTRIBUTION_FIELDS) {
+    const value = oneLine(snapshot[field], ATTRIBUTION_MAX);
+    if (value) out[field] = value;
+  }
+
+  return Object.keys(out).length > 0 ? out : null;
 }
 
 /**

@@ -112,8 +112,10 @@
      Drží kampaň, přes kterou člověk přišel poprvé, i když se pak vrátí přímo.
      Platnost 90 dní: uvnitř okna se nepřepisuje, po vypršení smí příští
      návštěva založit nový snímek. Jen marketingové
-     parametry, žádné osobní údaje. Ve Fázi 1 se nikam neodesílá — čeká na
-     rozšíření CRM kontraktu. Podrobnosti v docs/analytics.md.
+     parametry, žádné osobní údaje. Od Fáze 2A se PŘIKLÁDÁ k odeslané
+     poptávce (viz `sendConfirmation`) a CRM si ho uloží k poptávce
+     natrvalo. Zakládání a platnost se tím NEMĚNÍ — snímek se jen čte.
+     Podrobnosti v docs/analytics.md.
      ----------------------------------------------------------------------- */
   var FIRST_TOUCH_STORE = 'md-first-touch-v1';
   var FIRST_TOUCH_MAX_AGE_MS = 90 * 24 * 60 * 60 * 1000;   // 90 dní
@@ -126,6 +128,19 @@
     var t = Date.parse(snap.captured_at);
     if (!t) return false;
     return (Date.now() - t) < FIRST_TOUCH_MAX_AGE_MS;
+  }
+
+  /* Snímek k PŘILOŽENÍ k poptávce. Jen se ČTE — nic se nezakládá,
+     nepřepisuje ani neobnovuje; `captured_at` zůstává z prvního dotyku.
+     Neplatný, vypršelý, rozbitý i nedostupný snímek = `null`, a poptávka
+     jde dál bez něj. Analytika nikdy nesmí zdržet ani shodit lead. */
+  function firstTouchSnapshot() {
+    try {
+      var snap = JSON.parse(localStorage.getItem(FIRST_TOUCH_STORE) || 'null');
+      return firstTouchAlive(snap) ? snap : null;
+    } catch (e) {
+      return null;                                   // privátní režim, zakázané úložiště
+    }
   }
 
   (function captureFirstTouch() {
@@ -778,7 +793,12 @@
 
      Endpoint kromě potvrzení posílá i kopii poptávky do CRM. Obojí běží
      na serveru: klíč k Resendu ani tajemství pro CRM se do prohlížeče
-     nikdy nedostanou. */
+     nikdy nedostanou.
+
+     S poptávkou jede i to, ODKUD člověk přišel — snímek prvního dotyku,
+     který si prohlížeč uložil při první návštěvě. Jen se přiloží; nová
+     se tu nezakládá a `captured_at` se nemění. Do CRM se z něj dostane
+     jen to, co je na whitelistu v `api/_crm.mjs`. */
   function sendConfirmation(d) {
     try {
       fetch('/api/potvrzeni', {
@@ -793,8 +813,13 @@
           /* Telefon do potvrzovacího e-mailu nepatří (a nevypisuje se v něm),
              ale CRM ho vyžaduje — server ho předá dál a nikam jinam. */
           telefon: d.telefon, telefonE164: d.telefonE164,
-          /* Identita jednoho odeslání kvůli idempotenci na straně CRM. */
-          submissionId: d.submissionId
+          /* Identita jednoho odeslání. Server z ní odvodí klíč idempotence
+             pro CRM a tutéž hodnotu pošle i v těle, aby se poptávka dala
+             spárovat s konverzí v PostHogu. */
+          submissionId: d.submissionId,
+          /* Odkud návštěvník přišel poprvé. `null` je platná odpověď —
+             přímá návštěva, vypršelý snímek i vypnuté úložiště. */
+          attribution: firstTouchSnapshot()
         })
       }).then(function (r) {
         /* Úspěch se nehlásí — zajímavé je jen selhání: poptávka je ve

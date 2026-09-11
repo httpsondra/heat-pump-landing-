@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node scripts/build-assets.mjs",
     "serve": "python3 -m http.server 4321",
-    "test": "node --test \"api/*.test.mjs\""
+    "test": "node --test \"api/*.test.mjs\" \"js/*.test.mjs\""
   },
   "devDependencies": {
     "ffmpeg-static": "^5.2.0"
