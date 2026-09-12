@@ -6,10 +6,12 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-assets.mjs",
+    "build:fonts": "node scripts/build-fonts.mjs",
     "serve": "python3 -m http.server 4321",
     "test": "node --test \"api/*.test.mjs\" \"js/*.test.mjs\""
   },
   "devDependencies": {
-    "ffmpeg-static": "^5.2.0"
+    "ffmpeg-static": "^5.2.0",
+    "subset-font": "^2.7.0"
   }
 }
