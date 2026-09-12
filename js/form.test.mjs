@@ -189,6 +189,12 @@ describe('základ z Fáze 1 zůstal nedotčený', () => {
     assert.match(INDEX, /disable_session_recording: true/);
   });
 
+  /* Bez tohohle si array.js dotáhne surveys.js (~34 kB) jen proto, aby zjistil,
+     že žádný dotazník není. Dotazníky nepoužíváme — hlídej, ať se to nevrátí. */
+  it('dotazníky zůstávají vypnuté', () => {
+    assert.match(INDEX, /disable_surveys: true/);
+  });
+
   it('profily jen u identifikovaných', () => {
     assert.match(INDEX, /person_profiles: 'identified_only'/);
   });

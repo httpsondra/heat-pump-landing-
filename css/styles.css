@@ -276,7 +276,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .topnav a {
   position: relative; z-index: 1;
-  font-size: .88rem; font-weight: 500; color: var(--ink-2);
+  font-size: .88rem; font-weight: 400; color: var(--ink-2);
   letter-spacing: -.01em;
   padding: .5rem .95rem;
   border-radius: 999px;
@@ -911,7 +911,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   padding: .9rem 0; border-top: 1px solid var(--line);
 }
 .contact__label { font-family: var(--mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
-.contact__value { font-size: 1.08rem; font-weight: 500; }
+.contact__value { font-size: 1.08rem; font-weight: 400; }
 a.contact__row { transition: color 150ms var(--ease); }
 @media (hover: hover) and (pointer: fine) {
   a.contact__row:hover .contact__value { color: var(--accent-deep); }
@@ -929,7 +929,7 @@ a.contact__row { transition: color 150ms var(--ease); }
 .contact__map-link {
   position: absolute; right: 12px; bottom: 12px; z-index: 2;
   display: inline-flex; align-items: center;
-  font-family: var(--mono); font-size: .72rem; letter-spacing: .02em; font-weight: 500;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .02em; font-weight: 400;
   color: var(--ink); background: rgba(255,255,255,.94); backdrop-filter: blur(8px);
   border: 1px solid var(--line-strong); border-radius: 999px; padding: .45rem .9rem;
   box-shadow: var(--shadow-sm);
@@ -1262,7 +1262,7 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(16,22,26,.07);
 }
 .field input[aria-invalid="true"], .field textarea[aria-invalid="true"] { border-color: var(--accent-deep); }
-.field__err { font-size: .84rem; color: var(--accent-deep); font-weight: 500; min-height: 0; }
+.field__err { font-size: .84rem; color: var(--accent-deep); font-weight: 400; min-height: 0; }
 .field__note { font-size: .84rem; color: var(--ink-soft); }
 
 /* Navigační řádek — „Pokračovat" je černý ghost, červená je vyhrazená odeslání */
@@ -1280,7 +1280,7 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 .inquiry__alert {
   margin-top: 1rem; padding: .8rem 1rem; border-radius: var(--r-sm);
   background: var(--accent-soft); border: 1px solid #F7D2BC;
-  color: var(--accent-dark); font-size: .9rem; font-weight: 500;
+  color: var(--accent-dark); font-size: .9rem; font-weight: 400;
 }
 /* Souhrn odpovědí na posledním kroku */
 .inquiry__summary {
