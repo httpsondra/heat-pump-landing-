@@ -623,112 +623,164 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   }
 }
 
-/* ---------- Jedno řešení pro celý dům ---------- */
-/* Dům vlevo, výběr vpravo. Stav drží čtyři radia před oběma bloky, takže
-   `:checked ~` dosáhne na obojí — žádné JS, funguje klávesnicí i dotykem.
-   Popisky jsou vidět pořád; výběr mění jen zvýraznění v domě. */
-.house {
-  display: grid; grid-template-columns: 1.1fr .9fr;
-  gap: clamp(32px, 5vw, 76px); align-items: center;
+/* ---------- Nejdřív dům. Pak technologie. ---------- */
+/* Odsazení hlavičky je tu menší než globálních clamp(48px, 7vh, 88px): dům
+   má na nadpis navazovat, ne plavat o půl obrazovky níž. Mění se jen tahle
+   sekce, ostatní si drží svůj rytmus. */
+#reseni .section__head { margin-bottom: clamp(32px, 4.4vh, 56px); }
+
+/* Dům vlevo, panel vpravo, ovladače přes celou šířku dole. Stav drží čtyři
+   radia před všemi třemi bloky, takže na ně `:checked ~` dosáhne — žádné JS.
+   Body nad domem jsou HTML prvky, ne součást obrázku: obrázek je jeden
+   neutrální a přepíná se jen to, co leží nad ním. */
+.hs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(232px, 22%, 288px);
+  grid-template-areas: "stage panel" "tabs tabs";
+  column-gap: clamp(20px, 2.6vw, 40px);
+  row-gap: clamp(22px, 2.6vw, 40px);
+  align-items: center;
 }
+/* Sekce má být nejsilnější vizuální moment stránky, takže dům dostává tolik
+   šířky, kolik container unese: panel je jen tak široký, aby se do něj vešel
+   text na tři řádky. */
 
 /* Schovaná, ale zaostřitelná — proto ne display:none. */
-.house__radio {
+.hs__radio {
   position: absolute; width: 1px; height: 1px; margin: 0; padding: 0; border: 0;
   clip-path: inset(50%); overflow: hidden; white-space: nowrap;
 }
 
-/* width:100% schválně — bez něj se <figure> ve složeném layoutu smrskne
-   na výchozí vnitřní šířku SVG (300 px) místo aby vyplnil sloupec. */
-.house__stage { margin: 0; width: 100%; position: relative; }
-.house__svg { display: block; width: 100%; height: auto; }
+/* Scéna je přesně velká jako obrázek: width/height v <img> drží poměr
+   1520/906 ještě před načtením, takže se nic nepřeskládá a `inset: 0`
+   u bodů sedí 1:1 na kresbu. */
+.hs__stage { grid-area: stage; position: relative; margin: 0; }
+.hs__img { display: block; width: 100%; height: auto; }
 
-/* Klikací plošky nad zařízeními. V procentech, protože SVG má pevný poměr
-   (viewBox 0 40 420 250) — plošky tak sedí na kresbě v každé velikosti.
-   Jsou větší než samotná kresba: i na nejužším mobilu vychází přes 44 px. */
-.house__hit { position: absolute; z-index: 2; cursor: pointer; }
-.house__hit--hp { left: 8.5714%;  top: 67.2%; width: 18.0952%; height: 27.2%; }
-.house__hit--ac { left: 33.8095%; top: 32.8%; width: 19.5238%; height: 28%; }
-.house__hit--bo { left: 33.3333%; top: 63.2%; width: 16.6667%; height: 27.2%; }
-
-/* Konstrukce domu — tichá linka, nesoupeří se zařízeními. */
-.h-base { fill: none; stroke: #c9c9c9; }
-.h-ground { fill: none; stroke: var(--line-strong); }
-.h-base, .h-ground { stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-
-/* Zařízení — bílá výplň, ať nepropadají konstrukcí. */
-.h-part {
-  fill: #fff; stroke: #787878; stroke-width: 1.6;
-  stroke-linecap: round; stroke-linejoin: round;
-  transition: stroke .45s var(--ease), fill .45s var(--ease);
+.hs__spots { position: absolute; inset: 0; pointer-events: none; }
+.hs__spot {
+  position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px;
+  border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 0 3px #fff, 0 1px 4px rgba(16, 22, 26, .35);
+  opacity: 0;
+}
+/* Měkký nádech kolem bodu — má naznačit plochu, ne svítit. */
+.hs__spot::before {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 85, 14, .18), rgba(244, 85, 14, 0) 70%);
 }
 
-/* Vybraná část se rozsvítí. „Servis" schválně zvýrazní všechna zařízení —
-   servisujeme celý systém, ne jednu krabici. */
-#house-hp:checked ~ .house__stage .p-hp,
-#house-ac:checked ~ .house__stage .p-ac,
-#house-bo:checked ~ .house__stage .p-bo,
-#house-sv:checked ~ .house__stage .h-part {
-  stroke: var(--accent); fill: var(--accent-soft);
-}
+/* Souřadnice odečtené z dodané kresby (v % scény). Když se vymění obrázek,
+   mění se jen těchhle deset řádků. */
+.hs__spot--strecha  { left: 33%; top: 23%; }
+.hs__spot--stena    { left: 37%; top: 62%; }
+.hs__spot--okna     { left: 23%; top: 62%; }
+.hs__spot--radiator { left: 63%; top: 41%; }
+.hs__spot--podlaha  { left: 52%; top: 83%; }
+.hs__spot--venku    { left: 10%; top: 78%; }
+.hs__spot--technika { left: 79%; top: 66%; }
+.hs__spot--obytne   { left: 52%; top: 67%; }
+.hs__spot--loznice  { left: 46%; top: 42%; }
+.hs__spot--koupelna { left: 78%; top: 35%; }
 
-.house__list { list-style: none; }
-.house__item { border-top: 1px solid var(--line); }
-.house__item:last-child { border-bottom: 1px solid var(--line); }
-.house__label {
-  display: block; position: relative; cursor: pointer;
-  padding: clamp(15px, 1.7vw, 21px) 0 clamp(15px, 1.7vw, 21px) 20px;
-}
-/* Aktivní řádek značí tenký akcentový praporek, ne rámeček. */
-.house__label::before {
-  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-  width: 3px; height: 0; background: var(--accent);
-  transition: height .35s var(--ease);
-}
-.house__name {
-  display: block; font-size: var(--fs-h3); font-weight: 700; letter-spacing: -.02em;
-  transition: color .3s var(--ease), transform .25s var(--ease);
-}
-.house__desc {
-  display: block; margin-top: .3rem; color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6;
-  transition: color .3s var(--ease), transform .25s var(--ease);
-}
+#hs-ztraty:checked   ~ .hs__stage .hs__spot--strecha,
+#hs-ztraty:checked   ~ .hs__stage .hs__spot--stena,
+#hs-ztraty:checked   ~ .hs__stage .hs__spot--okna,
+#hs-rozvody:checked  ~ .hs__stage .hs__spot--radiator,
+#hs-rozvody:checked  ~ .hs__stage .hs__spot--podlaha,
+#hs-umisteni:checked ~ .hs__stage .hs__spot--venku,
+#hs-umisteni:checked ~ .hs__stage .hs__spot--technika,
+#hs-potreby:checked  ~ .hs__stage .hs__spot--obytne,
+#hs-potreby:checked  ~ .hs__stage .hs__spot--loznice,
+#hs-potreby:checked  ~ .hs__stage .hs__spot--koupelna { opacity: 1; }
 
-#house-hp:checked ~ .house__list .i-hp .house__label::before,
-#house-ac:checked ~ .house__list .i-ac .house__label::before,
-#house-bo:checked ~ .house__list .i-bo .house__label::before,
-#house-sv:checked ~ .house__list .i-sv .house__label::before { height: 62%; }
+/* --- panel --- */
+/* Panel sedí nad středem, ne přesně uprostřed. Zarovnaný úplně nahoru nechával
+   pod sebou prázdný roh — referenční panel je vysoký, protože v sobě má fotku,
+   tenhle nese jen tři řádky textu. Odsazení shora je proto kompromis. */
+/* Všechny čtyři texty leží na sobě v jedné buňce mřížky. Kdyby se přepínaly
+   přes display:none, měnila by se výška panelu podle délky textu (183–228 px)
+   a karta by při každém přepnutí poskočila. Takhle drží výšku nejdelšího
+   z nich a nehne se. */
+.hs__panel { grid-area: panel; display: grid; align-self: start; margin-top: clamp(20px, 3vw, 48px); }
+.hs__pane {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: clamp(20px, 2vw, 28px); box-shadow: var(--shadow-sm);
+}
+.hs__pane::before {
+  content: ''; display: block; width: 34px; height: 3px;
+  background: var(--accent); margin-bottom: 1.1rem;
+}
+.hs__pane h3 { font-size: var(--fs-h3); font-weight: 700; letter-spacing: -.02em; }
+.hs__pane p { margin-top: .6rem; color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.65; }
 
-#house-hp:checked ~ .house__list .i-hp .house__name,
-#house-ac:checked ~ .house__list .i-ac .house__name,
-#house-bo:checked ~ .house__list .i-bo .house__name,
-#house-sv:checked ~ .house__list .i-sv .house__name { color: var(--accent-deep); }
+#hs-ztraty:checked   ~ .hs__panel .hs__pane--ztraty,
+#hs-rozvody:checked  ~ .hs__panel .hs__pane--rozvody,
+#hs-umisteni:checked ~ .hs__panel .hs__pane--umisteni,
+#hs-potreby:checked  ~ .hs__panel .hs__pane--potreby { visibility: visible; }
 
-#house-hp:focus-visible ~ .house__list .i-hp .house__label,
-#house-ac:focus-visible ~ .house__list .i-ac .house__label,
-#house-bo:focus-visible ~ .house__list .i-bo .house__label,
-#house-sv:focus-visible ~ .house__list .i-sv .house__label {
-  outline: 2px solid var(--accent-deep); outline-offset: -2px;
+/* --- ovladače --- */
+.hs__tabs {
+  grid-area: tabs; list-style: none;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  /* 1fr i na řádky: ve 2×2 na mobilu má jinak řádek se zalomeným popiskem
+     jinou výšku než ten pod ním. */
+  grid-auto-rows: 1fr;
+  gap: clamp(10px, 1.2vw, 16px);
+}
+.hs__tab {
+  /* height:100% — položka <li> se v řádku mřížky roztáhne na výšku nejvyšší
+     dlaždice, ale <label> uvnitř ne. Bez toho je dlaždice se zalomeným
+     „Tepelné ztráty“ o 15 px vyšší než zbylé tři. */
+  display: flex; align-items: center; justify-content: center; gap: .62rem;
+  min-height: 58px; height: 100%; padding: .7rem 1rem; cursor: pointer;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--ink); text-align: left;
+}
+.hs__ico {
+  flex: none; width: 22px; height: 22px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+/* Aktivní stav nestojí jen na barvě: plná výplň obrací světlost (tmavé pole,
+   bílý text) a text ztuční — pozná se i v odstínech šedi. Výplň je
+   --accent-cta, protože na značkové oranžové nemá bílý text dost kontrastu. */
+#hs-ztraty:checked   ~ .hs__tabs .hs__tab--ztraty,
+#hs-rozvody:checked  ~ .hs__tabs .hs__tab--rozvody,
+#hs-umisteni:checked ~ .hs__tabs .hs__tab--umisteni,
+#hs-potreby:checked  ~ .hs__tabs .hs__tab--potreby {
+  background: var(--accent-cta); border-color: var(--accent-cta);
+  color: #fff; font-weight: 700;
+}
+#hs-ztraty:focus-visible   ~ .hs__tabs .hs__tab--ztraty,
+#hs-rozvody:focus-visible  ~ .hs__tabs .hs__tab--rozvody,
+#hs-umisteni:focus-visible ~ .hs__tabs .hs__tab--umisteni,
+#hs-potreby:focus-visible  ~ .hs__tabs .hs__tab--potreby {
+  outline: 2px solid var(--accent-deep); outline-offset: 2px;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  /* Řádek: obsah se posune o kousek doprava. Praporek aktivního řádku
-     zůstává stát — posouvá se text, ne celý rámec. */
-  .house__label:hover .house__name,
-  .house__label:hover .house__desc { transform: translateX(4px); }
-  .house__label:hover .house__name { color: var(--accent-deep); }
-  .house__label:hover .house__desc { color: var(--ink-2); }
-
-  /* Dům: najetí jen ztmaví obrys. Vybírá se až klikem — hover schválně
-     nepřepíná stav. Aktivní (oranžové) zařízení přebije pravidlo
-     s #id výš, takže se hoverem nezešedne. */
-  .house__hit--hp:hover ~ .house__svg .p-hp,
-  .house__hit--ac:hover ~ .house__svg .p-ac,
-  .house__hit--bo:hover ~ .house__svg .p-bo { stroke: var(--ink-2); }
+  .hs__tab:hover { border-color: var(--line-strong); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .h-part, .house__name, .house__desc, .house__label::before { transition: none; }
-  .house__label:hover .house__name, .house__label:hover .house__desc { transform: none; }
+
+/* Pohyb jen tam, kde si ho uživatel nevypnul. Ve výchozím stavu je přechod
+   pouhé prolnutí — body se nikde nehýbou samy od sebe. */
+@media (prefers-reduced-motion: no-preference) {
+  .hs__spot { transform: scale(.72); transition: opacity .4s var(--ease), transform .4s var(--ease); }
+  #hs-ztraty:checked   ~ .hs__stage .hs__spot--strecha,
+  #hs-ztraty:checked   ~ .hs__stage .hs__spot--stena,
+  #hs-ztraty:checked   ~ .hs__stage .hs__spot--okna,
+  #hs-rozvody:checked  ~ .hs__stage .hs__spot--radiator,
+  #hs-rozvody:checked  ~ .hs__stage .hs__spot--podlaha,
+  #hs-umisteni:checked ~ .hs__stage .hs__spot--venku,
+  #hs-umisteni:checked ~ .hs__stage .hs__spot--technika,
+  #hs-potreby:checked  ~ .hs__stage .hs__spot--obytne,
+  #hs-potreby:checked  ~ .hs__stage .hs__spot--loznice,
+  #hs-potreby:checked  ~ .hs__stage .hs__spot--koupelna { transform: scale(1); }
+  .hs__tab { transition: background 240ms var(--ease), border-color 240ms var(--ease), color 240ms var(--ease); }
 }
 
 /* ---------- O nás ---------- */
@@ -1006,8 +1058,17 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   .about__step::before { left: -26px; width: 15px; }
   .about__lead, .about__meta { max-width: none; }
 
-  .house { grid-template-columns: 1fr; gap: clamp(28px, 5vw, 44px); }
-  .house__stage { max-width: 460px; margin-inline: auto; }
+  /* Na jeden sloupec a v pořadí dům -> ovladače -> vysvětlení: nejdřív se
+     ukáže, o čem to je, pak čím se to přepíná, a text až pod tím. */
+  .hs {
+    grid-template-columns: 1fr;
+    grid-template-areas: "stage" "tabs" "panel";
+    row-gap: clamp(20px, 3.4vw, 30px);
+  }
+  .hs__stage { max-width: 620px; margin-inline: auto; width: 100%; }
+  /* Odsazení panelu shora je nudge jen pro dvousloupcové rozvržení — ve
+     stohu už panel stojí ve vlastním řádku a řádkovou mezeru má z mřížky. */
+  .hs__panel { margin-top: 0; }
   .contact { grid-template-columns: 1fr; }
   .footer__contact { text-align: left; }
   .section__head--split { grid-template-columns: 1fr; gap: 1rem; align-items: start; }
@@ -1064,11 +1125,10 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   .about { gap: 26px; }
   .about__photo { max-width: 100%; }
   .about__frame::before, .about__frame::after { width: 18px; height: 18px; }
-  .house { gap: 22px; }
-  /* Dům má na mobilu jen uvést kontext — pod ním musí být hned vidět,
-     že se dá vybírat. Proto zůstává menší, než kolik by se vešlo. */
-  .house__stage { max-width: 300px; margin-inline: auto; }
-  .house__label { padding-left: 16px; }
+  /* Čtyři ovladače vedle sebe by na mobilu vyšly pod 80 px a text by se lámal
+     do tří řádků. Ve 2×2 zůstane každý dost velký na prst i na čtení. */
+  .hs__tabs { grid-template-columns: repeat(2, 1fr); }
+  .hs__tab { justify-content: flex-start; min-height: 56px; }
   .hero__title { font-size: clamp(2.2rem, 8.5vw, 2.8rem); }
 
   /* Hero CTA: side-by-side buttons on mobile */

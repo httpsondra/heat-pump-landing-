@@ -146,7 +146,7 @@
     }
   </style>
 
-  <link rel="stylesheet" href="/css/styles.css?v=57" />
+  <link rel="stylesheet" href="/css/styles.css?v=64" />
 </head>
 <body>
 
@@ -163,6 +163,15 @@
       <symbol id="i-ac" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="7" rx="1.6"/><path d="M6.2 8h11.6"/><path d="M7 15c1.3 0 1.3 2.2 2.6 2.2M12 15c1.3 0 1.3 2.2 2.6 2.2M17 15c.9 0 .9 1.6 1.8 1.6"/></symbol>
       <symbol id="i-bo" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="15" rx="2"/><path d="M8.5 21h7"/><path d="M12 6.6c2.2 2 3 3.3 3 4.9a3 3 0 0 1-6 0c0-1.6.8-2.9 3-4.9Z"/></symbol>
       <symbol id="i-sv" viewBox="0 0 24 24"><path d="M15.9 3.1a5.6 5.6 0 0 0-6.9 7.1l-6 6a2 2 0 0 0 2.8 2.8l6-6a5.6 5.6 0 0 0 7.1-6.9l-3 3-2.9-.6-.6-2.9 3-3Z"/></symbol>
+
+      <!-- Ovladače sekce „Nejdřív dům“. Tyhle čtyři NEJSOU ze značkové sady —
+           jsou to provozní ikony pro jednu sekci. Leží na stejné mřížce 24×24
+           a mají stejný tah, aby s kartami opticky ladily, ale se sadou výš se
+           nemíchají a nepoužívají se jinde. -->
+      <symbol id="i-ztraty" viewBox="0 0 24 24"><path d="M14 13.9V5.2a2 2 0 1 0-4 0v8.7a4.3 4.3 0 1 0 4 0Z"/><path d="M12 8.6v5.9"/></symbol>
+      <symbol id="i-rozvody" viewBox="0 0 24 24"><path d="M4.6 7.2h8a3 3 0 0 1 3 3v3.6a3 3 0 0 0 3 3h.8"/><circle cx="4.6" cy="7.2" r="1.7"/><circle cx="19.4" cy="16.8" r="1.7"/></symbol>
+      <symbol id="i-umisteni" viewBox="0 0 24 24"><path d="M12 20.5s6.6-5.3 6.6-10.4a6.6 6.6 0 1 0-13.2 0C5.4 15.2 12 20.5 12 20.5Z"/><circle cx="12" cy="9.8" r="2.5"/></symbol>
+      <symbol id="i-potreby" viewBox="0 0 24 24"><path d="M4.2 10.8 12 4.2l7.8 6.6"/><path d="M6.6 9.6V19.8h10.8V9.6"/><path d="M10 19.8v-5.2h4v5.2"/></symbol>
     </defs>
   </svg>
 
@@ -383,103 +392,88 @@
       </div>
     </section>
 
-    <!-- ================= JEDNO ŘEŠENÍ PRO CELÝ DŮM ================= -->
-    <!-- Dům je tu hlavní vizuál, ne dekorace: ukazuje, KDE v objektu která
-         služba sedí. Ovládá se výběrem v seznamu (radio + :checked), takže
-         to funguje bez JS, klávesnicí i na dotyku úplně stejně. Popisky jsou
-         vidět pořád — výběr mění jen zvýraznění v domě, nic neschovává. -->
+    <!-- ================= NEJDŘÍV DŮM. PAK TECHNOLOGIE. ================= -->
+    <!-- Sekce nic nepočítá a nic nedoporučuje — ukazuje, PODLE ČEHO se návrh
+         dělá. Služby samotné jsou vysvětlené výš v kartách, tohle je vrstva
+         nad nimi.
+
+         Stav drží čtyři radia před scénou, panelem i ovladači, takže na ně
+         `:checked ~` dosáhne a nepotřebuje to ani řádek JS — stejný vzor jako
+         předchozí verze sekce. Funguje tím myší, prstem i klávesnicí (šipky
+         přepínají skupinu nativně).
+
+         Zvýraznění NEJSOU součástí bitmapy: dům je neutrální obrázek a body
+         nad ním jsou HTML prvky. Proto se dají přepínat a obrázek zůstává
+         jeden pro všechny čtyři stavy. Souřadnice jsou v procentech vůči
+         scéně s pevným poměrem 1520/906, takže sedí v každé velikosti. -->
     <section class="section section--soft" id="reseni">
       <div class="container">
-        <header class="section__head section__head--split reveal">
-          <div>
-            <p class="kicker">02 — Řešení</p>
-            <h2>Jedno řešení<br><span class="muted">pro celý dům</span></h2>
-          </div>
-          <p class="section__sub">Vytápění, chlazení i servis podle konkrétního objektu.</p>
+        <header class="section__head section__head--left reveal">
+          <p class="kicker">02 — Řešení</p>
+          <h2>Nejdřív dům. <br><span class="muted">Pak technologie.</span></h2>
+          <p class="section__sub">Správný návrh začíná tím, jak váš dům skutečně funguje.</p>
         </header>
 
-        <div class="house reveal">
-          <input class="house__radio" type="radio" name="house-part" id="house-hp" checked>
-          <input class="house__radio" type="radio" name="house-part" id="house-ac">
-          <input class="house__radio" type="radio" name="house-part" id="house-bo">
-          <input class="house__radio" type="radio" name="house-part" id="house-sv">
+        <div class="hs reveal">
+          <input class="hs__radio" type="radio" name="hs-tema" id="hs-ztraty">
+          <input class="hs__radio" type="radio" name="hs-tema" id="hs-rozvody" checked>
+          <input class="hs__radio" type="radio" name="hs-tema" id="hs-umisteni">
+          <input class="hs__radio" type="radio" name="hs-tema" id="hs-potreby">
 
-          <figure class="house__stage">
-            <!-- Průhledné plošky nad zařízeními. Jsou to <label> pro tatáž
-                 radia jako v seznamu, takže klik v domě a klik v seznamu vedou
-                 na JEDEN stav — nic se nedubluje a nepotřebuje to JS. Leží před
-                 <svg>, aby na něj dosáhl `~` při :hover. Pro odečítač jsou
-                 schované: ovládá se seznamem, tohle je jen zkratka myší/prstem.
-                 Plocha je schválně větší než kresba, ať se to dá trefit prstem. -->
-            <label class="house__hit house__hit--hp" for="house-hp" aria-hidden="true"></label>
-            <label class="house__hit house__hit--ac" for="house-ac" aria-hidden="true"></label>
-            <label class="house__hit house__hit--bo" for="house-bo" aria-hidden="true"></label>
-            <svg class="house__svg" viewBox="0 40 420 250" role="img"
-                 aria-label="Zjednodušené schéma domu: tepelné čerpadlo venku u domu, klimatizace v patře a kotel v přízemí.">
-              <!-- Konstrukce: silueta domu, strop mezi patry a jedna příčka.
-                   Víc čar tam schválně není — dům se má přečíst na první pohled. -->
-              <g class="h-base">
-                <path d="M108 134 227 56 346 134" />
-                <path d="M132 134V272M322 134V272" />
-                <path d="M132 200H322" />
-                <path d="M252 134V200" />
-                <rect x="266" y="146" width="36" height="30" />
-                <path d="M284 146v30" />
-                <path d="M268 272v-44h32v44" />
-                <circle cx="275" cy="251" r="1.8" />
-              </g>
-
-              <!-- Venkovní jednotka tepelného čerpadla: tělo, ventilátor, nožky. -->
-              <g class="h-part p-hp">
-                <rect x="44" y="222" width="60" height="46" rx="4" />
-                <circle cx="74" cy="245" r="13" />
-                <circle cx="74" cy="245" r="2" />
-                <path d="M52 268v4M96 268v4" />
-              </g>
-
-              <!-- Nástěnná klimatizace: podlouhlá jednotka se zaoblenými konci
-                   (schválně jiný tvar než okno) a naznačený proud vzduchu. -->
-              <g class="h-part p-ac">
-                <rect x="152" y="142" width="62" height="14" rx="7" />
-                <path d="M164 163l-4 8M180 163l-4 8M196 163l-4 8" />
-              </g>
-
-              <!-- Závěsný kotel: skříň, ovládací lišta a dvě přípojky dolů. -->
-              <g class="h-part p-bo">
-                <rect x="152" y="206" width="42" height="46" rx="4" />
-                <path d="M158 242h30" />
-                <path d="M163 252v8M183 252v8" />
-              </g>
-
-              <path class="h-ground" d="M8 272h404" />
-            </svg>
+          <figure class="hs__stage">
+            <img class="hs__img" src="/images/dum-rez-1520.webp"
+                 srcset="/images/dum-rez-820.webp 820w, /images/dum-rez-1140.webp 1140w, /images/dum-rez-1520.webp 1520w"
+                 sizes="(min-width: 961px) min(70vw, 820px), 92vw"
+                 width="1520" height="906" loading="lazy" decoding="async"
+                 alt="Řez rodinným domem: zateplená střecha a obvodové stěny, okna, radiátor v patře, podlahové vytápění v přízemí, technická místnost se zásobníkem teplé vody a venkovní jednotka u domu." />
+            <!-- Body jsou dekorace nad obrázkem — obsah nesou nadpis a odstavec
+                 v panelu, proto je odečítač přeskakuje. -->
+            <span class="hs__spots" aria-hidden="true">
+              <i class="hs__spot hs__spot--strecha"></i>
+              <i class="hs__spot hs__spot--stena"></i>
+              <i class="hs__spot hs__spot--okna"></i>
+              <i class="hs__spot hs__spot--radiator"></i>
+              <i class="hs__spot hs__spot--podlaha"></i>
+              <i class="hs__spot hs__spot--venku"></i>
+              <i class="hs__spot hs__spot--technika"></i>
+              <i class="hs__spot hs__spot--obytne"></i>
+              <i class="hs__spot hs__spot--loznice"></i>
+              <i class="hs__spot hs__spot--koupelna"></i>
+            </span>
           </figure>
 
-          <ul class="house__list">
-            <li class="house__item i-hp">
-              <label class="house__label" for="house-hp">
-                <span class="house__name">Tepelné čerpadlo</span>
-                <span class="house__desc">Návrh, montáž a nastavení systému.</span>
-              </label>
-            </li>
-            <li class="house__item i-ac">
-              <label class="house__label" for="house-ac">
-                <span class="house__name">Klimatizace</span>
-                <span class="house__desc">Chlazení i přitápění podle prostoru.</span>
-              </label>
-            </li>
-            <li class="house__item i-bo">
-              <label class="house__label" for="house-bo">
-                <span class="house__name">Kotel</span>
-                <span class="house__desc">Výměna, montáž a uvedení do provozu.</span>
-              </label>
-            </li>
-            <li class="house__item i-sv">
-              <label class="house__label" for="house-sv">
-                <span class="house__name">Servis</span>
-                <span class="house__desc">Údržba a opravy i po montáži.</span>
-              </label>
-            </li>
+          <div class="hs__panel" aria-live="polite">
+            <article class="hs__pane hs__pane--ztraty">
+              <h3>Tepelné ztráty domu</h3>
+              <p>Velikost domu, zateplení, okna a způsob větrání ovlivňují, kolik tepla je potřeba dodat.</p>
+            </article>
+            <article class="hs__pane hs__pane--rozvody">
+              <h3>Stávající vytápění</h3>
+              <p>Radiátory a podlahové topení kladou na zdroj tepla různé nároky.</p>
+            </article>
+            <article class="hs__pane hs__pane--umisteni">
+              <h3>Kam technologii umístit</h3>
+              <p>Při návrhu je potřeba zohlednit prostor, servisní přístup, vedení rozvodů i okolí domu.</p>
+            </article>
+            <article class="hs__pane hs__pane--potreby">
+              <h3>Co od systému očekáváte</h3>
+              <p>Návrh se odvíjí také od toho, zda má systém vytápět, chladit nebo připravovat teplou vodu.</p>
+            </article>
+          </div>
+
+          <ul class="hs__tabs">
+            <li><label class="hs__tab hs__tab--ztraty" for="hs-ztraty">
+              <svg class="hs__ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ztraty" /></svg>
+              <span>Tepelné ztráty</span></label></li>
+            <li><label class="hs__tab hs__tab--rozvody" for="hs-rozvody">
+              <svg class="hs__ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rozvody" /></svg>
+              <span>Rozvody</span></label></li>
+            <li><label class="hs__tab hs__tab--umisteni" for="hs-umisteni">
+              <svg class="hs__ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-umisteni" /></svg>
+              <span>Umístění</span></label></li>
+            <li><label class="hs__tab hs__tab--potreby" for="hs-potreby">
+              <svg class="hs__ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-potreby" /></svg>
+              <span>Potřeby</span></label></li>
           </ul>
         </div>
       </div>
