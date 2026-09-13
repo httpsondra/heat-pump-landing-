@@ -146,7 +146,7 @@
     }
   </style>
 
-  <link rel="stylesheet" href="/css/styles.css?v=54" />
+  <link rel="stylesheet" href="/css/styles.css?v=56" />
 </head>
 <body>
 
@@ -185,9 +185,9 @@
       <nav class="topnav" id="topnav" aria-label="Hlavní">
         <span class="topnav__indicator" aria-hidden="true"></span>
         <a href="#sluzby">Služby</a>
-        <a href="#postup">Postup</a>
+        <a href="#reseni">Řešení</a>
         <a href="#poptavka">Poptávka</a>
-        <a href="#faq">Časté dotazy</a>
+        <a href="#realizace">Realizace</a>
         <a href="#kontakt">Kontakt</a>
       </nav>
 
@@ -383,39 +383,6 @@
       </div>
     </section>
 
-    <!-- ================= JAK TO PROBÍHÁ ================= -->
-    <section class="section" id="postup">
-      <div class="container">
-        <header class="section__head reveal">
-          <p class="kicker">02 — Postup</p>
-          <h2>Od návrhu <br><span class="muted">po servis</span></h2>
-        </header>
-
-        <ol class="steps">
-          <li class="step reveal">
-            <span class="step__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 14 16 5l11 9"/><path d="M8 12.5V26h16V12.5"/><path d="M13 26v-7h6v7"/></svg></span>
-            <h3>Posouzení</h3>
-            <p>Zjistíme stav objektu a požadavky.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 5h13l5 5v17H7z"/><path d="M20 5v5h5"/><path d="M11 16h10M11 21h10"/></svg></span>
-            <h3>Návrh</h3>
-            <p>Navrhneme vhodné zařízení a výkon.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M21.5 6.5a5 5 0 0 0-6.4 6.4L6 22l4 4 9.1-9.1a5 5 0 0 0 6.4-6.4l-3 3-3-3z"/></svg></span>
-            <h3>Montáž</h3>
-            <p>Namontujeme a zprovozníme.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3 6 7v8c0 6.2 4.2 11.8 10 14 5.8-2.2 10-7.8 10-14V7z"/><path d="m11.5 15.5 3.2 3.2 6-6.4"/></svg></span>
-            <h3>Servis</h3>
-            <p>Zůstáváme k dispozici i potom.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
     <!-- ================= JEDNO ŘEŠENÍ PRO CELÝ DŮM ================= -->
     <!-- Dům je tu hlavní vizuál, ne dekorace: ukazuje, KDE v objektu která
          služba sedí. Ovládá se výběrem v seznamu (radio + :checked), takže
@@ -425,7 +392,7 @@
       <div class="container">
         <header class="section__head section__head--split reveal">
           <div>
-            <p class="kicker">03 — Řešení</p>
+            <p class="kicker">02 — Řešení</p>
             <h2>Jedno řešení<br><span class="muted">pro celý dům</span></h2>
           </div>
           <p class="section__sub">Vytápění, chlazení i servis podle konkrétního objektu.</p>
@@ -533,9 +500,9 @@
 
           <figure class="about__photo reveal">
             <div class="about__frame">
-              <span class="about__note">Foto — doplnit</span>
+              <img src="/images/o-nas.webp" alt="Venkovní jednotka tepelného čerpadla na betonovém základu"
+                   width="820" height="1025" loading="lazy" decoding="async" />
             </div>
-            <figcaption class="about__cap">Milan Dušek <span>— MD-Therm</span></figcaption>
           </figure>
 
           <ol class="about__route reveal">
@@ -566,7 +533,7 @@
     <section class="section section--airy" id="poptavka">
       <div class="container">
         <header class="section__head reveal">
-          <p class="kicker">04 — Poptávka</p>
+          <p class="kicker">03 — Poptávka</p>
           <h2>Řekněte nám, co potřebujete<br><span class="muted">ozveme se vám</span></h2>
           <p class="section__sub" style="margin-inline:auto">Pár otázek, ať víme, o co jde. Zabere přibližně 2 minuty, nezávazně a zdarma.</p>
         </header>
@@ -757,7 +724,7 @@
     <section class="section section--tight" id="faq">
       <div class="container">
         <header class="section__head reveal">
-          <p class="kicker">05 — Časté dotazy</p>
+          <p class="kicker">04 — Časté dotazy</p>
           <h2>Časté dotazy</h2>
         </header>
 
@@ -808,17 +775,19 @@
 
     <!--
       REALIZACE:
-      Replace placeholder assets below with real MD-Therm installation photos.
-      Keep filenames / structure where possible.
-      Do not use stock photography.
+      Skutečné fotky z montáží MD-Therm. Žádná stocková fotografie.
 
-      Až budou skutečné fotky:
-        1) přepiš soubory /images/realizace/realizace-01…08.webp (poměr 3:2),
-        2) v alt nahraď „Zástupný obrázek…“ za „Realizace MD-Therm“
-           (jednorázově: sed -i '' 's/Zástupný obrázek — místo pro fotku realizace/Realizace MD-Therm/g'),
+      Poměr je 4:5 na výšku, ne 3:2 na šířku: zdrojové fotky z telefonu jsou
+      na výšku a svislé jsou i samotné předměty — venkovní jednotky, zásobníky,
+      rozdělovače. Při 3:2 se jim uřízl vršek. Stejný poměr má i rám v „O nás“.
+
+      Když se sada mění:
+        1) soubory /images/realizace/realizace-01…10.webp, 480×600 (2× karty),
+        2) alt popisuje jen to, co je na fotce vidět,
         3) NEVYMÝŠLET lokality, modely zařízení ani jména zákazníků —
-           popisek se přidává jen tehdy, když údaj opravdu známe.
-      Fotky musí být reálné, žádné generované ani stockové.
+           popisek se přidává jen tehdy, když údaj opravdu známe,
+        4) skupina B je kopie skupiny A s aria-hidden — musí zůstat shodná,
+           jinak odečítač přečte pás dvakrát.
     -->
     <section class="section section--soft" id="realizace">
       <div class="container">
@@ -831,23 +800,27 @@
       <div class="marquee marquee--work">
         <ul class="marquee__track">
           <!-- skupina A — jediné položky, které čte odečítač -->
-          <li class="marquee__item"><img src="/images/realizace/realizace-01.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item"><img src="/images/realizace/realizace-02.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item"><img src="/images/realizace/realizace-03.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item"><img src="/images/realizace/realizace-04.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item"><img src="/images/realizace/realizace-05.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item"><img src="/images/realizace/realizace-06.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item"><img src="/images/realizace/realizace-07.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item"><img src="/images/realizace/realizace-08.webp" alt="Zástupný obrázek — místo pro fotku realizace" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-01.webp" alt="Dvě venkovní jednotky tepelného čerpadla u domu" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-02.webp" alt="Rozdělovač otopných okruhů s čerpadlovými skupinami" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-03.webp" alt="Dvě venkovní jednotky tepelného čerpadla na betonových základech" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-04.webp" alt="Uzávěry a regulace na izolovaném potrubí" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-05.webp" alt="Venkovní jednotky tepelného čerpadla u opěrné zdi" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-06.webp" alt="Zásobník teplé vody s měděným rozvodem" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-07.webp" alt="Venkovní jednotka tepelného čerpadla na betonovém základu" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-08.webp" alt="Vnitřní jednotka se zásobníkem a rozdělovačem" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-09.webp" alt="Venkovní jednotka tepelného čerpadla u domu" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item"><img src="/images/realizace/realizace-10.webp" alt="Nástěnná jednotka s měděným rozvodem" width="480" height="600" loading="lazy" decoding="async" /></li>
           <!-- skupina B — identická kopie, aby posun o -50 % navazoval -->
-          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-01.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-02.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-03.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-04.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-05.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-06.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-07.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
-          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-08.webp" alt="" width="1200" height="800" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-01.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-02.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-03.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-04.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-05.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-06.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-07.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-08.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-09.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
+          <li class="marquee__item" aria-hidden="true"><img src="/images/realizace/realizace-10.webp" alt="" width="480" height="600" loading="lazy" decoding="async" /></li>
         </ul>
       </div>
     </section>
@@ -871,7 +844,7 @@
       <div class="container">
         <header class="section__head section__head--split reveal">
           <div>
-            <p class="kicker">06 — Kontakt</p>
+            <p class="kicker">05 — Kontakt</p>
             <h2>Kontakt — MD-Therm<br><span class="muted">Praha 4</span></h2>
           </div>
           <p class="section__sub">Nejrychleji telefonicky.</p>

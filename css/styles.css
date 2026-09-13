@@ -564,7 +564,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* Záměrně nepravidelný vertikální rytmus — některé sekce dýchají víc, jiné jsou sevřenější */
 #sluzby  { padding-block: clamp(64px, 10vh, 132px) clamp(60px, 9vh, 116px); }
-#postup  { padding-block: clamp(56px, 8vh, 104px); }
 #reseni  { padding-block: clamp(80px, 13vh, 168px); }
 #kontakt { padding-block: clamp(56px, 8vh, 104px) clamp(48px, 7vh, 92px); }
 
@@ -624,19 +623,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     border-color: var(--line-strong);
   }
 }
-
-/* ---------- Postup ---------- */
-/* Čtyři kroky vedené ikonou. Bez karet, bez čísel a bez spojnice — sekce
-   má být klidný přehled, ne stepper. Strukturu drží ikony a bílé místo,
-   stejně jako u ostatních čtyřsloupců na stránce. */
-.steps {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: clamp(24px, 3vw, 48px); list-style: none;
-}
-.step__icon { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 1rem; color: var(--accent-dark); }
-.step__icon svg { width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.step h3 { font-size: 1.02rem; letter-spacing: -.01em; font-weight: 700; }
-.step p { color: var(--ink-soft); font-size: var(--fs-sm); line-height: 1.6; margin-top: .4rem; }
 
 /* ---------- Jedno řešení pro celý dům ---------- */
 /* Dům vlevo, výběr vpravo. Stav drží čtyři radia před oběma bloky, takže
@@ -768,32 +754,21 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .about__meta  { grid-area: meta; }
 
 /* --- fotka --- */
-/* 4:5 na výšku = cílový poměr. Až přijde reálná fotka, mění se jen zdroj
-   obrázku uvnitř .about__frame, rozvrh zůstává. */
+/* 4:5 na výšku. Pozadí zůstává: než se líná fotka načte, drží rám tón
+   stránky místo bílé díry. */
 .about__frame {
   position: relative;
   aspect-ratio: 4 / 5;
   background: var(--bg-soft);
   overflow: hidden;
 }
-/* Dva protilehlé rohy místo rámečku — značka pro umístění obrazu, ne karta. */
-.about__frame::before,
-.about__frame::after {
-  content: ''; position: absolute; width: 24px; height: 24px;
-  border: 1px solid var(--line-strong);
+/* Rohové značky a popisek „Foto — doplnit" tu byly, dokud byl rám prázdný.
+   Přes skutečnou fotku by z nich zůstaly dva šedé úhelníky ležící na obraze,
+   proto jsou pryč i s pravidly pro .about__note a .about__cap. */
+.about__frame img {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover;
 }
-.about__frame::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
-.about__frame::after { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
-.about__note {
-  position: absolute; left: 16px; bottom: 14px;
-  font-family: var(--mono); font-size: var(--fs-mono);
-  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft);
-}
-.about__cap {
-  margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line);
-  font-size: var(--fs-sm); font-weight: 600; color: var(--ink);
-}
-.about__cap span { font-weight: 400; color: var(--ink-soft); }
 
 /* --- anotační linka --- */
 /* Páteř + loket doleva k fotce. Rozestupy kroků jsou schválně nestejné,
@@ -1002,10 +977,6 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 .grid--services .card:nth-child(2).is-in { transition-delay: 80ms; }
 .grid--services .card:nth-child(3).is-in { transition-delay: 160ms; }
 .grid--services .card:nth-child(4).is-in { transition-delay: 240ms; }
-.steps .step:nth-child(1).is-in { transition-delay: 0ms; }
-.steps .step:nth-child(2).is-in { transition-delay: 90ms; }
-.steps .step:nth-child(3).is-in { transition-delay: 180ms; }
-.steps .step:nth-child(4).is-in { transition-delay: 270ms; }
 
 /* =========================================================================
    Responsivita
@@ -1014,7 +985,6 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   /* .topnav se skrývá v bloku mobilního menu výše — nedublovat, jinak se
      při pozdější úpravě menu tiše rozbije. */
   .grid--services { grid-template-columns: repeat(2, 1fr); }
-  .steps { grid-template-columns: repeat(2, 1fr); }
   /* Dům nad seznam. Nezmenšovat do šířky sloupce — popisky by se slily. */
   /* Mobilní pořadí je jiné než desktopové: nejdřív text, pak fotka,
      nakonec linka a údaje. Proto se přerovnávají oblasti, ne jen sloupce. */
@@ -1092,7 +1062,6 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
 
   .grid--services { grid-template-columns: 1fr; }
   /* 2x2 zůstává i na telefonu — jeden sloupec by sekci zbytečně natáhl. */
-  .steps { gap: 1.9rem 1.4rem; }
   .about { gap: 26px; }
   .about__photo { max-width: 100%; }
   .about__frame::before, .about__frame::after { width: 18px; height: 18px; }
@@ -1126,7 +1095,6 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   .hero__copy .cta-row { flex-direction: column; align-items: stretch; }
   .hero__copy .cta-row .btn { flex: none; width: 100%; }
   /* Pod 375 px už se do dvou sloupců krátký popisek neláme čitelně. */
-  .steps { grid-template-columns: 1fr; gap: 1.7rem; }
 }
 
 /* =========================================================================
@@ -1321,9 +1289,13 @@ html.reveal-fallback .section__head h2 .muted { opacity: 1 !important; transform
   animation-duration: 90s;
   list-style: none; margin: 0; padding: 0;
 }
-.marquee--work .marquee__item { display: block; width: clamp(240px, 27vw, 360px); }
+/* Karty jsou na výšku (4:5), ne na šířku. Fotky z montáží jsou svislé a svislé
+   jsou i ty věci na nich — venkovní jednotky, zásobníky, rozdělovače. V 3:2 se
+   jim ořezával vršek. Šířka klesla z 240–360 px na 170–240 px, aby pás při
+   vyšším formátu nezabral půl obrazovky. */
+.marquee--work .marquee__item { display: block; width: clamp(170px, 18vw, 240px); }
 .marquee--work img {
-  width: 100%; height: auto; aspect-ratio: 3 / 2;
+  width: 100%; height: auto; aspect-ratio: 4 / 5;
   object-fit: cover; border-radius: var(--r-md);
   background: var(--bg-soft);
 }
