@@ -528,11 +528,11 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .marquee__item { flex: none; display: flex; align-items: center; }
 
+/* Loga jdou v původních barvách značek. Dřív tu byl grayscale(1) a krytí 55 %,
+   aby pás nekonkuroval oranžovému akcentu — teď je hlavní, že značky jsou
+   rozpoznatelné na první pohled. */
 .brand-logo {
   width: auto; display: block;
-  filter: grayscale(1) contrast(1.05);
-  opacity: .55;
-  transition: opacity .3s var(--ease);
 }
 /* Výšky vyrovnané kvůli rozdílnému vnitřnímu okraji v originálních souborech */
 .brand-logo--protherm { height: clamp(36px, 4.8vw, 56px); aspect-ratio: 1440 / 810; }
@@ -544,9 +544,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
    samotného nápisu, takže opticky sedí ~17 px. */
 .brand-logo--gree  { height: clamp(11px, 1.45vw, 17px); aspect-ratio: 817 / 160; }
 .brand-logo--bosch { height: clamp(11px, 1.45vw, 17px); aspect-ratio: 718 / 160; }
-@media (hover: hover) and (pointer: fine) {
-  .marquee__item:hover .brand-logo { opacity: .85; }
-}
+/* Hover dřív loga vytahoval z 55 % na 85 % krytí. Když jsou vidět naplno,
+   nemá co odkrývat — a s plným krytím by je najetí myší naopak ztmavilo. */
 @media (prefers-reduced-motion: reduce) {
   .marquee__track { animation: none; transform: translateX(0); }
 }
