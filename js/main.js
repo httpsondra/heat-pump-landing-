@@ -343,7 +343,11 @@
       window.ScrollTrigger.create({
         trigger: '.hero',
         start: 'top top',
-        end: function () { return '+=' + Math.round(window.innerHeight * 3.2); },
+        /* Délka pinu = jak dlouho se scrolluje přes hero. 3,2 výšky okna byly
+           na projetí zdlouhavé; 2,4 je o čtvrtinu kratší a na 150 snímků pořád
+           vychází ~14 px scrollu na snímek, takže sekvence zůstává plynulá.
+           Všechno ostatní v hero jede na progressu 0–1, takže se přeškáluje samo. */
+        end: function () { return '+=' + Math.round(window.innerHeight * 2.4); },
         pin: '.hero__stage',
         pinSpacing: true,
         scrub: 1,                 /* delší doběh = plynulejší glide, míň „skákání" snímků */
