@@ -343,11 +343,12 @@
       window.ScrollTrigger.create({
         trigger: '.hero',
         start: 'top top',
-        /* Délka pinu = jak dlouho se scrolluje přes hero. 3,2 výšky okna byly
-           na projetí zdlouhavé; 2,4 je o čtvrtinu kratší a na 150 snímků pořád
-           vychází ~14 px scrollu na snímek, takže sekvence zůstává plynulá.
+        /* Délka pinu = jak dlouho se scrolluje přes hero. Původní 3,2 výšky okna
+           byly na projetí zdlouhavé, 2,0 je o 37 % kratší. Na 150 snímků z toho
+           vychází ~12 px scrollu na snímek, což je pořád plynulé. Níž než ~1,8
+           se snímky začnou přeskakovat a rozklad čerpadla přestane být čitelný.
            Všechno ostatní v hero jede na progressu 0–1, takže se přeškáluje samo. */
-        end: function () { return '+=' + Math.round(window.innerHeight * 2.4); },
+        end: function () { return '+=' + Math.round(window.innerHeight * 2.0); },
         pin: '.hero__stage',
         pinSpacing: true,
         scrub: 1,                 /* delší doběh = plynulejší glide, míň „skákání" snímků */
