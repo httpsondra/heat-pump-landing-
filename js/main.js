@@ -344,11 +344,11 @@
         trigger: '.hero',
         start: 'top top',
         /* Délka pinu = jak dlouho se scrolluje přes hero. Původní 3,2 výšky okna
-           byly na projetí zdlouhavé, 2,0 je o 37 % kratší. Na 150 snímků z toho
-           vychází ~12 px scrollu na snímek, což je pořád plynulé. Níž než ~1,8
-           se snímky začnou přeskakovat a rozklad čerpadla přestane být čitelný.
+           byly na projetí zdlouhavé, 1,8 je o 44 % kratší. Na 150 snímků z toho
+           vychází ~11 px scrollu na snímek. Je to spodní hranice: níž už scrub
+           nestíhá vykreslit každý snímek a rozklad čerpadla se začne trhat.
            Všechno ostatní v hero jede na progressu 0–1, takže se přeškáluje samo. */
-        end: function () { return '+=' + Math.round(window.innerHeight * 2.0); },
+        end: function () { return '+=' + Math.round(window.innerHeight * 1.8); },
         pin: '.hero__stage',
         pinSpacing: true,
         scrub: 1,                 /* delší doběh = plynulejší glide, míň „skákání" snímků */
