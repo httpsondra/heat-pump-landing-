@@ -82,22 +82,22 @@
     return FAIL_REASONS.indexOf(r) >= 0 ? r : 'unknown';
   }
 
-  /* Kontext jednoho pokusu o poptávku: odkud člověk k formuláři přišel.
-     Vlastní klíč (ne koncept `save()`), aby obnova rozepsané poptávky
-     nezačala omylem považovat pouhý klik na CTA za zahájený formulář. */
-  var CTX_STORE = 'md-poptavka-ctx-v1';
-  function readCtx() {
-    try { return JSON.parse(sessionStorage.getItem(CTX_STORE) || '{}') || {}; }
-    catch (e) { return {}; }
-  }
+  /* Kontext jednoho pokusu o poptávku: odkud člověk k formuláři přišel
+     a jakou službu měl vybranou na kartě.
+
+     Dřív to byl klíč `md-poptavka-ctx-v1` v sessionStorage. Je to ale údaj
+     pro analytiku, ne pro chod formuláře — a výjimka pro nezbytné úložiště
+     se řídí ÚČELEM, ne tím, jak dlouho záznam vydrží. Proto je i tohle jen
+     v paměti: klik na CTA i odeslání se dějí v jednom načtení stránky,
+     takže se chování nemění. Formulář si svoje odpovědi ukládá dál
+     (`save()`), tohle je oddělené schválně — pouhý klik na CTA nesmí
+     vypadat jako zahájená poptávka. */
+  var CTX = {};
+  function readCtx() { return CTX; }
   function writeCtx(patch) {
-    try {
-      var c = readCtx();
-      Object.keys(patch).forEach(function (k) { c[k] = patch[k]; });
-      sessionStorage.setItem(CTX_STORE, JSON.stringify(c));
-    } catch (e) {}
+    Object.keys(patch).forEach(function (k) { CTX[k] = patch[k]; });
   }
-  function clearCtx() { try { sessionStorage.removeItem(CTX_STORE); } catch (e) {} }
+  function clearCtx() { CTX = {}; }
 
   /* Vlastnosti, které nese inquiry_started i inquiry_submitted. */
   function ctxProps() {
@@ -108,47 +108,28 @@
   }
 
   /* -----------------------------------------------------------------------
-     První dotyk (first-touch) — podklad pro pozdější spojení s CRM.
-     Drží kampaň, přes kterou člověk přišel poprvé, i když se pak vrátí přímo.
-     Platnost 90 dní: uvnitř okna se nepřepisuje, po vypršení smí příští
-     návštěva založit nový snímek. Jen marketingové
-     parametry, žádné osobní údaje. Od Fáze 2A se PŘIKLÁDÁ k odeslané
-     poptávce (viz `sendConfirmation`) a CRM si ho uloží k poptávce
-     natrvalo. Zakládání a platnost se tím NEMĚNÍ — snímek se jen čte.
-     Podrobnosti v docs/analytics.md.
+     Původ návštěvy — POUZE V PAMĚTI.
+     -----------------------------------------------------------------------
+     Dřív tu byl „první dotyk" uložený v localStorage na 90 dní. To je podle
+     § 89 odst. 3 zákona č. 127/2005 Sb. netechnické úložiště a vyžadovalo by
+     předchozí souhlas. Web tuhle cestu nejde: nic trvalého se do prohlížeče
+     neukládá a banner proto není potřeba.
+
+     Zůstává původ AKTUÁLNÍ návštěvy. Zachytí se jednou při načtení stránky
+     a žije v téhle proměnné do zavření karty. Web je jedna stránka s kotvami,
+     takže když někdo přijde z kampaně a hned odešle poptávku, atribuce
+     dorazí do CRM úplně stejně jako dřív.
+
+     Co se tím ztrácí: návrat za týden už kampaň nenese — z pohledu atribuce
+     je to přímá návštěva. A protože main.js při překročení 860 px stránku
+     reloaduje, přežije otočení tabletu rozepsaná poptávka (sessionStorage),
+     ale původ návštěvy ne.
+
+     Tvar objektu se NEMĚNÍ — CRM má na něj whitelist v `api/_crm.mjs`
+     (ATTRIBUTION_FIELDS) a ten zůstává beze změny.
      ----------------------------------------------------------------------- */
-  var FIRST_TOUCH_STORE = 'md-first-touch-v1';
-  var FIRST_TOUCH_MAX_AGE_MS = 90 * 24 * 60 * 60 * 1000;   // 90 dní
-
-  /* Platí, dokud je snímku míň než 90 dní. Uvnitř okna se NEPŘEPISUJE ani
-     neobnovuje `captured_at` — jinak by z prvního dotyku vznikl posuvný
-     poslední dotyk. Po vypršení smí příští návštěva založit nový. */
-  function firstTouchAlive(snap) {
-    if (!snap || !snap.captured_at) return false;
-    var t = Date.parse(snap.captured_at);
-    if (!t) return false;
-    return (Date.now() - t) < FIRST_TOUCH_MAX_AGE_MS;
-  }
-
-  /* Snímek k PŘILOŽENÍ k poptávce. Jen se ČTE — nic se nezakládá,
-     nepřepisuje ani neobnovuje; `captured_at` zůstává z prvního dotyku.
-     Neplatný, vypršelý, rozbitý i nedostupný snímek = `null`, a poptávka
-     jde dál bez něj. Analytika nikdy nesmí zdržet ani shodit lead. */
-  function firstTouchSnapshot() {
+  var VISIT_SOURCE = (function captureVisitSource() {
     try {
-      var snap = JSON.parse(localStorage.getItem(FIRST_TOUCH_STORE) || 'null');
-      return firstTouchAlive(snap) ? snap : null;
-    } catch (e) {
-      return null;                                   // privátní režim, zakázané úložiště
-    }
-  }
-
-  (function captureFirstTouch() {
-    try {
-      var existing = null;
-      try { existing = JSON.parse(localStorage.getItem(FIRST_TOUCH_STORE) || 'null'); } catch (e) {}
-      if (firstTouchAlive(existing)) return;               // v okně → nesahat
-
       var q = new URLSearchParams(location.search);
       var snap = { captured_at: new Date().toISOString(), landing_page: location.pathname };
       ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
@@ -157,9 +138,15 @@
       ['gclid', 'fbclid'].forEach(function (k) { if (q.get(k)) snap.click_id = k; });
       var ref = doc.referrer || '';
       if (ref) { try { snap.initial_referrer = new URL(ref).hostname; } catch (e) {} }
-      localStorage.setItem(FIRST_TOUCH_STORE, JSON.stringify(snap));
-    } catch (e) { /* privátní režim / zakázané úložiště — analytika se nevnucuje */ }
+      return snap;
+    } catch (e) {
+      return null;              // cokoli selže → poptávka jde dál bez původu
+    }
   })();
+
+  /* Snímek k PŘILOŽENÍ k poptávce. Jen čte proměnnou — nic nezakládá
+     a `captured_at` se po zachycení už nemění. */
+  function visitSource() { return VISIT_SOURCE; }
 
   /* -----------------------------------------------------------------------
      Telefon a e-mail — jedno jméno události, místo nese vlastnost.
@@ -347,6 +334,14 @@
         if (el.type === 'radio') { if (el.checked) d.v[el.name] = el.value; }
         else d.v[el.name] = el.value;
       });
+      /* Prázdný formulář se neukládá. `save()` se volá i při prvním
+         vykreslení kroku 1, takže bez tohohle by klíč vznikl každému
+         návštěvníkovi hned při načtení — i tomu, kdo se formuláře ani
+         nedotkne. Úložiště je nezbytné pro rozepsanou poptávku, o kterou
+         člověk sám požádal; dokud žádná není, není co ukládat. */
+      var prazdny = d.step === 1 && Object.keys(d.v).every(function (k) { return !d.v[k]; });
+      if (prazdny && sessionStorage.getItem(STORE) === null) return;
+
       sessionStorage.setItem(STORE, JSON.stringify(d));
     } catch (e) {}
   }
@@ -817,9 +812,9 @@
              pro CRM a tutéž hodnotu pošle i v těle, aby se poptávka dala
              spárovat s konverzí v PostHogu. */
           submissionId: d.submissionId,
-          /* Odkud návštěvník přišel poprvé. `null` je platná odpověď —
-             přímá návštěva, vypršelý snímek i vypnuté úložiště. */
-          attribution: firstTouchSnapshot()
+          /* Odkud návštěvník přišel v TÉTO návštěvě. `null` je platná
+             odpověď — přímá návštěva nebo nedostupné `location`. */
+          attribution: visitSource()
         })
       }).then(function (r) {
         /* Úspěch se nehlásí — zajímavé je jen selhání: poptávka je ve

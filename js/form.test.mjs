@@ -2,7 +2,7 @@
    Prohlížečová půlka mostu do CRM
    -------------------------------------------------------------------------
    `js/form.js` je jeden IIFE pro prohlížeč: sahá na `document`, `window`
-   a `localStorage` hned při načtení, takže se v Node nedá spustit ani
+   a `sessionStorage` hned při načtení, takže se v Node nedá spustit ani
    importovat. Kdyby se kvůli testu rozřezal na moduly, byla by to přestavba
    celého formuláře — a ta se kvůli jednomu mostu dělat nemá.
 
@@ -39,50 +39,54 @@ function body(source, name) {
   throw new Error('konec funkce ' + name + ' se nenašel');
 }
 
-describe('snímek prvního dotyku se k poptávce PŘIKLÁDÁ', () => {
-  const reader = body(FORM, 'firstTouchSnapshot');
+describe('původ návštěvy se k poptávce PŘIKLÁDÁ — a NIKAM se neukládá', () => {
+  const reader = body(FORM, 'captureVisitSource');
 
-  it('poptávka veze surový identifikátor odeslání i snímek', () => {
+  it('poptávka veze surový identifikátor odeslání i původ návštěvy', () => {
     const send = body(FORM, 'sendConfirmation');
 
     assert.match(send, /submissionId: d\.submissionId/);
-    assert.match(send, /attribution: firstTouchSnapshot\(\)/);
+    assert.match(send, /attribution: visitSource\(\)/);
   });
 
-  it('čte se TÝŽ snímek, který už prohlížeč má', () => {
-    // Klíč i pravidlo platnosti jsou ty existující — žádné druhé úložiště
-    // a žádné druhé okno platnosti.
-    assert.match(reader, /localStorage\.getItem\(FIRST_TOUCH_STORE\)/);
-    assert.match(reader, /firstTouchAlive\(snap\)/);
+  /* Tohle je to podstatné a je to důvod, proč web nemá lištu se souhlasem.
+     Trvalé úložiště pro marketingovou atribuci je podle § 89 odst. 3 zákona
+     č. 127/2005 Sb. netechnické a vyžadovalo by předchozí souhlas. Kdyby se
+     sem localStorage nebo cookie vrátily, web by se tiše dostal do rozporu
+     a nikdo by si toho nevšiml — data by dál vypadala rozumně. */
+  it('původ návštěvy NESMÍ sáhnout na trvalé úložiště', () => {
+    assert.equal(reader.includes('localStorage'), false);
+    assert.equal(reader.includes('sessionStorage'), false);
+    assert.equal(reader.includes('document.cookie'), false);
   });
 
-  it('nic se při čtení nezakládá ani nepřepisuje', () => {
-    /* Tohle je to podstatné. Kdyby čtení snímek zakládalo nebo obnovovalo
-       `captured_at`, přestal by to být PRVNÍ dotyk a stal by se z něj
-       posuvný poslední — a nikdo by si toho nevšiml, protože data by dál
-       vypadala rozumně. */
-    assert.equal(reader.includes('setItem'), false);
-    assert.equal(reader.includes('captured_at'), false);
-    assert.equal(reader.includes('Date.now'), false);
-    assert.equal(reader.includes('URLSearchParams'), false);
+  it('v celém souboru nezůstala žádná trvalá atribuce', () => {
+    assert.equal(FORM.includes('md-first-touch'), false);
+    assert.equal(FORM.includes('FIRST_TOUCH'), false);
+    /* Hlídá se VOLÁNÍ, ne slovo: `localStorage` smí zůstat v komentáři,
+       který vysvětluje, proč se odtud trvalé úložiště odstranilo. */
+    assert.equal(/localStorage\s*\./.test(FORM), false);
+    assert.equal(/document\.cookie/.test(FORM), false);
   });
 
-  it('nedostupné ani rozbité úložiště poptávku nezastaví', () => {
-    // Privátní režim, zakázané úložiště, poškozený JSON — všechno končí
-    // jako `null` a poptávka jde dál bez původu.
+  it('čtení původu nic nezakládá ani nepřepisuje', () => {
+    // `visitSource()` jen vrací proměnnou — žádné zachytávání za běhu,
+    // jinak by se z původu návštěvy stal posuvný poslední dotyk.
+    const getter = body(FORM, 'visitSource');
+    assert.equal(getter.includes('URLSearchParams'), false);
+    assert.equal(getter.includes('captured_at'), false);
+  });
+
+  it('nedostupné `location` poptávku nezastaví', () => {
     assert.match(reader, /try\s*\{/);
     assert.match(reader, /catch\s*\(e\)\s*\{[\s\S]*return null/);
-    assert.match(reader, /\|\|\s*'null'/);
   });
 
-  it('vypršelý snímek se neposílá', () => {
-    // Platnost rozhoduje `firstTouchAlive`, tedy existující 90denní okno.
-    assert.match(reader, /return firstTouchAlive\(snap\) \? snap : null/);
-  });
-
-  it('okno platnosti zůstalo 90 dní a nepřepisuje se', () => {
-    assert.match(FORM, /FIRST_TOUCH_MAX_AGE_MS = 90 \* 24 \* 60 \* 60 \* 1000/);
-    assert.match(FORM, /if \(firstTouchAlive\(existing\)\) return;/);
+  it('tvar snímku zůstal shodný se smlouvou CRM', () => {
+    // api/_crm.mjs má na tahle pole whitelist (ATTRIBUTION_FIELDS).
+    for (const f of ['captured_at', 'landing_page', 'utm_source', 'click_id', 'initial_referrer']) {
+      assert.ok(reader.includes(f), f);
+    }
   });
 });
 
@@ -152,7 +156,7 @@ describe('do analytiky nejde nic osobního', () => {
     const attribution = send.slice(send.indexOf('attribution:'));
 
     // Za `attribution:` stojí volání čtečky, ne skládání objektu z `d`.
-    assert.match(attribution, /^attribution: firstTouchSnapshot\(\)/);
+    assert.match(attribution, /^attribution: visitSource\(\)/);
     for (const pii of ['d.jmeno', 'd.email', 'd.telefon', 'd.mesto', 'd.psc', 'd.popis']) {
       assert.equal(attribution.split('\n')[0].includes(pii), false, pii);
     }
@@ -197,5 +201,23 @@ describe('základ z Fáze 1 zůstal nedotčený', () => {
 
   it('profily jen u identifikovaných', () => {
     assert.match(INDEX, /person_profiles: 'identified_only'/);
+  });
+
+  /* Bez tohohle si posthog-js drží identifikátor v cookie (platnost rok)
+     i v localStorage — netechnické úložiště, které by vyžadovalo předchozí
+     souhlas. Tohle jediné nastavení drží lištu se souhlasem pryč. */
+  it('PostHog neukládá nic do zařízení', () => {
+    assert.match(INDEX, /cookieless_mode: 'always'/);
+  });
+
+  /* V cookieless režimu je trvalý identifikátor podle GDPR osobní údaj —
+     `identify()` by tím celý smysl režimu zrušil a `alias()` ingestní linka
+     stejně zahodí. Ani jedno nikde nevoláme; kdyby se to změnilo, ať to
+     spadne tady a ne až v datech. */
+  it('v cookieless režimu se neidentifikuje', () => {
+    assert.equal(/posthog\.identify\s*\(/.test(INDEX), false);
+    assert.equal(/posthog\.alias\s*\(/.test(INDEX), false);
+    assert.equal(/posthog\.identify\s*\(/.test(FORM), false);
+    assert.equal(/posthog\.alias\s*\(/.test(FORM), false);
   });
 });

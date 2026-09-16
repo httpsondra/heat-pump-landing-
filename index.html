@@ -146,7 +146,7 @@
     }
   </style>
 
-  <link rel="stylesheet" href="/css/styles.css?v=64" />
+  <link rel="stylesheet" href="/css/styles.css?v=66" />
 </head>
 <body>
 
@@ -693,6 +693,15 @@
             <button type="submit" class="btn btn--primary btn--lg" id="inquirySubmit" hidden>Odeslat nezávaznou poptávku</button>
           </div>
 
+          <!-- Informační poznámka, ne zaškrtávátko. Poptávka se zpracovává jako
+               jednání o smlouvě na žádost zákazníka (čl. 6 odst. 1 písm. b GDPR),
+               takže souhlas není tím správným právním základem a vynucovat ho
+               by bylo zavádějící. Odkaz na zásady stačí. -->
+          <p class="inquiry__micro inquiry__legal">
+            Odesláním formuláře posíláte nezávaznou poptávku. Informace o zpracování osobních údajů
+            najdete v <a href="/ochrana-osobnich-udaju.html">zásadách ochrany osobních údajů</a>.
+          </p>
+
           <noscript>
             <p class="inquiry__micro">Formulář vyžaduje JavaScript. Zavolejte prosím na <a href="tel:+420703888830"><strong>+420 703 888 830</strong></a> nebo napište na <a href="mailto:dusek@md-therm.cz">dusek@md-therm.cz</a>.</p>
           </noscript>
@@ -913,7 +922,11 @@
     </div>
     <div class="container footer__legal">
       <span>© <span id="year">2026</span> Milan Dušek</span>
-      <span>Severovýchodní VI. 1525/29, 141 00 Praha 4</span>
+      <nav class="footer__links" aria-label="Právní informace">
+        <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+        <a href="/cookies.html">Cookies</a>
+        <a href="/informace-pro-spotrebitele.html">Informace pro spotřebitele</a>
+      </nav>
     </div>
   </footer>
 
@@ -996,7 +1009,7 @@
   <!-- Formulář, FAQ a mobilní lišta jsou ve vlastním souboru schválně: main.js
        se v mobilním/reduced-motion režimu ukončuje dřív (early return), takže
        cokoli přidaného na jeho konec by na telefonech vůbec neexistovalo. -->
-  <script src="/js/form.js?v=50" defer></script>
+  <script src="/js/form.js?v=51" defer></script>
 
   <!-- =====================================================================
        PostHog — jen na produkci, mimo kritickou cestu vykreslení.
@@ -1038,7 +1051,41 @@
              jeden pageview. Web je jedna stránka s kotvami (#sluzby,
              #poptavka, …) a režim 'history_change' by z každé kotvy udělal
              další pageview. */
-          capture_pageview: true
+          capture_pageview: true,
+
+          /* Tohle je důvod, proč web nemá lištu se souhlasem.
+             Ve výchozím nastavení si posthog-js drží identifikátor návštěvníka
+             v cookie (platnost rok) i v localStorage. To je podle § 89 odst. 3
+             zákona č. 127/2005 Sb. netechnické úložiště a vyžadovalo by
+             předchozí souhlas — analytika pod výjimku pro nezbytné cookies
+             nespadá.
+
+             V režimu 'always' neukládá posthog-js do prohlížeče vůbec nic:
+             místo identifikátoru pošle zástupnou hodnotu `$posthog_cookieless`
+             a skutečný identifikátor si dopočítá server PostHogu jako otisk
+             (hash) z IP adresy, hlavičky User-Agent a domény, se solí, která
+             se pravidelně mění. Do zařízení návštěvníka se nezapíše žádná
+             cookie ani klíč v localStorage — změřeno v čistém prohlížeči.
+
+             POZOR, tenhle režim NENÍ jen věc kódu. Musí k němu být zapnuté
+             „Cookieless server hash mode“ v nastavení projektu (Settings →
+             Web analytics). Když zapnuté není, události se pořád odesílají
+             a jsou VIDĚT v Live events, ale ingestní linka je pak zahodí
+             (`cookieless_team_disabled`) a do Activity → Explore, insightů
+             ani do SQL se nikdy nedostanou. Live events proto nestačí
+             k ověření, že to funguje — kontroluje se Explore.
+
+             Vedlejší účinky režimu, se kterými počítáme:
+             — `has_opted_out_capturing()` vrací true. Je to vnitřní stav
+               (odhlášení z ukládání identity), ne vypnuté měření; skutečnou
+               bránu měření drží `is_capturing()`, která vrací true.
+             — Nevzniká `$session_id`; relace si odvozuje server z otisku.
+             — Neběží obohacení podle IP (GeoIP), protože se IP zahazuje
+               dřív, než by se stihlo použít. Mapa v Web analytics zůstane
+               prázdná.
+             — `identify()` ani `alias()` se tu volat nesmí. Nikde je
+               nevoláme a hlídá to test. */
+          cookieless_mode: 'always'
         });
 
         if (window.__mdthermFlush) window.__mdthermFlush();

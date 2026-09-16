@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Cookies a data ukládaná v prohlížeči | MD-Therm</title>
+  <meta name="description" content="Přesný seznam toho, co web MD-Therm ukládá do prohlížeče — k čemu to slouží, jak dlouho to vydrží a jak to vypnout." />
+  <link rel="canonical" href="https://www.md-therm.cz/cookies.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="cs_CZ" />
+  <meta property="og:site_name" content="MD-Therm" />
+  <meta property="og:title" content="Cookies a data ukládaná v prohlížeči | MD-Therm" />
+  <meta property="og:description" content="Přesný seznam toho, co web MD-Therm ukládá do prohlížeče — k čemu to slouží, jak dlouho to vydrží a jak to vypnout." />
+  <meta property="og:url" content="https://www.md-therm.cz/cookies.html" />
+
+  <link rel="icon" href="/favicon.svg?v=6" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- Řezy písma jsou tu ze souboru, ne inline jako na domovské stránce:
+       u čtecí podstránky nemá smysl optimalizovat první dávku bajtů. -->
+  <link rel="stylesheet" href="/css/fonts.css?v=1" />
+  <link rel="stylesheet" href="/css/styles.css?v=66" />
+</head>
+<body>
+
+  <header class="topbar" id="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="/" aria-label="MD-Therm — domů">
+        <img class="brand__logo" src="/images/logo-wordmark.webp" alt="" width="310" height="68" />
+      </a>
+
+      <nav class="topnav" id="topnav" aria-label="Hlavní">
+        <a href="/#sluzby">Služby</a>
+        <a href="/#reseni">Řešení</a>
+        <a href="/#poptavka">Poptávka</a>
+        <a href="/#realizace">Realizace</a>
+        <a href="/#kontakt">Kontakt</a>
+      </nav>
+
+      <div class="topbar__cta">
+        <a class="btn btn--phone" href="tel:+420703888830" aria-label="Zavolat: +420 703 888 830">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.3 15.3 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.37 2.3.57 3.5.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.57 3.5a1 1 0 0 1-.25 1z"/></svg>
+          <span>+420 703 888 830</span>
+        </a>
+        <a class="btn btn--primary btn--quote" href="/#poptavka">Nezávazně poptat</a>
+        <button class="btn btn--menu" id="menuToggle" aria-label="Menu" aria-controls="topnav" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="legal" id="top">
+    <div class="container legal__wrap">
+      <p class="kicker">Právní informace</p>
+      <h1>Cookies</h1>
+      <p class="legal__lede">Co přesně si web uloží do vašeho prohlížeče, proč a na jak dlouho.</p>
+      <p class="legal__meta">Účinné od 15. 9. 2026</p>
+
+      <h2>Co se ukládá do vašeho prohlížeče</h2>
+      <p>Tenhle seznam není obecná šablona — odpovídá tomu, co web při návštěvě opravdu zapíše.
+        Ověřeno měřením, ne odhadem.</p>
+
+      <h3>Nezbytné pro funkci webu</h3>
+      <div class="legal__table-wrap">
+      <table class="legal__table">
+        <thead><tr><th>Název</th><th>Kde</th><th>K čemu</th><th>Jak dlouho</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">md-poptavka-v1</td><td>sessionStorage</td>
+              <td>Drží rozepsanou poptávku, aby se odpovědi neztratily při obnovení stránky
+                  nebo otočení telefonu.</td><td>do zavření karty</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Tohle je jediná položka, která tu je kvůli službě, o kterou jste sami požádali —
+        tedy kvůli formuláři. Vznikne teprve ve chvíli, kdy ve formuláři něco vyplníte;
+        pokud se ho nedotknete, nevznikne vůbec.</p>
+
+      <h3>Statistika návštěvnosti</h3>
+      <p>Návštěvnost měřím nástrojem <strong>PostHog</strong> na jeho evropském cloudu.
+        Je nastavený do režimu bez cookies, takže si do vašeho prohlížeče
+        <strong>neukládá nic</strong> — <strong>nevzniká žádná cookie</strong> ani záznam
+        v localStorage nebo sessionStorage.</p>
+      <p>Aby šlo přesto spočítat, kolik lidí web navštívilo, dopočítá si PostHog na svém
+        serveru dočasný identifikátor: spočítá otisk (hash) z vaší IP adresy, označení
+        prohlížeče (hlavička User‑Agent) a domény tohoto webu, a přidá k tomu náhodnou
+        hodnotu, která se <strong>každý den mění</strong>. Starou hodnotu pak smaže, takže
+        otisk už nejde zpětně rozklíčovat.</p>
+      <p>Chci být přesný, ne se chlubit: tenhle otisk <strong>vzniká z vaší IP adresy</strong>,
+        a než se spočítá, PostHog ji zpracuje. Bezprostředně po výpočtu ji ze záznamu
+        odstraní a dál ji neukládá. Neurčuje se z ní ani vaše poloha.</p>
+      <p>Prakticky to znamená, že v rámci jednoho dne vás měření bere jako jednoho návštěvníka,
+        ale <strong>druhý den už vás nepozná</strong> — je to jiný otisk. Napříč dny je
+        statistika souhrnná, ne po lidech. Přesně tak je to zamýšlené.</p>
+      <p>PostHog navíc nesbírá kliky ani texty napříč stránkou, nenahrává relace
+        a nepoužívá dotazníky. Posílají se jen vlastní pojmenované události: otevření
+        formuláře, postup po krocích, odeslání a kliknutí na telefon nebo e‑mail.</p>
+      <p>Do statistiky se <strong>nikdy</strong> neposílá jméno, telefon, e‑mail, obec, PSČ
+        ani text, který napíšete do popisu poptávky.</p>
+
+      <h3>Odkud jste přišli</h3>
+      <p>Když dorazíte přes reklamu nebo odkaz, web si z adresy přečte parametry kampaně
+        a doménu odkazujícího webu. Drží je <strong>jen v paměti stránky</strong> a přiloží
+        je k poptávce, pokud ji odešlete během téže návštěvy. Nic z toho se do prohlížeče
+        neukládá, takže po zavření karty to je pryč.</p>
+
+      <h2>Co web nepoužívá</h2>
+      <p>Žádné reklamní ani retargetingové skripty. Žádné sledovací pixely sociálních sítí.
+        Žádné sdílení profilů s inzertními sítěmi. Písma jsou uložená přímo na tomhle webu,
+        takže se kvůli nim nikam jinam nechodí.</p>
+
+      <h2>Mapa v kontaktech</h2>
+      <p>V sekci kontaktů je vložená mapa Google. Načte se teprve ve chvíli, kdy k ní doscrollujete.
+        Google se přitom dozví vaši IP adresu a údaje o prohlížeči. Při měření nenastavovala
+        žádné cookies, ale samotné načtení je předáním údajů Googlu do USA.
+        Adresu si můžete místo toho <a href="/#kontakt">přečíst v textu</a> a mapu nenačítat.</p>
+
+      <h2>Jak to ovlivnit</h2>
+      <p>Ukládání cookies a dat webů zakážete nebo smažete v nastavení prohlížeče —
+        obvykle v sekci Soukromí a zabezpečení. Zablokování analytických položek nijak
+        neovlivní funkci formuláře ani zbytek webu.</p>
+      <p>Jak s osobními údaji nakládám jinde, popisuje stránka
+        <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="brand__mark" aria-hidden="true">MD</span>
+        <div>
+          <p class="footer__name">MD‑Therm</p>
+          <p class="footer__role">Tepelná čerpadla · klimatizace · servis topení — Praha a okolí</p>
+        </div>
+      </div>
+      <div class="footer__contact">
+        <a href="tel:+420703888830">+420 703 888 830</a>
+        <a href="mailto:dusek@md-therm.cz">dusek@md-therm.cz</a>
+        <span class="mono">IČO 67267092 · DIČ CZ7107250183</span>
+      </div>
+    </div>
+    <div class="container footer__legal">
+      <span>© <span id="year">2026</span> Milan Dušek</span>
+      <nav class="footer__links" aria-label="Právní informace">
+        <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+        <a href="/cookies.html">Cookies</a>
+        <a href="/informace-pro-spotrebitele.html">Informace pro spotřebitele</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Podstránky nenačítají main.js: ten obsluhuje hero, scrub a scrollspy,
+       které tu nejsou. Menu a rok v patičce jsou jediné, co je potřeba. -->
+  <script>
+    (function () {
+      var t = document.getElementById('menuToggle');
+      var n = document.getElementById('topnav');
+      if (t && n) {
+        var set = function (open) {
+          t.setAttribute('aria-expanded', open ? 'true' : 'false');
+          n.classList.toggle('is-open', open);
+          document.documentElement.classList.toggle('menu-open', open);
+        };
+        t.addEventListener('click', function () { set(t.getAttribute('aria-expanded') !== 'true'); });
+        document.addEventListener('keydown', function (e) {
+          if ((e.key === 'Escape' || e.key === 'Esc') && t.getAttribute('aria-expanded') === 'true') { set(false); t.focus(); }
+        });
+        document.addEventListener('click', function (e) {
+          if (t.getAttribute('aria-expanded') !== 'true') return;
+          if (!n.contains(e.target) && !t.contains(e.target)) set(false);
+        });
+      }
+      var y = document.getElementById('year');
+      if (y) y.textContent = String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>
