@@ -8,10 +8,13 @@
 Ceny ani termíny web neuvádí — stanovují se podle konkrétního domu a rozsahu prací.
 
 ## Služby
-- Tepelná čerpadla
+- Tepelná čerpadla — hlavní zaměření, návrh i montáž
 - Klimatizace
 - Plynové kotle
 - Servis a revize
+
+## Značky
+Web uvádí Protherm, Vaillant, Gree a Bosch.
 
 ## Stránky
 - [Úvodní stránka](https://www.md-therm.cz/): služby, řešení, realizace, poptávkový formulář, kontakt
