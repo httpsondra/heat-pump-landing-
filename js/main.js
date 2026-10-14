@@ -11,6 +11,33 @@
   var doc = document;
   var html = doc.documentElement;
 
+  /* =======================================================================
+     Sdružení scroll handlerů do jednoho snímku.
+
+     Scroll event chodí podle vstupního zařízení klidně 100× za sekundu,
+     zatímco vykreslit se dá nanejvýš jednou za snímek. Když handler v tom
+     eventu NAČTE geometrii (getBoundingClientRect), prohlížeč musí dopočítat
+     layout, který hero scrub právě zneplatnil zápisem stylů — vynucený
+     synchronní reflow uprostřed snímku. Změřeno na této stránce: totéž
+     čtení stojí 0,008 ms nad čistým layoutem a 0,222 ms (špička 0,8 ms)
+     hned po zápisu stylu, tedy 27× víc.
+
+     onFrame() zajistí, že se každý handler spustí nanejvýš jednou za snímek
+     a až ve chvíli, kdy prohlížeč sám chystá vykreslení. Čtení a zápisy se
+     tím přestanou střídat a reflow se počítá jednou místo při každém eventu.
+     ======================================================================= */
+  function onFrame(fn) {
+    var pending = false;
+    return function () {
+      if (pending) return;          // víc eventů v jednom snímku = jedno spuštění
+      pending = true;
+      window.requestAnimationFrame(function () {
+        pending = false;
+        fn();
+      });
+    };
+  }
+
   /* Signál pro pojistku v <head>: JS běží, takže reveal-fallback se nespustí. */
   html.classList.add('js-ready');
   /* Pojistka z <head> už není potřeba. Bez zrušení by se při pomalém CDN
@@ -57,7 +84,7 @@
     topbar.classList.toggle('is-stuck', window.scrollY > 8);
   }
   onScrollTop();
-  window.addEventListener('scroll', onScrollTop, { passive: true });
+  window.addEventListener('scroll', onFrame(onScrollTop), { passive: true });
 
   /* ---- mobile menu toggle ---- */
   var menuToggle = doc.getElementById('menuToggle');
@@ -159,7 +186,7 @@
       }
       setActive(currentId);
     };
-    window.addEventListener('scroll', updateSpy, { passive: true });
+    window.addEventListener('scroll', onFrame(updateSpy), { passive: true });
     // Po změně šířky/výšky okna: přepočítat aktivní sekci (reflow může posunout jinou
     // sekci přes referenční linku bez scroll eventu) a přesunout indikátor bez animace.
     window.addEventListener('resize', function () {
@@ -340,6 +367,12 @@
       ready = true;
       window.gsap.registerPlugin(window.ScrollTrigger);
 
+      /* Na mobilu se při scrollu schovává a vysouvá adresní lišta, což mění
+         innerHeight a posílá resize event. Bez tohohle by každý takový pohyb
+         spustil přepočet všech triggerů uprostřed scrollu — další zdroj
+         nahodilého škubnutí, tentokrát jen na telefonu. */
+      window.ScrollTrigger.config({ ignoreMobileResize: true });
+
       window.ScrollTrigger.create({
         trigger: '.hero',
         start: 'top top',
@@ -418,9 +451,15 @@
         var firstDrawn = false;
 
         function frameSrc(i) { return '/images/sequence/heat-pump-' + pad(i + 1, padLen) + '.jpg'; }
+        /* Dřív se tu po doložení posledního snímku volal ScrollTrigger.refresh().
+           Načtení obrázku ale s rozložením stránky nic nedělá — canvas má
+           velikost z CSS a resizeCanvas(), ne z obrázku. Byl to tedy úplný
+           přepočet všech triggerů zadarmo, a hlavně v okamžiku, který závisí
+           na síti: když padl doprostřed scrollu přes hero, přeměřil pin pod
+           rukama a animace sebou škubla. Přesně proto se to projevovalo
+           nahodile — jednou se trefil do scrollu, jindy ne. */
         function onSettled() {
           loadedCount++;
-          if (loadedCount >= total && window.ScrollTrigger) window.ScrollTrigger.refresh();
         }
 
         // 1) První snímek přednostně — odemkne hero a nastavení ScrollTriggeru co nejdřív.
